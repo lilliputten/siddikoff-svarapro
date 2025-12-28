@@ -1,9 +1,10 @@
 import React, { useState } from "react";
 import { useTranslation } from "react-i18next";
-import lockIcon from "@/assets/lock.png";
-import dollarIcon from "@/assets/dollar.png";
-import incompleteIcon from "@/assets/completeSmallGrey.png";
+
 import completeIcon from "@/assets/completeSmallGreen.png";
+import incompleteIcon from "@/assets/completeSmallGrey.png";
+import dollarIcon from "@/assets/dollar.png";
+import lockIcon from "@/assets/lock.png";
 import { apiService } from "@/services/api/api";
 import { CreatePrivateProps } from "@/types/components";
 
@@ -72,8 +73,8 @@ export const CreatePrivate: React.FC<CreatePrivateProps> = ({
       setCurrentPage("gameRoom", { roomId: room.roomId, autoSit: true });
     } catch (error: unknown) {
       setError(
-        (error as { response?: { data?: { message?: string } } }).response?.data
-          ?.message || "Failed to create room",
+        (error as { response?: { data?: { message?: string } } }).response?.data?.message ||
+          "Failed to create room",
       );
       setIsCreatingRoom(false); // Hide loading on error
     }
@@ -87,17 +88,15 @@ export const CreatePrivate: React.FC<CreatePrivateProps> = ({
   const isFormValid = isPasswordValid && isStakeValid;
 
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 backdrop-blur-sm flex items-center justify-center z-50">
-      <div className="bg-[#47444C] w-[316px] h-[215px] rounded-lg flex flex-col items-center py-4 px-4 relative">
-        <h2 className="text-white font-semibold text-lg mb-4">
-          {t("create_private_room")}
-        </h2>
-        {error && <p className="text-red-500 text-sm mb-2">{error}</p>}
-        <div className="relative w-full mb-4">
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50 backdrop-blur-sm">
+      <div className="relative flex h-[215px] w-[316px] flex-col items-center rounded-lg bg-[#47444C] px-4 py-4">
+        <h2 className="mb-4 text-lg font-semibold text-white">{t("create_private_room")}</h2>
+        {error && <p className="mb-2 text-sm text-red-500">{error}</p>}
+        <div className="relative mb-4 w-full">
           <img
             src={lockIcon}
             alt="lock"
-            className="absolute left-3 top-1/2 -translate-y-1/2 w-6 h-6"
+            className="absolute left-3 top-1/2 h-6 w-6 -translate-y-1/2"
           />
           <input
             type="text"
@@ -105,19 +104,19 @@ export const CreatePrivate: React.FC<CreatePrivateProps> = ({
             value={password}
             onChange={handlePasswordChange}
             placeholder={t("come_up_with_a_password")}
-            className="bg-[#13121780] text-white text-center text-base font-normal w-full h-[36px] rounded-lg pl-10 pr-10"
+            className="h-[36px] w-full rounded-lg bg-[#13121780] pl-10 pr-10 text-center text-base font-normal text-white"
           />
           <img
             src={isPasswordValid ? completeIcon : incompleteIcon}
             alt="complete"
-            className="absolute right-3 top-1/2 -translate-y-1/2 w-6 h-6"
+            className="absolute right-3 top-1/2 h-6 w-6 -translate-y-1/2"
           />
         </div>
-        <div className="relative w-full mb-4">
+        <div className="relative mb-4 w-full">
           <img
             src={dollarIcon}
             alt="dollar"
-            className="absolute left-3 top-1/2 -translate-y-1/2 w-[11px] h-[17px]"
+            className="absolute left-3 top-1/2 h-[17px] w-[11px] -translate-y-1/2"
           />
           <input
             type="text"
@@ -125,24 +124,24 @@ export const CreatePrivate: React.FC<CreatePrivateProps> = ({
             value={stake}
             onChange={handleStakeChange}
             placeholder={t("min_stake")}
-            className="bg-[#13121780] text-white text-center text-base font-normal w-full h-[36px] rounded-lg pl-10 pr-10"
+            className="h-[36px] w-full rounded-lg bg-[#13121780] pl-10 pr-10 text-center text-base font-normal text-white"
           />
           <img
             src={hasEnoughBalance ? completeIcon : incompleteIcon}
             alt="complete"
-            className="absolute right-3 top-1/2 -translate-y-1/2 w-6 h-6"
+            className="absolute right-3 top-1/2 h-6 w-6 -translate-y-1/2"
           />
         </div>
-        <div className="absolute bottom-0 left-0 w-full flex">
+        <div className="absolute bottom-0 left-0 flex w-full">
           <button
-            className="w-[164px] h-[49px] text-[#5F8BE7] border-t border-r border-white border-opacity-10 disabled:opacity-50"
+            className="h-[49px] w-[164px] border-r border-t border-white border-opacity-10 text-[#5F8BE7] disabled:opacity-50"
             onClick={handleCreate}
             disabled={!isFormValid || isProcessing}
           >
             {t("create")}
           </button>
           <button
-            className="w-[164px] h-[49px] text-[#5F8BE7] border-t border-white border-opacity-10"
+            className="h-[49px] w-[164px] border-t border-white border-opacity-10 text-[#5F8BE7]"
             onClick={handleCancel}
             disabled={isProcessing}
           >

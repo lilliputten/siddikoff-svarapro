@@ -1,8 +1,10 @@
 import React from "react";
+import { useTranslation } from "react-i18next";
+
 import { GameState } from "@/types/game";
+
 import tableImage from "../../assets/game/table.jpg";
 import ChipsStack from "./ChipsStack";
-import { useTranslation } from "react-i18next";
 
 const formatAmount = (amount: number): string => {
   const num = Number(amount);
@@ -50,9 +52,7 @@ const GameTable: React.FC<GameTableProps> = ({
       return 0;
     }
     const bettingActions = ["ante", "blind_bet", "bet", "call", "raise"];
-    return gameState.log.filter((action) =>
-      bettingActions.includes(action.type),
-    ).length;
+    return gameState.log.filter((action) => bettingActions.includes(action.type)).length;
   }, [gameState.status, gameState.log, savedChipCount]);
 
   const containerStyle: React.CSSProperties = {
@@ -157,10 +157,7 @@ const GameTable: React.FC<GameTableProps> = ({
       <div style={logoStyle}>Svarapro</div>
 
       <div style={potContainerStyle}>
-        <span
-          className="text-sm font-semibold text-white"
-          style={{ fontSize: `${14 * scale}px` }}
-        >
+        <span className="text-sm font-semibold text-white" style={{ fontSize: `${14 * scale}px` }}>
           {t("pot", { amount: formattedPot })}
         </span>
       </div>
@@ -171,11 +168,7 @@ const GameTable: React.FC<GameTableProps> = ({
       {/* Стоп
       ки фишек */}
       {showChipStack && (
-        <ChipsStack
-          totalChips={totalChips}
-          gameStatus={gameState.status}
-          pot={gameState.pot}
-        />
+        <ChipsStack totalChips={totalChips} gameStatus={gameState.status} pot={gameState.pot} />
       )}
     </div>
   );

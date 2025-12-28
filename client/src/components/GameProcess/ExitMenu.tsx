@@ -1,28 +1,29 @@
 import React from "react";
-import { ExitMenuProps } from "@/types/components";
 import { useTranslation } from "react-i18next";
+
+import { ExitMenuProps } from "@/types/components";
 
 export const ExitMenu: React.FC<ExitMenuProps> = ({ onClose, onConfirm }) => {
   const { t } = useTranslation("common");
 
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 backdrop-blur-sm flex items-center justify-center z-50">
-      <div className="bg-[#47444C] w-[316px] h-[172px] rounded-lg flex flex-col items-center py-4 px-4 relative">
-        <div className="h-[91px] flex items-center justify-center text-center">
-          <p className="text-white leading-relaxed text-lg font-semibold px-[16px]">
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50 backdrop-blur-sm">
+      <div className="relative flex h-[172px] w-[316px] flex-col items-center rounded-lg bg-[#47444C] px-4 py-4">
+        <div className="flex h-[91px] items-center justify-center text-center">
+          <p className="px-[16px] text-lg font-semibold leading-relaxed text-white">
             {t("exit_confirmation_text")}
           </p>
         </div>
 
-        <div className="absolute bottom-0 left-0 w-full flex">
+        <div className="absolute bottom-0 left-0 flex w-full">
           <button
-            className="w-[164px] h-[49px] text-white font-semibold border-t border-r border-white border-opacity-10 hover:bg-white hover:bg-opacity-5 transition-colors duration-200"
+            className="h-[49px] w-[164px] border-r border-t border-white border-opacity-10 font-semibold text-white transition-colors duration-200 hover:bg-white hover:bg-opacity-5"
             onClick={onConfirm}
           >
             {t("yes")}
           </button>
           <button
-            className="w-[164px] h-[49px] text-white font-semibold border-t border-white border-opacity-10 hover:bg-white hover:bg-opacity-5 transition-colors duration-200"
+            className="h-[49px] w-[164px] border-t border-white border-opacity-10 font-semibold text-white transition-colors duration-200 hover:bg-white hover:bg-opacity-5"
             onClick={onClose}
           >
             {t("cancel")}

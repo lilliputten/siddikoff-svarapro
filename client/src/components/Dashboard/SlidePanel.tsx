@@ -1,19 +1,18 @@
 import { useState } from "react";
 import Slider from "rc-slider";
+
 import "rc-slider/assets/index.css";
+
 import { useTranslation } from "react-i18next";
+
 import { SlidePanelProps } from "@/types/components";
 
 export function SlidePanel({ isOpen, onRangeChange }: SlidePanelProps) {
   const { t } = useTranslation("common");
-  const [rangeValues, setRangeValues] = useState<[number, number]>([
-    0, 1000000,
-  ]);
+  const [rangeValues, setRangeValues] = useState<[number, number]>([0, 1000000]);
   const [colorRange, setColorRange] = useState("#807C7C");
   const handleRangeChange = (value: number | number[]) => {
-    const newRange = Array.isArray(value)
-      ? (value as [number, number])
-      : [0, 1000000];
+    const newRange = Array.isArray(value) ? (value as [number, number]) : [0, 1000000];
     // Ограничиваем значения в пределах [0, 1000000] и гарантируем порядок
     const [minVal, maxVal] = [
       Math.max(0, Math.min(newRange[0], 1000000)),
@@ -36,10 +35,9 @@ export function SlidePanel({ isOpen, onRangeChange }: SlidePanelProps) {
 
   return (
     <div
-      className="shadow-lg rounded-b-lg p-2 mx-auto w-[93vw] relative"
+      className="relative mx-auto w-[93vw] rounded-b-lg p-2 shadow-lg"
       style={{
-        boxShadow:
-          "0px 5.5px 10px rgba(0, 0, 0, 0.25), 0px -2px 8px rgba(0, 0, 0, 0.3)",
+        boxShadow: "0px 5.5px 10px rgba(0, 0, 0, 0.25), 0px -2px 8px rgba(0, 0, 0, 0.3)",
         borderRadius: "0 0 8px 8px",
         background: "#48454D",
         position: "relative",
@@ -50,7 +48,7 @@ export function SlidePanel({ isOpen, onRangeChange }: SlidePanelProps) {
     >
       <div className="relative z-10">
         <p
-          className="text-white text-center mb-2"
+          className="mb-2 text-center text-white"
           style={{
             fontWeight: 600,
             fontStyle: "normal",
@@ -63,7 +61,7 @@ export function SlidePanel({ isOpen, onRangeChange }: SlidePanelProps) {
           {t("show_only")}
         </p>
         <div
-          className="p-1 rounded-lg relative"
+          className="relative rounded-lg p-1"
           style={{
             boxShadow: "0px 4px 4px rgba(0, 0, 0, 0.25)",
             borderRadius: "15px",
@@ -128,10 +126,7 @@ export function SlidePanel({ isOpen, onRangeChange }: SlidePanelProps) {
             />
           </div>
         </div>
-        <div
-          className="flex justify-around mt-2 mx-auto"
-          style={{ width: "281px" }}
-        >
+        <div className="mx-auto mt-2 flex justify-around" style={{ width: "281px" }}>
           <span
             className="text-white"
             style={{

@@ -5,10 +5,7 @@ interface ActionNotificationProps {
   visible: boolean;
 }
 
-export function ActionNotification({
-  action,
-  visible,
-}: ActionNotificationProps) {
+export function ActionNotification({ action, visible }: ActionNotificationProps) {
   const { t } = useTranslation("common");
 
   const actionConfig = {
@@ -28,7 +25,7 @@ export function ActionNotification({
 
   return (
     <div
-      className="absolute bottom-0 left-1/2 transform -translate-x-1/2 z-50 flex items-center justify-center"
+      className="absolute bottom-0 left-1/2 z-50 flex -translate-x-1/2 transform items-center justify-center"
       style={{
         width: "62px",
         height: "18px",
@@ -37,7 +34,7 @@ export function ActionNotification({
         bottom: "38px",
       }}
     >
-      <span className="text-white text-[10px] font-extrabold leading-none text-center">
+      <span className="text-center text-[10px] font-extrabold leading-none text-white">
         {config.text}
       </span>
     </div>

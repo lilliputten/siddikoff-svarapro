@@ -1,21 +1,18 @@
-import closeIcon from "@/assets/close.png";
 import { useTranslation } from "react-i18next";
+
+import closeIcon from "@/assets/close.png";
 import { EulaProps, TextProps } from "@/types/components";
 
 export const EulaHeader = ({ children }: TextProps) => (
-  <h2 className="font-bold text-base text-white tracking-tighter leading-tight">
-    {children}
-  </h2>
+  <h2 className="text-base font-bold leading-tight tracking-tighter text-white">{children}</h2>
 );
 
 export const EulaBody = ({ children }: TextProps) => (
-  <p className="font-normal text-xs text-white tracking-tighter leading-tight">
-    {children}
-  </p>
+  <p className="text-xs font-normal leading-tight tracking-tighter text-white">{children}</p>
 );
 
 export const EulaSubtext = ({ children }: TextProps) => (
-  <p className="font-normal text-[10px] text-[#64646E] tracking-tighter leading-tight">
+  <p className="text-[10px] font-normal leading-tight tracking-tighter text-[#64646E]">
     {children}
   </p>
 );
@@ -23,12 +20,12 @@ export const EulaSubtext = ({ children }: TextProps) => (
 export function Eula({ onClose }: EulaProps) {
   const { t } = useTranslation("common");
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 backdrop-blur-sm flex items-center justify-center z-50 p-4">
-      <div className="bg-[#131217] w-[330px] max-h-[80vh] rounded-lg p-4 relative flex flex-col">
-        <button onClick={onClose} className="absolute top-4 right-4 z-10">
-          <img src={closeIcon} alt="Close" className="w-6 h-6" />
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50 p-4 backdrop-blur-sm">
+      <div className="relative flex max-h-[80vh] w-[330px] flex-col rounded-lg bg-[#131217] p-4">
+        <button onClick={onClose} className="absolute right-4 top-4 z-10">
+          <img src={closeIcon} alt="Close" className="h-6 w-6" />
         </button>
-        <div className="overflow-y-auto flex-grow pr-4 space-y-4">
+        <div className="flex-grow space-y-4 overflow-y-auto pr-4">
           <EulaHeader>{t("eula_title")}</EulaHeader>
           <EulaSubtext>{t("eula_date")}</EulaSubtext>
           <EulaHeader>{t("eula_welcome")}</EulaHeader>

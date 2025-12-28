@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { hapticFeedback } from "@telegram-apps/sdk";
 import { isTMA } from "@telegram-apps/sdk-react";
 

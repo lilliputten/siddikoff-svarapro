@@ -1,41 +1,39 @@
-import { Card } from "@/types/game";
-
-// Импортируем изображения карт
-import backImage from "@/assets/game/back.png";
-
+import _7c from "@/assets/game/7c.png";
+import _7d from "@/assets/game/7d.png";
+import _7h from "@/assets/game/7h.png";
+import _7s from "@/assets/game/7s.png";
+import _8c from "@/assets/game/8c.png";
+import _8d from "@/assets/game/8d.png";
+import _8h from "@/assets/game/8h.png";
+import _8s from "@/assets/game/8s.png";
+import _9c from "@/assets/game/9c.png";
+import _9d from "@/assets/game/9d.png";
+import _9h from "@/assets/game/9h.png";
+import _9s from "@/assets/game/9s.png";
+import _10c from "@/assets/game/10c.png";
+import _10d from "@/assets/game/10d.png";
+import _10h from "@/assets/game/10h.png";
+import _10s from "@/assets/game/10s.png";
+import ac from "@/assets/game/ac.png";
+import ad from "@/assets/game/ad.png";
 // Импортируем все изображения карт
 import ah from "@/assets/game/ah.png";
-import kh from "@/assets/game/kh.png";
-import qh from "@/assets/game/qh.png";
-import jh from "@/assets/game/jh.png";
-import _10h from "@/assets/game/10h.png";
-import _9h from "@/assets/game/9h.png";
-import _8h from "@/assets/game/8h.png";
-import _7h from "@/assets/game/7h.png";
-import ad from "@/assets/game/ad.png";
-import kd from "@/assets/game/kd.png";
-import qd from "@/assets/game/qd.png";
-import jd from "@/assets/game/jd.png";
-import _10d from "@/assets/game/10d.png";
-import _9d from "@/assets/game/9d.png";
-import _8d from "@/assets/game/8d.png";
-import _7d from "@/assets/game/7d.png";
-import ac from "@/assets/game/ac.png";
-import kc from "@/assets/game/kc.png";
-import qc from "@/assets/game/qc.png";
-import jc from "@/assets/game/jc.png";
-import _10c from "@/assets/game/10c.png";
-import _9c from "@/assets/game/9c.png";
-import _8c from "@/assets/game/8c.png";
-import _7c from "@/assets/game/7c.png";
 import as from "@/assets/game/as.png";
-import ks from "@/assets/game/ks.png";
-import qs from "@/assets/game/qs.png";
+// Импортируем изображения карт
+import backImage from "@/assets/game/back.png";
+import jc from "@/assets/game/jc.png";
+import jd from "@/assets/game/jd.png";
+import jh from "@/assets/game/jh.png";
 import js from "@/assets/game/js.png";
-import _10s from "@/assets/game/10s.png";
-import _9s from "@/assets/game/9s.png";
-import _8s from "@/assets/game/8s.png";
-import _7s from "@/assets/game/7s.png";
+import kc from "@/assets/game/kc.png";
+import kd from "@/assets/game/kd.png";
+import kh from "@/assets/game/kh.png";
+import ks from "@/assets/game/ks.png";
+import qc from "@/assets/game/qc.png";
+import qd from "@/assets/game/qd.png";
+import qh from "@/assets/game/qh.png";
+import qs from "@/assets/game/qs.png";
+import { Card } from "@/types/game";
 
 const cardImages = {
   ah,
@@ -150,11 +148,7 @@ export function CardComponent({
   if (hidden || !card) {
     return (
       <div style={cardStyle} className={cardClasses}>
-        <img
-          src={backImage}
-          alt="Card back"
-          className="w-full h-full object-contain"
-        />
+        <img src={backImage} alt="Card back" className="h-full w-full object-contain" />
       </div>
     );
   }
@@ -164,7 +158,7 @@ export function CardComponent({
       <img
         src={getCardImagePath(card)}
         alt={`${card.rank} of ${card.suit}`}
-        className="w-full h-full object-contain"
+        className="h-full w-full object-contain"
       />
     </div>
   );

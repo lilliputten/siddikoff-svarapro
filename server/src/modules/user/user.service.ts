@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 
 @Injectable()
 export class UserService {
-  findOneByTelegramId(id: number): Promise<any> {
+  findOneByTelegramId(_id: number): Promise<any> {
     return Promise.resolve({ balance: 1000 });
   }
   findMultipleByTelegramIds(ids: number[]): Promise<any[]> {

@@ -1,8 +1,10 @@
+import { HTMLAttributes, useContext, useEffect, useState } from "react";
+import { createPortal } from "react-dom";
+
 import { PositionElement, PositionsContext } from "@/context/PositionsContext";
 import { cn } from "@/utils/cn";
 import { getChipsCountFromBet } from "@/utils/getChipsCountFromBet";
-import { HTMLAttributes, useContext, useEffect, useState } from "react";
-import { createPortal } from "react-dom";
+
 import { Coin } from "../Coin/Coin";
 
 interface Props extends HTMLAttributes<HTMLDivElement> {
@@ -70,15 +72,11 @@ export const PlayerBetAnimation = ({
       const randomDelay = Math.random() * 80;
 
       // меняем старт и цель в зависимости от reverse
-      const startX = reverse
-        ? bidsPosition.x + CHIP_WIDTH + randomOffsetX
-        : playerPosition.x + 60;
+      const startX = reverse ? bidsPosition.x + CHIP_WIDTH + randomOffsetX : playerPosition.x + 60;
       const startY = reverse
         ? bidsPosition.y - CHIP_HEIGHT / 2 + randomOffsetY
         : playerPosition.y + 60;
-      const targetX = reverse
-        ? playerPosition.x + 60
-        : bidsPosition.x + CHIP_WIDTH + randomOffsetX;
+      const targetX = reverse ? playerPosition.x + 60 : bidsPosition.x + CHIP_WIDTH + randomOffsetX;
       const targetY = reverse
         ? playerPosition.y + 60
         : bidsPosition.y - CHIP_HEIGHT / 2 + randomOffsetY;
@@ -116,15 +114,13 @@ export const PlayerBetAnimation = ({
         createPortal(
           <Coin
             key={chip.id}
-            className="fixed w-8 h-11"
+            className="fixed h-11 w-8"
             style={{
               zIndex: 30 + chip.id,
               left: chip.startX,
               top: chip.startY,
               transform: chip.animate
-                ? `translate(${chip.targetX - chip.startX}px, ${
-                    chip.targetY - chip.startY
-                  }px)`
+                ? `translate(${chip.targetX - chip.startX}px, ${chip.targetY - chip.startY}px)`
                 : "translate(0, 0)",
               opacity: chip.faded ? 0 : 1,
               transition: `

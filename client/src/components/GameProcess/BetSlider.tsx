@@ -1,8 +1,10 @@
-import React, { useState, useEffect } from "react";
-import { StyledContainer } from "../StyledContainer";
-import { TURN_DURATION_SECONDS } from "@/constants";
+import React, { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
+
+import { TURN_DURATION_SECONDS } from "@/constants";
+
 import { Slider } from "../Slider";
+import { StyledContainer } from "../StyledContainer";
 
 interface BetSliderProps {
   minBet: number;
@@ -96,12 +98,12 @@ export function BetSlider({
 
   return (
     <Slider isOpen={isOpen} onClose={onClose} height="25vh">
-      <div className="relative z-10 p-4 h-full flex flex-col justify-around">
+      <div className="relative z-10 flex h-full flex-col justify-around p-4">
         {/* Верхняя часть с индикатором и кнопкой */}
-        <div className="flex items-center justify-between mb-4 w-[85%] mx-auto">
+        <div className="mx-auto mb-4 flex w-[85%] items-center justify-between">
           {/* Таймер Хода */}
           {isTurn ? (
-            <div className="w-[96px] h-[5px] bg-gray-600 rounded-full overflow-hidden">
+            <div className="h-[5px] w-[96px] overflow-hidden rounded-full bg-gray-600">
               <div
                 className="h-full rounded-full"
                 style={{
@@ -112,11 +114,11 @@ export function BetSlider({
               />
             </div>
           ) : (
-            <div className="w-[96px] h-[5px] rounded-full" />
+            <div className="h-[5px] w-[96px] rounded-full" />
           )}
           {/* Дисплей суммы */}
           <div
-            className="flex items-center justify-center text-white font-bold text-[18px] leading-none"
+            className="flex items-center justify-center text-[18px] font-bold leading-none text-white"
             style={{
               width: "79px",
               height: "33px",
@@ -134,14 +136,11 @@ export function BetSlider({
               e.preventDefault();
               handleConfirm();
             }}
-            className={`w-1/4 h-[29px] text-white font-bold rounded-md transition flex items-center justify-center text-xs cursor-pointer ${
-              value > maxBet || isProcessing
-                ? "opacity-50 cursor-not-allowed"
-                : ""
+            className={`flex h-[29px] w-1/4 cursor-pointer items-center justify-center rounded-md text-xs font-bold text-white transition ${
+              value > maxBet || isProcessing ? "cursor-not-allowed opacity-50" : ""
             }`}
             style={{
-              backgroundColor:
-                value > maxBet || isProcessing ? "#666" : "#56BF00",
+              backgroundColor: value > maxBet || isProcessing ? "#666" : "#56BF00",
               WebkitTapHighlightColor: "transparent",
               touchAction: "manipulation",
             }}
@@ -152,11 +151,10 @@ export function BetSlider({
         </div>
 
         {/* Множители */}
-        <div className="grid grid-cols-4 gap-2 mb-4 justify-items-center w-[85%] mx-auto">
+        <div className="mx-auto mb-4 grid w-[85%] grid-cols-4 justify-items-center gap-2">
           {multipliers.map((mult, index) => {
             // Проверяем, не превышает ли множитель баланс
-            const multiplierValue =
-              mult.value === "max" ? maxBet : minBet * (mult.value as number);
+            const multiplierValue = mult.value === "max" ? maxBet : minBet * (mult.value as number);
             const isDisabled = multiplierValue > maxBet || isProcessing;
 
             return (
@@ -170,8 +168,8 @@ export function BetSlider({
                     handleMultiplier(mult.value);
                   }
                 }}
-                className={`font-medium text-xs leading-none transition flex items-center justify-center cursor-pointer ${
-                  isDisabled ? "opacity-50 cursor-not-allowed" : ""
+                className={`flex cursor-pointer items-center justify-center text-xs font-medium leading-none transition ${
+                  isDisabled ? "cursor-not-allowed opacity-50" : ""
                 }`}
                 style={{
                   width: "27px",
@@ -194,15 +192,15 @@ export function BetSlider({
 
         <div className="flex justify-center">
           <StyledContainer
-            className="w-[85%] h-[42px] rounded-[15px]"
+            className="h-[42px] w-[85%] rounded-[15px]"
             contentClassName="w-full h-full flex items-center justify-center"
           >
-            <div className="relative w-[82.5%] h-full flex items-center">
+            <div className="relative flex h-full w-[82.5%] items-center">
               {/* Track background */}
-              <div className="w-full h-[5px] bg-[#807C7C] rounded-full" />
+              <div className="h-[5px] w-full rounded-full bg-[#807C7C]" />
               {/* Track progress */}
               <div
-                className="absolute h-[5px] bg-[#56BF00] rounded-full"
+                className="absolute h-[5px] rounded-full bg-[#56BF00]"
                 style={{ width: `${percentage}%` }}
               />
               {/* Invisible range input */}
@@ -215,7 +213,7 @@ export function BetSlider({
                 onTouchStart={(e) => e.stopPropagation()}
                 onTouchMove={(e) => e.stopPropagation()}
                 onTouchEnd={(e) => e.stopPropagation()}
-                className="absolute w-full h-full appearance-none bg-transparent cursor-pointer"
+                className="absolute h-full w-full cursor-pointer appearance-none bg-transparent"
                 style={{
                   WebkitAppearance: "none",
                   WebkitTapHighlightColor: "transparent",
@@ -224,7 +222,7 @@ export function BetSlider({
               />
               {/* Thumb */}
               <div
-                className="absolute top-1/2 -translate-y-1/2 w-7 h-7 bg-white rounded-full shadow-lg pointer-events-none"
+                className="pointer-events-none absolute top-1/2 h-7 w-7 -translate-y-1/2 rounded-full bg-white shadow-lg"
                 style={{ left: `calc(${percentage}% - 14px)` }} // 14px is half of 28px width
               />
             </div>

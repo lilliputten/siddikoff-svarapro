@@ -1,5 +1,6 @@
-import { createContext, useContext, ReactNode } from "react";
-import { useSound, SoundType } from "@/hooks/useSound";
+import { createContext, ReactNode, useContext } from "react";
+
+import { SoundType, useSound } from "@/hooks/useSound";
 
 interface SoundContextType {
   isSoundEnabled: boolean;
@@ -12,12 +13,9 @@ const SoundContext = createContext<SoundContextType | undefined>(undefined);
 export const SoundProvider = ({ children }: { children: ReactNode }) => {
   const sound = useSound();
 
-  return (
-    <SoundContext.Provider value={sound}>{children}</SoundContext.Provider>
-  );
+  return <SoundContext.Provider value={sound}>{children}</SoundContext.Provider>;
 };
 
-// eslint-disable-next-line react-refresh/only-export-components
 export const useSoundContext = () => {
   const context = useContext(SoundContext);
   if (context === undefined) {

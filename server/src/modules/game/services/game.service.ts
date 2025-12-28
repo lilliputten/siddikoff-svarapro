@@ -9,7 +9,7 @@ import {
 import { CardService } from './card.service';
 import { PlayerService } from './player.service';
 import { BettingService } from './betting.service';
-import { PotManager } from '../lib/pot-manager';
+// import { PotManager } from '../lib/pot-manager';
 import { GameStateService } from './game-state.service';
 import { UsersService } from '../../users/users.service';
 import { UserDataDto } from '../dto/user-data.dto';
@@ -1431,6 +1431,7 @@ export class GameService {
   startTurnTimer(roomId: string, playerId: string): void {
     this.clearTurnTimer(roomId); // Всегда очищаем предыдущий
 
+    // eslint-disable-next-line @typescript-eslint/no-misused-promises
     const timer = setTimeout(async () => {
       await this.handleAutoFold(roomId, playerId);
       this.turnTimers.delete(roomId);
@@ -1487,7 +1488,7 @@ export class GameService {
 
   // Очистка всех таймеров
   clearAllTimers(): void {
-    for (const [roomId, timer] of this.turnTimers) {
+    for (const [_roomId, timer] of this.turnTimers) {
       clearTimeout(timer);
     }
     this.turnTimers.clear();

@@ -1,15 +1,17 @@
-import { useState, useEffect, useRef, useContext } from "react";
-import { GameStatuses, Player } from "@/types/game";
-import { CardComponent } from "./CardComponent";
-import { ActionNotification } from "./ActionNotification";
-import defaultAvatar from "@/assets/main_logo.png";
+import { useContext, useEffect, useRef, useState } from "react";
+
 import cardBack from "@/assets/game/back.png";
 import chatButtonBg from "@/assets/game/chat.png";
+import defaultAvatar from "@/assets/main_logo.png";
 import { TURN_DURATION_SECONDS } from "@/constants";
 import { PositionElement, PositionsContext } from "@/context/PositionsContext";
-import { PlayerBetAnimation } from "./PlayerBetAnimation";
+import { GameStatuses, Player } from "@/types/game";
+// import { PlayerBetAnimation } from "./PlayerBetAnimation";
 import { WithNull } from "@/types/mainTypes";
 import { cn } from "@/utils/cn";
+
+import { ActionNotification } from "./ActionNotification";
+import { CardComponent } from "./CardComponent";
 
 const formatAmount = (amount: number): string => {
   const num = Number(amount);
@@ -75,24 +77,19 @@ export function PlayerSpot({
   showWinIndicator,
 }: PlayerSpotProps) {
   scale = 1;
-  const { username, avatar, balance, cards, hasFolded, hasLooked, score } =
-    player;
+  const { username, avatar, balance, cards, hasFolded, hasLooked, score } = player;
   const [lastTotalBet, setLastTotalBet] = useState(player.totalBet);
   const { addPlayerPosition } = useContext(PositionsContext);
   const ref = useRef<HTMLDivElement>(null);
-  const [playerPosition, setPlayerPosition] =
-    useState<WithNull<PositionElement>>(null);
-  const [showBetAnimation, setShowBetAnimation] = useState(false);
+  const [playerPosition, setPlayerPosition] = useState<WithNull<PositionElement>>(null);
+  const [_showBetAnimation, setShowBetAnimation] = useState(false);
   const [lastBet, setLastBet] = useState(player.currentBet);
 
-  const [openCards, setOpenCards] = useState(false);
+  const [_openCards, setOpenCards] = useState(false);
   const [newShowWinIndicator, setNewShowWinIndicator] = useState(false);
 
   useEffect(() => {
-    console.log(
-      "shoWinIndicator!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!>>",
-      showWinIndicator,
-    );
+    console.log("shoWinIndicator!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!>>", showWinIndicator);
     if (showWinIndicator) {
       setNewShowWinIndicator(true);
       setTimeout(() => {
@@ -165,12 +162,8 @@ export function PlayerSpot({
   const otherPlayersStep = Math.round(otherPlayersCardWidth * 0.46);
 
   // Выбираем размеры в зависимости от того, текущий ли это пользователь
-  const cardHeight = isCurrentUser
-    ? currentUserCardHeight
-    : otherPlayersCardHeight;
-  const cardWidth = isCurrentUser
-    ? currentUserCardWidth
-    : otherPlayersCardWidth;
+  const cardHeight = isCurrentUser ? currentUserCardHeight : otherPlayersCardHeight;
+  const cardWidth = isCurrentUser ? currentUserCardWidth : otherPlayersCardWidth;
   const step = isCurrentUser ? currentUserStep : otherPlayersStep;
 
   const spotClasses = `
@@ -206,11 +199,11 @@ export function PlayerSpot({
     window.addEventListener("resize", onResizeHandler);
 
     return () => window.removeEventListener("resize", onResizeHandler);
-  }, []);
+  }, [addPlayerPosition, cardSide, openCardsPosition]);
 
   const TotalBetComponent = player.totalBet > 0 && !showCards && (
     <div
-      className="text-white font-semibold text-xs leading-4 flex items-center justify-center px-2"
+      className="flex items-center justify-center px-2 text-xs font-semibold leading-4 text-white"
       style={{
         minWidth: "32px",
         height: "19px",
@@ -223,7 +216,7 @@ export function PlayerSpot({
   );
 
   const DealerIcon = player.isDealer && (
-    <div className="w-[15px] h-[15px] bg-black rounded-full flex items-center justify-center text-white font-bold text-[10px]">
+    <div className="flex h-[15px] w-[15px] items-center justify-center rounded-full bg-black text-[10px] font-bold text-white">
       D
     </div>
   );
@@ -367,10 +360,7 @@ export function PlayerSpot({
     const bettingStatuses: GameStatuses[] = ["blind_betting", "betting"];
 
     // Если игрок делает ставку
-    if (
-      player.currentBet > lastBet &&
-      bettingStatuses.includes(gameState.status as GameStatuses)
-    ) {
+    if (player.currentBet > lastBet && bettingStatuses.includes(gameState.status as GameStatuses)) {
       setShowBetAnimation(true);
       const timeout = setTimeout(() => setShowBetAnimation(false), 2000);
       return () => clearTimeout(timeout);
@@ -384,16 +374,20 @@ export function PlayerSpot({
     }
 
     setLastBet(player.currentBet);
-  }, [
-    player.currentBet,
-    lastBet,
-    gameState?.status,
-    playerPosition,
-    winAmount,
-  ]);
+  }, [player.currentBet, lastBet, gameState?.status, playerPosition, winAmount]);
 
   const hue = progress * 1.2;
   const progressBarColor = `hsl(${hue}, 100%, 50%)`;
+
+  useEffect(() => {
+    if (player.hasFolded == false) {
+      setTimeout(() => {
+        setOpenCards(true);
+      }, 2000);
+    } else {
+      setOpenCards(false);
+    }
+  }, [player]);
 
   // Render a placeholder for players waiting for the next round
   if (!player.isActive && !player.hasFolded) {
@@ -401,7 +395,7 @@ export function PlayerSpot({
       <div className={`${spotClasses} player-spot`} style={containerStyle}>
         <div className="relative">
           <div
-            className="relative flex justify-center items-start"
+            className="relative flex items-start justify-center"
             style={{
               width: `${avatarSize}px`,
               height: `${avatarSize + nameHeight / 1.5}px`,
@@ -412,7 +406,7 @@ export function PlayerSpot({
               style={{ width: `${avatarSize}px`, height: `${avatarSize}px` }}
             >
               <div
-                className="absolute rounded-full top-0 left-0"
+                className="absolute left-0 top-0 rounded-full"
                 style={{
                   width: `${avatarSize}px`,
                   height: `${avatarSize}px`,
@@ -420,7 +414,7 @@ export function PlayerSpot({
                 }}
               ></div>
               <div
-                className="absolute rounded-full top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2"
+                className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 transform rounded-full"
                 style={{
                   width: `${avatarSize - 6 * scale}px`,
                   height: `${avatarSize - 6 * scale}px`,
@@ -428,29 +422,21 @@ export function PlayerSpot({
                 }}
               ></div>
               <div
-                className="absolute rounded-full overflow-hidden top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2"
+                className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 transform overflow-hidden rounded-full"
                 style={{
                   width: `${avatarSize - 10 * scale}px`,
                   height: `${avatarSize - 10 * scale}px`,
                 }}
               >
                 {avatar ? (
-                  <img
-                    src={avatar}
-                    alt={username}
-                    className="w-full h-full object-cover"
-                  />
+                  <img src={avatar} alt={username} className="h-full w-full object-cover" />
                 ) : (
-                  <img
-                    src={defaultAvatar}
-                    alt={username}
-                    className="w-full h-full object-cover"
-                  />
+                  <img src={defaultAvatar} alt={username} className="h-full w-full object-cover" />
                 )}
               </div>
             </div>
             <div
-              className="absolute left-1/2 transform -translate-x-1/2 z-20"
+              className="absolute left-1/2 z-20 -translate-x-1/2 transform"
               style={{ bottom: "-4px" }}
             >
               <div className="flex flex-col items-center">
@@ -459,7 +445,7 @@ export function PlayerSpot({
                   style={{ width: `${nameWidth}px`, height: `${nameHeight}px` }}
                 >
                   <div
-                    className=" inset-0"
+                    className="inset-0"
                     style={{
                       borderRadius: `${8 * scale}px`,
                       background:
@@ -503,25 +489,11 @@ export function PlayerSpot({
     );
   }
 
-  useEffect(() => {
-    if (player.hasFolded == false) {
-      setTimeout(() => {
-        setOpenCards(true);
-      }, 2000);
-    } else {
-      setOpenCards(false);
-    }
-  }, [player]);
-
   return (
-    <div
-      className={`${spotClasses} player-spot`}
-      style={containerStyle}
-      ref={ref}
-    >
+    <div className={`${spotClasses} player-spot`} style={containerStyle} ref={ref}>
       {chatPhrase && (
         <div
-          className="absolute left-1/2 -translate-x-1/2 z-50 flex items-center justify-center p-1"
+          className="absolute left-1/2 z-50 flex -translate-x-1/2 items-center justify-center p-1"
           style={{
             width: "75px",
             height: "38px",
@@ -538,13 +510,11 @@ export function PlayerSpot({
       )}
       <ActionNotification
         action={notificationType}
-        visible={
-          !!notificationType && (notificationType === "pass" || !hasFolded)
-        }
+        visible={!!notificationType && (notificationType === "pass" || !hasFolded)}
       />
       <div className="relative">
         <div
-          className="relative flex justify-center items-start"
+          className="relative flex items-start justify-center"
           style={{
             width: `${avatarSize}px`,
             height: `${avatarSize + nameHeight / 1.5}px`,
@@ -557,7 +527,7 @@ export function PlayerSpot({
             {/* Win amount container */}
             {newShowWinIndicator && (
               <div
-                className="absolute left-1/2 transform -translate-x-1/2 -translate-y-full mb-2 flex items-center justify-center transition-opacity duration-500"
+                className="absolute left-1/2 mb-2 flex -translate-x-1/2 -translate-y-full transform items-center justify-center transition-opacity duration-500"
                 style={{
                   top: "18px",
                   width: `${75 * scale}px`,
@@ -588,7 +558,7 @@ export function PlayerSpot({
 
             {/* Avatar with win animation shadow */}
             <div
-              className="absolute rounded-full top-0 left-0 transition-all duration-500"
+              className="absolute left-0 top-0 rounded-full transition-all duration-500"
               style={{
                 width: `${avatarSize}px`,
                 height: `${avatarSize}px`,
@@ -601,7 +571,7 @@ export function PlayerSpot({
               }}
             ></div>
             <div
-              className="absolute rounded-full top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2"
+              className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 transform rounded-full"
               style={{
                 width: `${avatarSize - 6 * scale}px`,
                 height: `${avatarSize - 6 * scale}px`,
@@ -609,31 +579,23 @@ export function PlayerSpot({
               }}
             ></div>
             <div
-              className="absolute rounded-full overflow-hidden top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2"
+              className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 transform overflow-hidden rounded-full"
               style={{
                 width: `${avatarSize - 10 * scale}px`,
                 height: `${avatarSize - 10 * scale}px`,
               }}
             >
               {avatar ? (
-                <img
-                  src={avatar}
-                  alt={username}
-                  className="w-full h-full object-cover"
-                />
+                <img src={avatar} alt={username} className="h-full w-full object-cover" />
               ) : (
-                <img
-                  src={defaultAvatar}
-                  alt={username}
-                  className="w-full h-full object-cover"
-                />
+                <img src={defaultAvatar} alt={username} className="h-full w-full object-cover" />
               )}
             </div>
 
             {/* Total bet for current user - positioned above avatar */}
             {isCurrentUser && TotalBetComponent && (
               <div
-                className="absolute left-1/2 transform -translate-x-1/2 flex items-center justify-center"
+                className="absolute left-1/2 flex -translate-x-1/2 transform items-center justify-center"
                 style={{
                   top: `-50px`,
                   zIndex: 60,
@@ -644,7 +606,7 @@ export function PlayerSpot({
             )}
           </div>
           <div
-            className="absolute left-1/2 transform -translate-x-1/2 z-20"
+            className="absolute left-1/2 z-20 -translate-x-1/2 transform"
             style={{ bottom: "-4px" }}
           >
             <div className="flex flex-col items-center">
@@ -696,8 +658,7 @@ export function PlayerSpot({
                     style={{
                       top: "50%",
                       transform: "translateY(-50%)",
-                      [cardSide === "left" ? "left" : "right"]:
-                        `${-20 * scale}px`,
+                      [cardSide === "left" ? "left" : "right"]: `${-20 * scale}px`,
                       zIndex: 25,
                     }}
                   >
@@ -725,8 +686,7 @@ export function PlayerSpot({
                       height: "100%",
                       backgroundColor: progressBarColor,
                       borderRadius: "3px",
-                      transition:
-                        "width 0.1s linear, background-color 0.1s linear",
+                      transition: "width 0.1s linear, background-color 0.1s linear",
                     }}
                   />
                 </div>
@@ -738,8 +698,7 @@ export function PlayerSpot({
           (showCards ||
             (isCurrentUser &&
               hasLooked &&
-              (gameState?.status === "blind_betting" ||
-                gameState?.status === "betting"))) && (
+              (gameState?.status === "blind_betting" || gameState?.status === "betting"))) && (
             <div
               className="absolute z-50"
               style={{
@@ -767,7 +726,7 @@ export function PlayerSpot({
                 }),
               }}
             >
-              <div className="relative w-full h-full">
+              <div className="relative h-full w-full">
                 {cards.map((card, index) => {
                   const centerOffset = ((cards.length - 1) * step) / 2;
                   const left = index * step - centerOffset;
@@ -800,21 +759,17 @@ export function PlayerSpot({
           )}
         {!hasFolded && (
           <div
-            className={cn(
-              "absolute z-30 top-8 -translate-y-1/2 flex items-center space-x-2",
-              {
-                "-right-[22px]": cardSide === "right",
-                "-left-[13px]": cardSide === "left",
-                "left-[53%] -translate-x-[25%]":
-                  openCardsPosition === "bottom" || openCardsPosition === "top",
+            className={cn("absolute top-8 z-30 flex -translate-y-1/2 items-center space-x-2", {
+              "-right-[22px]": cardSide === "right",
+              "-left-[13px]": cardSide === "left",
+              "left-[53%] -translate-x-[25%]":
+                openCardsPosition === "bottom" || openCardsPosition === "top",
 
-                "left-[53px]":
-                  openCardsPosition === "top" || openCardsPosition === "bottom",
-              },
-            )}
+              "left-[53px]": openCardsPosition === "top" || openCardsPosition === "bottom",
+            })}
           >
             <div
-              className={`transition delay-3400 ${
+              className={`delay-3400 transition ${
                 !(isCurrentUser && hasLooked) &&
                 gameState?.status !== "finished" &&
                 gameState?.status !== "waiting" &&
@@ -828,27 +783,21 @@ export function PlayerSpot({
             </div>
           </div>
         )}
-        <div className="absolute w-full h-full top-[0] -left-[0]">
+        <div className="absolute -left-[0] top-[0] h-full w-full">
           {cardSide === "left" && !isCurrentUser && (
-            <div className="absolute left-[-55px] top-[23px]">
-              {TotalBetComponent}
-            </div>
+            <div className="absolute left-[-55px] top-[23px]">{TotalBetComponent}</div>
           )}
 
           {cardSide === "right" && !isCurrentUser && (
-            <div className="absolute right-[-52px] top-[23px]">
-              {TotalBetComponent}
-            </div>
+            <div className="absolute right-[-52px] top-[23px]">{TotalBetComponent}</div>
           )}
           {cardSide === "top" && !isCurrentUser && (
-            <div className="absolute left-1/2 transform -translate-x-1/2 bottom-[-40px]">
+            <div className="absolute bottom-[-40px] left-1/2 -translate-x-1/2 transform">
               {TotalBetComponent}
             </div>
           )}
           {cardSide === "bottom" && !isCurrentUser && (
-            <div className="absolute left-[16px] top-[-56px]">
-              {TotalBetComponent}
-            </div>
+            <div className="absolute left-[16px] top-[-56px]">{TotalBetComponent}</div>
           )}
         </div>
         {/* {(() => {

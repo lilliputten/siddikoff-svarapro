@@ -1,4 +1,5 @@
 import { CSSProperties, useEffect, useState } from "react";
+
 import "./LoadingPage.css";
 
 // Добавляем импорт логотипа (если используете vite)

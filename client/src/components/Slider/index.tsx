@@ -1,5 +1,6 @@
-import React, { useState, useEffect } from "react";
-import closeIcon from "../../assets/close.png";
+import React, { useEffect, useState } from "react";
+
+// import closeIcon from "../../assets/close.png";
 
 interface SliderProps {
   isOpen: boolean;
@@ -9,13 +10,7 @@ interface SliderProps {
   zIndex?: number;
 }
 
-export function Slider({
-  isOpen,
-  onClose,
-  children,
-  height = "25vh",
-  zIndex = 50,
-}: SliderProps) {
+export function Slider({ isOpen, onClose, children, height = "25vh", zIndex = 50 }: SliderProps) {
   const [isVisible, setIsVisible] = useState(false);
   const [shouldRender, setShouldRender] = useState(false);
 
@@ -42,7 +37,7 @@ export function Slider({
 
   return (
     <div
-      className={`fixed inset-0 bg-black flex items-end   ${
+      className={`fixed inset-0 flex items-end bg-black ${
         isVisible ? "bg-opacity-50" : "bg-opacity-0"
       }`}
       style={{ zIndex }}
@@ -63,12 +58,11 @@ export function Slider({
       >
         {/* Container with gradient border and rounded corners */}
         <div
-          className="relative w-full h-full"
+          className="relative h-full w-full"
           style={{
             background:
               "linear-gradient(180deg, #48454D 0%, rgba(255, 255, 255, 0.3) 50%, #2D2B31 100%)",
-            boxShadow:
-              "0px 1px 2px rgba(0, 0, 0, 0.3), 0px 1px 3px 1px rgba(0, 0, 0, 0.15)",
+            boxShadow: "0px 1px 2px rgba(0, 0, 0, 0.3), 0px 1px 3px 1px rgba(0, 0, 0, 0.15)",
             borderRadius: "20px 20px 0 0",
           }}
         >

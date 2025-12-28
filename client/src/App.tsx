@@ -1,30 +1,30 @@
-import { useEffect, useState, useMemo, useCallback } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { isMiniAppDark, retrieveLaunchParams } from "@telegram-apps/sdk-react";
 import { AppRoot } from "@telegram-apps/telegram-ui";
-import { Socket } from "socket.io-client";
-import { initSocket } from "./services/websocket";
-import { Dashboard } from "./pages/Dashboard";
-import { Deposit } from "./pages/Deposit";
-import { ConfirmDeposit } from "./pages/ConfirmDeposit";
-import { Withdraw } from "./pages/Withdraw";
-import { ConfirmWithdraw } from "./pages/ConfirmWithdraw";
-import { AddWallet } from "./pages/AddWallet";
-import { More } from "./pages/More";
-import { DepositHistory } from "./pages/DepositHistory";
-import { GameRoom } from "./pages/GameRoom";
-import { PopSuccess } from "./components/PopSuccess";
-import { initTelegramSdk } from "./utils/init";
-import { apiService } from "./services/api/api";
 import axios from "axios";
+import { Socket } from "socket.io-client";
+
 import { ErrorAlert } from "./components/ErrorAlert";
+import { Notification } from "./components/Notification";
+import { PopSuccess } from "./components/PopSuccess";
+import { TurnPhoneOver } from "./components/TurnPhoneOver";
+import { PositionsProvider } from "./context/PositionsContext";
+import { SoundProvider } from "./context/SoundContext";
 import { useAppBackButton } from "./hooks/useAppBackButton";
 import { useAppUpdate } from "./hooks/useAppUpdate";
-import { SoundProvider } from "./context/SoundContext";
-import { Notification } from "./components/Notification";
+import { AddWallet } from "./pages/AddWallet";
+import { ConfirmDeposit } from "./pages/ConfirmDeposit";
+import { ConfirmWithdraw } from "./pages/ConfirmWithdraw";
+import { Dashboard } from "./pages/Dashboard";
+import { Deposit } from "./pages/Deposit";
+import { DepositHistory } from "./pages/DepositHistory";
+import { GameRoom } from "./pages/GameRoom";
+import { More } from "./pages/More";
+import { Withdraw } from "./pages/Withdraw";
+import { apiService } from "./services/api/api";
+import { initSocket } from "./services/websocket";
 import { NotificationType } from "./types/components";
-import { PositionsProvider } from "./context/PositionsContext";
-
-import { TurnPhoneOver } from "./components/TurnPhoneOver";
+import { initTelegramSdk } from "./utils/init";
 
 interface LaunchParams {
   initData?: string;
@@ -97,9 +97,7 @@ function App() {
   const [withdrawAmount, setWithdrawAmount] = useState("");
   const [socket, setSocket] = useState<Socket | null>(null);
   const [successMessage, setSuccessMessage] = useState<string | null>(null);
-  const [notification, setNotification] = useState<NotificationType | null>(
-    null,
-  );
+  const [notification, setNotification] = useState<NotificationType | null>(null);
   const [isPhoneVertical, setIsPhoneVertical] = useState(false);
 
   useEffect(() => {
@@ -186,10 +184,7 @@ function App() {
           let roomIdFromPayload: string | undefined = undefined;
           let referrerIdFromPayload: string | undefined = undefined;
 
-          if (
-            launchParams.startPayload &&
-            launchParams.startPayload.startsWith("join_")
-          ) {
+          if (launchParams.startPayload && launchParams.startPayload.startsWith("join_")) {
             const parts = launchParams.startPayload.split("_");
             if (parts.length > 2) {
               // join_roomId_referrerId
@@ -221,10 +216,7 @@ function App() {
               });
             } catch (error) {
               let errorMessage = "";
-              if (
-                axios.isAxiosError(error) &&
-                isErrorResponse(error.response?.data)
-              ) {
+              if (axios.isAxiosError(error) && isErrorResponse(error.response?.data)) {
                 errorMessage = error.response.data.message;
               }
 
@@ -257,25 +249,17 @@ function App() {
               }
             };
 
-            window.addEventListener(
-              "balanceUpdated",
-              handleBalanceUpdate as EventListener,
-            );
+            window.addEventListener("balanceUpdated", handleBalanceUpdate as EventListener);
 
             // Очистка обработчика при размонтировании
             return () => {
-              window.removeEventListener(
-                "balanceUpdated",
-                handleBalanceUpdate as EventListener,
-              );
+              window.removeEventListener("balanceUpdated", handleBalanceUpdate as EventListener);
             };
           }
         } catch (error) {
           const apiError = error as ApiError;
           const errorMessage =
-            typeof apiError === "string"
-              ? apiError
-              : apiError.message || "Unknown error";
+            typeof apiError === "string" ? apiError : apiError.message || "Unknown error";
           console.error(
             "Login error:",
             errorMessage,
@@ -300,19 +284,15 @@ function App() {
   }, [socket]);
 
   return (
-    <AppRoot
-      className="overflow-x-hidden"
-      appearance={isDark ? "dark" : "light"}
-      platform="base"
-    >
+    <AppRoot className="overflow-x-hidden" appearance={isDark ? "dark" : "light"} platform="base">
       <SoundProvider>
         {/* Уведомление об обновлении приложения */}
         {updateAvailable && (
-          <div className="fixed top-0 left-0 right-0 z-50 bg-blue-600 text-white p-3 text-center">
+          <div className="fixed left-0 right-0 top-0 z-50 bg-blue-600 p-3 text-center text-white">
             <span className="mr-2">Доступно обновление приложения</span>
             <button
               onClick={updateApp}
-              className="bg-white text-blue-600 px-3 py-1 rounded text-sm font-medium"
+              className="rounded bg-white px-3 py-1 text-sm font-medium text-blue-600"
             >
               Обновить
             </button>
@@ -341,20 +321,11 @@ function App() {
             setWithdrawAmount={setWithdrawAmount}
           />
         ) : currentPage === "confirmWithdraw" ? (
-          <ConfirmWithdraw
-            withdrawAmount={withdrawAmount}
-            walletAddress={walletAddress || ""}
-          />
+          <ConfirmWithdraw withdrawAmount={withdrawAmount} walletAddress={walletAddress || ""} />
         ) : currentPage === "addWallet" ? (
-          <AddWallet
-            setCurrentPage={handleSetCurrentPage}
-            setWalletAddress={setWalletAddress}
-          />
+          <AddWallet setCurrentPage={handleSetCurrentPage} setWalletAddress={setWalletAddress} />
         ) : currentPage === "depositHistory" ? (
-          <DepositHistory
-            setCurrentPage={handleSetCurrentPage}
-            userId={String(userData.id)}
-          />
+          <DepositHistory setCurrentPage={handleSetCurrentPage} userId={String(userData.id)} />
         ) : currentPage === "gameRoom" && pageData && pageData.roomId ? (
           <PositionsProvider>
             <GameRoom
@@ -376,17 +347,9 @@ function App() {
           />
         )}
         {successMessage && (
-          <PopSuccess
-            message={successMessage}
-            onClose={() => setSuccessMessage(null)}
-          />
+          <PopSuccess message={successMessage} onClose={() => setSuccessMessage(null)} />
         )}
-        {notification && (
-          <Notification
-            type={notification}
-            onClose={() => setNotification(null)}
-          />
-        )}
+        {notification && <Notification type={notification} onClose={() => setNotification(null)} />}
       </SoundProvider>
     </AppRoot>
   );

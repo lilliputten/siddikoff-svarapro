@@ -48,8 +48,7 @@ export class ApiService {
   private api: AxiosInstance;
 
   constructor() {
-    const apiBaseUrl =
-      process.env.API_BASE_URL || "https://svarapro.com/api/v1";
+    const apiBaseUrl = process.env.API_BASE_URL || "https://svarapro.com/api/v1";
     this.api = axios.create({
       baseURL: apiBaseUrl,
       timeout: 30000,
@@ -79,8 +78,7 @@ export class ApiService {
       return response.data;
     } catch (error) {
       if (axios.isAxiosError(error)) {
-        const message =
-          error.response?.data?.message || error.message || "Unknown error";
+        const message = error.response?.data?.message || error.message || "Unknown error";
         throw new Error(`API error: ${message}`);
       }
       throw error;
@@ -116,8 +114,7 @@ export class ApiService {
       return response.data;
     } catch (error) {
       if (axios.isAxiosError(error)) {
-        const message =
-          error.response?.data?.message || error.message || "Unknown error";
+        const message = error.response?.data?.message || error.message || "Unknown error";
         throw new Error(`API error: ${message}`);
       }
       throw error;
@@ -159,8 +156,7 @@ export class ApiService {
       return response.data;
     } catch (error) {
       if (axios.isAxiosError(error)) {
-        const message =
-          error.response?.data?.message || error.message || "Unknown error";
+        const message = error.response?.data?.message || error.message || "Unknown error";
         throw new Error(`API error: ${message}`);
       }
       throw error;
@@ -182,8 +178,7 @@ export class ApiService {
       });
     } catch (error) {
       if (axios.isAxiosError(error)) {
-        const message =
-          error.response?.data?.message || error.message || "Unknown error";
+        const message = error.response?.data?.message || error.message || "Unknown error";
         throw new Error(`API error: ${message}`);
       }
       throw error;
@@ -192,23 +187,18 @@ export class ApiService {
 
   async getUserProfile(telegramId: string): Promise<UserProfile> {
     try {
-      const response = await this.api.get<UserProfile>(
-        `/users/profile/${telegramId}`,
-      );
+      const response = await this.api.get<UserProfile>(`/users/profile/${telegramId}`);
       return response.data;
     } catch (error) {
       if (axios.isAxiosError(error)) {
-        const message =
-          error.response?.data?.message || error.message || "Unknown error";
+        const message = error.response?.data?.message || error.message || "Unknown error";
         throw new Error(`API error: ${message}`);
       }
       throw error;
     }
   }
 
-  async getFiatTransactionHistory(
-    telegramId: string,
-  ): Promise<FiatTransactionHistoryItem[]> {
+  async getFiatTransactionHistory(telegramId: string): Promise<FiatTransactionHistoryItem[]> {
     try {
       const response = await this.api.get<FiatTransactionHistoryItem[]>(
         `/finances/history/fiat/${telegramId}`,
@@ -216,8 +206,7 @@ export class ApiService {
       return response.data;
     } catch (error) {
       if (axios.isAxiosError(error)) {
-        const message =
-          error.response?.data?.message || error.message || "Unknown error";
+        const message = error.response?.data?.message || error.message || "Unknown error";
         throw new Error(`API error: ${message}`);
       }
       throw error;
@@ -226,14 +215,12 @@ export class ApiService {
 
   async getFiatRates(): Promise<{ currency: string; rate: number }[]> {
     try {
-      const response = await this.api.get<{ currency: string; rate: number }[]>(
-        "/finances/fiat/rates",
-      );
+      const response =
+        await this.api.get<{ currency: string; rate: number }[]>("/finances/fiat/rates");
       return response.data;
     } catch (error) {
       if (axios.isAxiosError(error)) {
-        const message =
-          error.response?.data?.message || error.message || "Unknown error";
+        const message = error.response?.data?.message || error.message || "Unknown error";
         throw new Error(`API error: ${message}`);
       }
       throw error;
@@ -245,8 +232,7 @@ export class ApiService {
       await this.api.patch(`/finances/fiat/transaction/${norosId}/proof`);
     } catch (error) {
       if (axios.isAxiosError(error)) {
-        const message =
-          error.response?.data?.message || error.message || "Unknown error";
+        const message = error.response?.data?.message || error.message || "Unknown error";
         throw new Error(`API error: ${message}`);
       }
       throw error;
@@ -254,14 +240,11 @@ export class ApiService {
   }
   async getSystemWalletBalance(): Promise<{ balance: number }> {
     try {
-      const response = await this.api.get<{ balance: number }>(
-        "/finances/system-wallet",
-      );
+      const response = await this.api.get<{ balance: number }>("/finances/system-wallet");
       return response.data;
     } catch (error) {
       if (axios.isAxiosError(error)) {
-        const message =
-          error.response?.data?.message || error.message || "Unknown error";
+        const message = error.response?.data?.message || error.message || "Unknown error";
         throw new Error(`API error: ${message}`);
       }
       throw error;
@@ -303,8 +286,7 @@ export class ApiService {
       return response.data;
     } catch (error) {
       if (axios.isAxiosError(error)) {
-        const message =
-          error.response?.data?.message || error.message || "Unknown error";
+        const message = error.response?.data?.message || error.message || "Unknown error";
         throw new Error(`API error: ${message}`);
       }
       throw error;
@@ -322,8 +304,7 @@ export class ApiService {
       return response.data;
     } catch (error) {
       if (axios.isAxiosError(error)) {
-        const message =
-          error.response?.data?.message || error.message || "Unknown error";
+        const message = error.response?.data?.message || error.message || "Unknown error";
         throw new Error(`API error: ${message}`);
       }
       throw error;

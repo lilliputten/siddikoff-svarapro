@@ -1,4 +1,5 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
+
 import coinImage from "../../assets/game/coin.png";
 
 interface FlyingChipProps {
@@ -67,7 +68,7 @@ const FlyingChip: React.FC<FlyingChipProps> = ({
 
   return (
     <div
-      className="absolute pointer-events-none"
+      className="pointer-events-none absolute"
       style={{
         left: `${position.x}px`,
         top: `${position.y}px`,
@@ -76,11 +77,7 @@ const FlyingChip: React.FC<FlyingChipProps> = ({
         zIndex: 1000,
       }}
     >
-      <img
-        src={coinImage}
-        alt="flying chip"
-        className="w-full h-full object-contain"
-      />
+      <img src={coinImage} alt="flying chip" className="h-full w-full object-contain" />
     </div>
   );
 };

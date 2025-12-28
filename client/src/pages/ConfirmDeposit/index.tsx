@@ -1,21 +1,18 @@
-import { useState, useEffect } from "react";
+import { useEffect, useState } from "react";
+import { QRCodeCanvas } from "qrcode.react";
+
 import { Button } from "@/components/Button/Button";
 import { YellowButton } from "@/components/Button/YellowButton";
-import tetherIcon from "@/assets/tether.png";
-import copyIcon from "@/assets/copy.png";
+import { PopSuccess } from "@/components/PopSuccess";
+// import copyIcon from "@/assets/copy.png";
 import blackCopyIcon from "@/assets/black_copy.png";
 import qrIcon from "@/assets/qr.png";
 import slideDownIcon from "@/assets/slideDown.png";
+import tetherIcon from "@/assets/tether.png";
 import warningIcon from "@/assets/warning.svg";
-import { QRCodeCanvas } from "qrcode.react";
-import { PopSuccess } from "@/components/PopSuccess";
 import { ConfirmDepositProps } from "@/types/components";
 
-export function ConfirmDeposit({
-  address,
-  currency,
-  trackerId,
-}: ConfirmDepositProps) {
+export function ConfirmDeposit({ address, currency, trackerId }: ConfirmDepositProps) {
   const [timeLeft, setTimeLeft] = useState(60 * 60); // 60 минут в секундах
   const [showQR, setShowQR] = useState(false);
   const [showSuccess, setShowSuccess] = useState(false);
@@ -33,7 +30,7 @@ export function ConfirmDeposit({
     });
   };
 
-  const handleCopyTrackerId = () => {
+  const _handleCopyTrackerId = () => {
     navigator.clipboard.writeText(trackerId).then(() => {
       setShowSuccess(true);
     });
@@ -45,30 +42,26 @@ export function ConfirmDeposit({
   const paymentUrl = `ton://transfer/${address}`;
 
   // Сокращаем trackerId (первые 8 и последние 8 символов)
-  const shortTrackerId =
-    trackerId.length > 16
-      ? `${trackerId.slice(0, 8)}...${trackerId.slice(-8)}`
-      : trackerId;
+  const _shortTrackerId =
+    trackerId.length > 16 ? `${trackerId.slice(0, 8)}...${trackerId.slice(-8)}` : trackerId;
 
   return (
-    <div className="bg-primary min-h-screen flex flex-col items-center pt-4 px-4">
+    <div className="flex min-h-screen flex-col items-center bg-primary px-4 pt-4">
       {showSuccess && <PopSuccess onClose={() => setShowSuccess(false)} />}
       <div className="w-[100%]">
-        <h2 className="text-lg font-semibold text-white mb-2 flex items-center text-left">
-          Пополнение с {currency}{" "}
-          <img src={tetherIcon} alt={currency} className="w-6 h-6 ml-2" />
+        <h2 className="mb-2 flex items-center text-left text-lg font-semibold text-white">
+          Пополнение с {currency} <img src={tetherIcon} alt={currency} className="ml-2 h-6 w-6" />
         </h2>
-        <p className="font-inter font-medium text-sm leading-normal tracking-tight text-[#C9C6CE] text-left mb-4">
-          Отправляй по этому адресу только {currency}, иначе средства могут быть
-          утеряны.
+        <p className="mb-4 text-left font-inter text-sm font-medium leading-normal tracking-tight text-[#C9C6CE]">
+          Отправляй по этому адресу только {currency}, иначе средства могут быть утеряны.
         </p>
-        <div className="bg-red-900 bg-opacity-30 rounded-lg p-3 mb-4 w-full flex items-center justify-center relative">
+        <div className="relative mb-4 flex w-full items-center justify-center rounded-lg bg-red-900 bg-opacity-30 p-3">
           <img
             src={warningIcon}
             alt="Warning"
-            className="w-6 h-6 absolute left-[23px] top-[50%] -translate-y-[50%]"
+            className="absolute left-[23px] top-[50%] h-6 w-6 -translate-y-[50%]"
           />
-          <span className="text-[#C9C6CE] font-inter text-xs text-center">
+          <span className="text-center font-inter text-xs text-[#C9C6CE]">
             Это временный адрес для депозита,
             <br /> осталось минут: {minutes}:{seconds < 10 ? "0" : ""}
             {seconds}
@@ -77,7 +70,7 @@ export function ConfirmDeposit({
       </div>
 
       {/* Контейнер с адресом и trackerId */}
-      <div className="bg-black bg-opacity-30 rounded-lg p-6 w-[100%] flex flex-col items-center mb-4">
+      <div className="mb-4 flex w-[100%] flex-col items-center rounded-lg bg-black bg-opacity-30 p-6">
         <Button
           variant="secondary"
           size="sm"
@@ -90,21 +83,14 @@ export function ConfirmDeposit({
         </Button>
         {showQR && (
           <div className="mt-4">
-            <QRCodeCanvas
-              value={paymentUrl}
-              size={128}
-              bgColor="#000"
-              fgColor="#fff"
-            />
+            <QRCodeCanvas value={paymentUrl} size={128} bgColor="#000" fgColor="#fff" />
           </div>
         )}
-        <p className="text-white font-inter text-sm text-center break-all mt-4">
-          {address}
-        </p>
+        <p className="mt-4 break-all text-center font-inter text-sm text-white">{address}</p>
       </div>
 
       {/* Кнопка копирования адреса */}
-      <div className="mt-[25px] mb-[25px] w-[100%]">
+      <div className="mb-[25px] mt-[25px] w-[100%]">
         <YellowButton
           size="lg"
           icon={blackCopyIcon}
@@ -117,7 +103,7 @@ export function ConfirmDeposit({
       </div>
 
       {/* Минимальная сумма и комиссия */}
-      <div className="w-[100%] text-[#C9C6CE] mb-4">
+      <div className="mb-4 w-[100%] text-[#C9C6CE]">
         <div className="flex justify-between">
           <span
             className="text-left"

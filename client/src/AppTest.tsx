@@ -1,9 +1,10 @@
-import { io } from "socket.io-client";
-import { GameRoom } from "./pages/GameRoom";
-import { AppRoot } from "@telegram-apps/telegram-ui";
-import { SoundProvider } from "./context/SoundContext";
 import { isMiniAppDark } from "@telegram-apps/sdk";
+import { AppRoot } from "@telegram-apps/telegram-ui";
+import { io } from "socket.io-client";
+
 import { PositionsProvider } from "./context/PositionsContext";
+import { SoundProvider } from "./context/SoundContext";
+import { GameRoom } from "./pages/GameRoom";
 
 const socket = io();
 

@@ -1,4 +1,5 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
+
 import cardBackImage from "../../assets/game/back.png";
 
 interface FlyingCardProps {
@@ -67,7 +68,7 @@ const FlyingCard: React.FC<FlyingCardProps> = ({
 
   return (
     <div
-      className="absolute pointer-events-none"
+      className="pointer-events-none absolute"
       style={{
         left: `${position.x}px`,
         top: `${position.y}px`,
@@ -76,11 +77,7 @@ const FlyingCard: React.FC<FlyingCardProps> = ({
         zIndex: 1000,
       }}
     >
-      <img
-        src={cardBackImage}
-        alt="flying card"
-        className="w-full h-full object-contain"
-      />
+      <img src={cardBackImage} alt="flying card" className="h-full w-full object-contain" />
     </div>
   );
 };

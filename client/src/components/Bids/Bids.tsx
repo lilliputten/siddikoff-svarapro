@@ -1,6 +1,8 @@
+import { HTMLAttributes, useContext, useEffect, useRef } from "react";
+
 import { PositionsContext } from "@/context/PositionsContext";
 import { cn } from "@/utils/cn";
-import { HTMLAttributes, useContext, useEffect, useRef } from "react";
+
 import { Coin } from "../Coin/Coin";
 
 interface Props extends HTMLAttributes<HTMLDivElement> {
@@ -29,19 +31,16 @@ export function Bids({ className }: Props) {
     document.addEventListener("resize", onResizeHandler);
 
     return () => document.removeEventListener("resize", onResizeHandler);
-  }, []);
+  }, [changeBidsPosition]);
 
   return (
     <div
-      className={cn(
-        "absolute top-[51%] left-[47%] -translate-x-1/2 z-30",
-        className,
-      )}
+      className={cn("absolute left-[47%] top-[51%] z-30 -translate-x-1/2", className)}
       id="bids"
       ref={ref}
     >
       <div className="relative">
-        <div className="w-[20px] flex flex-col">
+        <div className="flex w-[20px] flex-col">
           {chipsArray.map((_, index) => (
             <Coin
               key={index}
@@ -52,7 +51,7 @@ export function Bids({ className }: Props) {
             />
           ))}
         </div>
-        <div className="w-[20px] flex flex-col translate-x-[74%] -mt-1">
+        <div className="-mt-1 flex w-[20px] translate-x-[74%] flex-col">
           {chipsArray.map((_, index) => (
             <Coin
               key={index}
@@ -63,7 +62,7 @@ export function Bids({ className }: Props) {
             />
           ))}
         </div>
-        <div className="w-[20px] flex flex-col translate-x-[71%] translate-y-2">
+        <div className="flex w-[20px] translate-x-[71%] translate-y-2 flex-col">
           {chipsArray.map((_, index) => (
             <Coin
               key={index}

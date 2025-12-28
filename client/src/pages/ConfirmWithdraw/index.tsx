@@ -1,12 +1,10 @@
 import { useState } from "react";
-import { YellowButton } from "@/components/Button/YellowButton";
-import { ConfirmWithdrawProps } from "@/types/components";
-import { apiService } from "@/services/api/api";
 
-export function ConfirmWithdraw({
-  withdrawAmount,
-  walletAddress,
-}: ConfirmWithdrawProps) {
+import { YellowButton } from "@/components/Button/YellowButton";
+import { apiService } from "@/services/api/api";
+import { ConfirmWithdrawProps } from "@/types/components";
+
+export function ConfirmWithdraw({ withdrawAmount, walletAddress }: ConfirmWithdrawProps) {
   const [isProcessing, setIsProcessing] = useState(false);
 
   const handleConfirmWithdraw = async () => {
@@ -30,37 +28,35 @@ export function ConfirmWithdraw({
   };
 
   return (
-    <div className="bg-primary min-h-screen flex flex-col items-center pt-4 px-4">
+    <div className="flex min-h-screen flex-col items-center bg-primary px-4 pt-4">
       <div className="w-full max-w-[331px]">
-        <h2 className="text-2xl font-semibold text-white mb-4 tracking-tighter leading-tight text-left">
+        <h2 className="mb-4 text-left text-2xl font-semibold leading-tight tracking-tighter text-white">
           Подтвердить вывод
         </h2>
-        <p className="font-medium text-xs text-gray-400 mb-2 tracking-tighter leading-tight text-left">
+        <p className="mb-2 text-left text-xs font-medium leading-tight tracking-tighter text-gray-400">
           Адрес для вывода
         </p>
-        <div className="bg-black bg-opacity-30 rounded-lg w-full h-[53px] flex items-center justify-start px-4 mb-4">
-          <p className="text-white font-semibold text-sm tracking-tighter leading-tight">
+        <div className="mb-4 flex h-[53px] w-full items-center justify-start rounded-lg bg-black bg-opacity-30 px-4">
+          <p className="text-sm font-semibold leading-tight tracking-tighter text-white">
             {walletAddress}
           </p>
         </div>
-        <p className="font-medium text-xs text-gray-400 mb-2 tracking-tighter leading-tight text-left">
+        <p className="mb-2 text-left text-xs font-medium leading-tight tracking-tighter text-gray-400">
           Сеть
         </p>
-        <div className="bg-black bg-opacity-30 rounded-lg w-full h-[53px] flex items-center justify-start px-4 mb-4">
-          <p className="text-white font-semibold text-sm tracking-tighter leading-tight">
-            TON
-          </p>
+        <div className="mb-4 flex h-[53px] w-full items-center justify-start rounded-lg bg-black bg-opacity-30 px-4">
+          <p className="text-sm font-semibold leading-tight tracking-tighter text-white">TON</p>
         </div>
-        <p className="font-medium text-xs text-gray-400 mb-2 tracking-tighter leading-tight text-left">
+        <p className="mb-2 text-left text-xs font-medium leading-tight tracking-tighter text-gray-400">
           Вы получите
         </p>
-        <div className="bg-black bg-opacity-30 rounded-lg w-full h-[53px] flex items-center justify-start px-4 mb-4">
-          <p className="text-white font-semibold text-sm tracking-tighter leading-tight">
+        <div className="mb-4 flex h-[53px] w-full items-center justify-start rounded-lg bg-black bg-opacity-30 px-4">
+          <p className="text-sm font-semibold leading-tight tracking-tighter text-white">
             {withdrawAmount} USDT
           </p>
         </div>
       </div>
-      <div className="mt-auto pb-6 w-[93vw]">
+      <div className="mt-auto w-[93vw] pb-6">
         <YellowButton
           size="lg"
           onClick={handleConfirmWithdraw}

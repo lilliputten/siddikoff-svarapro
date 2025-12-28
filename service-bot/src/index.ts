@@ -1,13 +1,14 @@
+import dotenv from "dotenv";
 import { Telegraf } from "telegraf";
 import rateLimit from "telegraf-ratelimit";
-import dotenv from "dotenv";
-import { getMessage } from "./locales/index.js";
-import { ServiceBotContext } from "./types/index.js";
-import { AdminService } from "./services/admin.service.js";
-import { UsersService } from "./services/users.service.js";
-import { StatsService } from "./services/stats.service.js";
+
 import { AdminHandlers } from "./handlers/admin.handlers.js";
 import { UserHandlers } from "./handlers/user.handlers.js";
+import { getMessage } from "./locales/index.js";
+import { AdminService } from "./services/admin.service.js";
+import { StatsService } from "./services/stats.service.js";
+import { UsersService } from "./services/users.service.js";
+import { ServiceBotContext } from "./types/index.js";
 
 // Загружаем переменные окружения
 dotenv.config();
@@ -23,11 +24,7 @@ const bot = new Telegraf<ServiceBotContext>(BOT_TOKEN);
 const adminService = new AdminService();
 const usersService = new UsersService();
 const statsService = new StatsService();
-const adminHandlers = new AdminHandlers(
-  adminService,
-  usersService,
-  statsService,
-);
+const adminHandlers = new AdminHandlers(adminService, usersService, statsService);
 const userHandlers = new UserHandlers();
 
 // Rate-limiting
@@ -60,9 +57,7 @@ bot.start(async (ctx) => {
   if (!user) return;
 
   // Создаём пользователя если его нет и получаем баланс
-  const apiService = new (
-    await import("./services/api.service.js")
-  ).ApiService();
+  const apiService = new (await import("./services/api.service.js")).ApiService();
   let balance = 0;
 
   try {
@@ -77,14 +72,9 @@ bot.start(async (ctx) => {
     // Get user balance
     const profile = await apiService.getUserProfile(user.id.toString());
     balance = profile.balance;
-    console.log(
-      `[START] User balance fetched: ${balance} for telegramId: ${user.id}`,
-    );
+    console.log(`[START] User balance fetched: ${balance} for telegramId: ${user.id}`);
   } catch (error) {
-    console.error(
-      `[START] Failed to ensure user or get balance for telegramId ${user.id}:`,
-      error,
-    );
+    console.error(`[START] Failed to ensure user or get balance for telegramId ${user.id}:`, error);
   }
 
   const welcomeMessage = `👋 Привет!
@@ -114,8 +104,7 @@ bot.start(async (ctx) => {
 });
 
 bot.help(async (ctx) => {
-  const helpText =
-    getMessage("ru", "help.title") + getMessage("ru", "help.common").join("\n");
+  const helpText = getMessage("ru", "help.title") + getMessage("ru", "help.common").join("\n");
 
   await ctx.reply(helpText);
 });
@@ -147,34 +136,20 @@ bot.action("start_fiat_history", async (ctx) => {
 */
 
 // Пользовательские callback'ы - Пополнение
-bot.action(/deposit_currency_.+/, (ctx) =>
-  userHandlers.handleCurrencySelection(ctx),
-);
-bot.action(/deposit_rub_amount_.+/, (ctx) =>
-  userHandlers.handleRubAmountSelection(ctx),
-);
-bot.action("deposit_rub_custom_amount", (ctx) =>
-  userHandlers.handleRubCustomAmount(ctx),
-);
+bot.action(/deposit_currency_.+/, (ctx) => userHandlers.handleCurrencySelection(ctx));
+bot.action(/deposit_rub_amount_.+/, (ctx) => userHandlers.handleRubAmountSelection(ctx));
+bot.action("deposit_rub_custom_amount", (ctx) => userHandlers.handleRubCustomAmount(ctx));
 bot.action(/deposit_bank_.+/, (ctx) => userHandlers.handleBankSelection(ctx));
-bot.action(/deposit_amount_.+/, (ctx) =>
-  userHandlers.handleAmountSelection(ctx),
-);
-bot.action("deposit_custom_amount", (ctx) =>
-  userHandlers.handleCustomAmount(ctx),
-);
+bot.action(/deposit_amount_.+/, (ctx) => userHandlers.handleAmountSelection(ctx));
+bot.action("deposit_custom_amount", (ctx) => userHandlers.handleCustomAmount(ctx));
 bot.action(/deposit_back_.+/, (ctx) => userHandlers.handleBackButton(ctx));
 bot.action(/deposit_done_.+/, (ctx) => userHandlers.handleDoneButton(ctx));
 bot.action("cancel_operation", (ctx) => userHandlers.handleCancelCommand(ctx));
 
 // Пользовательские callback'ы - Вывод
-bot.action(/withdraw_currency_.+/, (ctx) =>
-  userHandlers.handleWithdrawCurrencySelection(ctx),
-);
+bot.action(/withdraw_currency_.+/, (ctx) => userHandlers.handleWithdrawCurrencySelection(ctx));
 
-bot.action(/withdraw_back_.+/, (ctx) =>
-  userHandlers.handleWithdrawBackButton(ctx),
-);
+bot.action(/withdraw_back_.+/, (ctx) => userHandlers.handleWithdrawBackButton(ctx));
 
 // Админские callback'ы
 bot.action(/admin_(.+)/, async (ctx) => {
@@ -247,9 +222,7 @@ bot.hears("💰 Пополнить", (ctx) => userHandlers.handleDepositCommand(
 bot.hears("💸 Средства", (ctx) => userHandlers.handleWithdrawCommand(ctx));
 bot.hears("📜 История", (ctx) => userHandlers.handleFiatHistoryCommand(ctx));
 bot.hears("📊 Курс", (ctx) => userHandlers.handleRateCommand(ctx));
-bot.hears("🧑‍💻 Связь с поддержкой", (ctx) =>
-  userHandlers.handleSupportCommand(ctx),
-);
+bot.hears("🧑‍💻 Связь с поддержкой", (ctx) => userHandlers.handleSupportCommand(ctx));
 
 // Обработка текстовых сообщений для паролей и пользовательского ввода
 bot.hears(/.*/, async (ctx) => {

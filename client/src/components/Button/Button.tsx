@@ -1,6 +1,7 @@
+import { useState } from "react";
+
 import { StyledContainer } from "@/components/StyledContainer";
 import { ButtonProps } from "@/types/components";
-import { useState } from "react";
 
 export function Button({
   children,
@@ -52,7 +53,7 @@ export function Button({
 
   const renderIcon = (src: string, className: string, type: string) => {
     return type == "left" ? (
-      <div className="w-8 mr-[7px]">
+      <div className="mr-[7px] w-8">
         <img src={src} alt="" className={className} />
       </div>
     ) : (
@@ -105,22 +106,16 @@ export function Button({
         {...rest}
       >
         <StyledContainer
-          className="w-full h-full"
+          className="h-full w-full"
           contentClassName={`w-full h-full flex items-center px-3 ${justifyClass} ${contentLayoutClass}`}
           isActive={isActive}
         >
           {content}
           {(rightIcon || rightText) && (
-            <div
-              className={`ml-auto flex-shrink-0 flex items-center ${rightContentClassName}`}
-            >
+            <div className={`ml-auto flex flex-shrink-0 items-center ${rightContentClassName}`}>
               {rightText && <span>{rightText}</span>}
               {rightIcon &&
-                renderIcon(
-                  rightIcon,
-                  `${rightIconClassName || iconClassName} ml-2`,
-                  "right",
-                )}
+                renderIcon(rightIcon, `${rightIconClassName || iconClassName} ml-2`, "right")}
             </div>
           )}
         </StyledContainer>
@@ -129,8 +124,7 @@ export function Button({
   }
 
   const variantClasses = {
-    primary:
-      "bg-gradient-to-b from-yellow-400 to-yellow-600 text-white rounded-lg",
+    primary: "bg-gradient-to-b from-yellow-400 to-yellow-600 text-white rounded-lg",
     tertiary: "bg-transparent text-white rounded-lg",
   };
   const finalVariantClasses = variantClasses[variant] || "";
@@ -141,21 +135,13 @@ export function Button({
       className={`${baseClasses} ${finalSizeClasses} ${fullWidthClass} ${finalVariantClasses} ${isPressed ? "button-press" : ""} ${rest.className || ""}`}
       {...rest}
     >
-      <div
-        className={`flex items-center px-4 ${justifyClass} ${contentLayoutClass}`}
-      >
+      <div className={`flex items-center px-4 ${justifyClass} ${contentLayoutClass}`}>
         {content}
         {(rightIcon || rightText) && (
-          <div
-            className={`ml-auto flex-shrink-0 flex items-center ${rightContentClassName}`}
-          >
+          <div className={`ml-auto flex flex-shrink-0 items-center ${rightContentClassName}`}>
             {rightText && <span>{rightText}</span>}
             {rightIcon &&
-              renderIcon(
-                rightIcon,
-                `${rightIconClassName || iconClassName} ml-2`,
-                "right",
-              )}
+              renderIcon(rightIcon, `${rightIconClassName || iconClassName} ml-2`, "right")}
           </div>
         )}
       </div>

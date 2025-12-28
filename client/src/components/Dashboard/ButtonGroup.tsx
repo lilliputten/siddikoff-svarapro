@@ -1,8 +1,9 @@
+import { useTranslation } from "react-i18next";
+
 import { Button } from "@/components/Button/Button";
 import createIcon from "@/assets/create.png";
-import tournamentsIcon from "@/assets/tournaments.png";
 import moreIcon from "@/assets/more.png";
-import { useTranslation } from "react-i18next";
+import tournamentsIcon from "@/assets/tournaments.png";
 import { ButtonGroupProps } from "@/types/components";
 
 export function ButtonGroup({
@@ -12,11 +13,11 @@ export function ButtonGroup({
 }: ButtonGroupProps) {
   const { t } = useTranslation("common");
   return (
-    <div className="flex items-center gap-2 mx-auto mt-6 w-[93vw]">
+    <div className="mx-auto mt-6 flex w-[93vw] items-center gap-2">
       <Button
         layout="vertical"
         icon={createIcon}
-        className="flex-1 h-[57px]"
+        className="h-[57px] flex-1"
         onClick={onCreateRoomClick}
       >
         {t("create")}
@@ -24,17 +25,12 @@ export function ButtonGroup({
       <Button
         layout="vertical"
         icon={tournamentsIcon}
-        className="flex-1 h-[57px]"
+        className="h-[57px] flex-1"
         onClick={onComingSoonClick}
       >
         {t("tournaments")}
       </Button>
-      <Button
-        layout="vertical"
-        icon={moreIcon}
-        onClick={onMoreClick}
-        className="flex-1 h-[57px]"
-      >
+      <Button layout="vertical" icon={moreIcon} onClick={onMoreClick} className="h-[57px] flex-1">
         {t("more")}
       </Button>
     </div>

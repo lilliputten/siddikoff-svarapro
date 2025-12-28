@@ -24,9 +24,7 @@ export function Footer() {
         whiteSpace: "nowrap", // Убираем перенос текста
       }}
     >
-      <span style={{ fontSize: "14px" }}>
-        © 2024 | {t("all_rights_reserved")}
-      </span>
+      <span style={{ fontSize: "14px" }}>© 2024 | {t("all_rights_reserved")}</span>
       <svg
         width="22"
         height="22"

@@ -1,17 +1,15 @@
 import { useState } from "react";
+import { useTranslation } from "react-i18next";
+
 import { YellowButton } from "@/components/Button/YellowButton";
 import { Notification } from "@/components/Notification";
 import tetherIcon from "@/assets/tether.png";
 import warningIcon from "@/assets/warning.svg";
 import { apiService } from "@/services/api/api";
-import { useTranslation } from "react-i18next";
-import { ApiError } from "@/types/entities";
 import { AddWalletProps } from "@/types/components";
+import { ApiError } from "@/types/entities";
 
-export function AddWallet({
-  setCurrentPage,
-  setWalletAddress,
-}: AddWalletProps) {
+export function AddWallet({ setCurrentPage, setWalletAddress }: AddWalletProps) {
   const [address, setAddress] = useState("");
   const [notification, setNotification] = useState<
     "invalidAddress" | "addressAlreadyUsed" | "addressAdded" | null
@@ -38,9 +36,8 @@ export function AddWallet({
       if (typeof apiError === "string") {
         setNotification("invalidAddress");
       } else {
-        const errorMessage = (
-          apiError as { response?: { data?: { message: string } } }
-        ).response?.data?.message;
+        const errorMessage = (apiError as { response?: { data?: { message: string } } }).response
+          ?.data?.message;
         if (errorMessage === "Wallet address already in use") {
           setNotification("addressAlreadyUsed");
         } else if (errorMessage === "Invalid TON address format") {
@@ -53,33 +50,30 @@ export function AddWallet({
   };
 
   return (
-    <div className="bg-primary min-h-screen flex flex-col items-center pt-4 px-4">
+    <div className="flex min-h-screen flex-col items-center bg-primary px-4 pt-4">
       <div className="w-[93vw]">
-        <h2 className="text-xl font-semibold text-white mb-2 flex items-center text-left leading-tight tracking-tighter">
-          {t("add_wallet_title")}{" "}
-          <img src={tetherIcon} alt="USDT-TON" className="w-6 h-6 ml-2" />
+        <h2 className="mb-2 flex items-center text-left text-xl font-semibold leading-tight tracking-tighter text-white">
+          {t("add_wallet_title")} <img src={tetherIcon} alt="USDT-TON" className="ml-2 h-6 w-6" />
         </h2>
-        <p className="text-xl font-semibold text-white mb-4 text-left leading-tight tracking-tighter">
+        <p className="mb-4 text-left text-xl font-semibold leading-tight tracking-tighter text-white">
           {t("add_wallet_subtitle")}
         </p>
       </div>
 
-      <div className="bg-black bg-opacity-30 rounded-lg px-4 w-[93vw] flex items-center mb-4 h-[53px]">
+      <div className="mb-4 flex h-[53px] w-[93vw] items-center rounded-lg bg-black bg-opacity-30 px-4">
         <input
           type="text"
           value={address}
           onChange={(e) => setAddress(e.target.value)}
           placeholder={t("usdt_ton_address_placeholder")}
-          className="bg-transparent text-white text-left font-inter text-[17px] w-full focus:outline-none placeholder-white placeholder-opacity-60"
+          className="w-full bg-transparent text-left font-inter text-[17px] text-white placeholder-white placeholder-opacity-60 focus:outline-none"
           maxLength={48}
         />
       </div>
 
-      <div className="bg-red-900 bg-opacity-30 rounded-lg p-3 mb-4 w-[93vw] flex items-center text-left">
-        <img src={warningIcon} alt="Warning" className="w-6 h-6 mr-2" />
-        <span className="text-white font-inter text-xs">
-          {t("memo_warning")}
-        </span>
+      <div className="mb-4 flex w-[93vw] items-center rounded-lg bg-red-900 bg-opacity-30 p-3 text-left">
+        <img src={warningIcon} alt="Warning" className="mr-2 h-6 w-6" />
+        <span className="font-inter text-xs text-white">{t("memo_warning")}</span>
       </div>
 
       <YellowButton

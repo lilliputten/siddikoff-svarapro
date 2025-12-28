@@ -1,18 +1,19 @@
-import { useState, useMemo } from "react";
+import { useMemo, useState } from "react";
 import { retrieveLaunchParams, type User } from "@telegram-apps/sdk-react";
-import { Header } from "@/components/Dashboard/Header";
-import { Filter } from "@/components/Dashboard/Filter";
-import { RoomsList } from "@/components/Dashboard/RoomsList";
-import { ButtonGroup } from "@/components/Dashboard/ButtonGroup";
-import { Footer } from "@/components/Footer";
+
 import { AddWalletWindow } from "@/components/AddWalletWindow";
-import { Notification } from "@/components/Notification";
-import EnterGameMenu from "@/components/EnterGame/EnterGameMenu";
-import { CreatePublic } from "@/components/EnterGame/CreatePublic";
-import { CreatePrivate } from "@/components/EnterGame/CreatePrivate";
+import { ButtonGroup } from "@/components/Dashboard/ButtonGroup";
+import { Filter } from "@/components/Dashboard/Filter";
+import { Header } from "@/components/Dashboard/Header";
+import { RoomsList } from "@/components/Dashboard/RoomsList";
 import { ConnectRoom } from "@/components/EnterGame/ConnectRoom";
-import { DashboardProps, NotificationType } from "@/types/components";
+import { CreatePrivate } from "@/components/EnterGame/CreatePrivate";
+import { CreatePublic } from "@/components/EnterGame/CreatePublic";
+import EnterGameMenu from "@/components/EnterGame/EnterGameMenu";
+import { Footer } from "@/components/Footer";
 import { LoadingPage } from "@/components/LoadingPage";
+import { Notification } from "@/components/Notification";
+import { DashboardProps, NotificationType } from "@/types/components";
 
 export function Dashboard({
   onMoreClick,
@@ -30,19 +31,14 @@ export function Dashboard({
   const [isAvailableFilter, setIsAvailableFilter] = useState(false);
   const [stakeRange, setStakeRange] = useState<[number, number]>([0, 1000000]);
   const [isAddWalletVisible, setIsAddWalletVisible] = useState(false);
-  const [notification, setNotification] = useState<NotificationType | null>(
-    null,
-  );
+  const [notification, setNotification] = useState<NotificationType | null>(null);
   const [isEnterGameMenuVisible, setIsEnterGameMenuVisible] = useState(false);
   const [activeModal, setActiveModal] = useState<
     "createPublic" | "createPrivate" | "connectRoom" | null
   >(null);
 
   // Отладочные логи
-  console.log(
-    "Dashboard render - isEnterGameMenuVisible:",
-    isEnterGameMenuVisible,
-  );
+  console.log("Dashboard render - isEnterGameMenuVisible:", isEnterGameMenuVisible);
   console.log("Dashboard render - activeModal:", activeModal);
   const [isCreatingRoom, setIsCreatingRoom] = useState(false);
 
@@ -68,9 +64,7 @@ export function Dashboard({
     setIsEnterGameMenuVisible(false);
   };
 
-  const openModal = (
-    modal: "createPublic" | "createPrivate" | "connectRoom",
-  ) => {
+  const openModal = (modal: "createPublic" | "createPrivate" | "connectRoom") => {
     setActiveModal(modal);
     setIsEnterGameMenuVisible(false);
   };
@@ -90,7 +84,7 @@ export function Dashboard({
   }
 
   return (
-    <div className="bg-primary min-h-screen flex flex-col">
+    <div className="flex min-h-screen flex-col bg-primary">
       <div className="flex-1">
         <Header
           user={userData}
@@ -120,7 +114,7 @@ export function Dashboard({
       </div>
       <Footer />
       {isAddWalletVisible && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 backdrop-blur-sm flex items-center justify-center z-50">
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50 backdrop-blur-sm">
           <AddWalletWindow
             onClose={() => setIsAddWalletVisible(false)}
             onAdd={() => {

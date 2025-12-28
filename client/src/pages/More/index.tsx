@@ -1,28 +1,29 @@
+import { useMemo, useState } from "react";
+import { openTelegramLink } from "@telegram-apps/sdk";
+import { useTranslation } from "react-i18next";
+
+import { useLanguage } from "@/hooks/useLanguage";
 import { Button } from "@/components/Button/Button";
 import { YellowButton } from "@/components/Button/YellowButton";
-import { StyledContainer } from "@/components/StyledContainer";
+import { Footer } from "@/components/Footer";
+import LanguageSelector from "@/components/Language";
 import { Eula } from "@/components/LongRead/eula";
-import { Referral } from "@/components/Referral";
 import { Gamerules } from "@/components/LongRead/gamerules";
 import { PopSuccess } from "@/components/PopSuccess";
-import { Footer } from "@/components/Footer";
-import sharpIcon from "@/assets/sharp.png";
-import languageIcon from "@/assets/language.png";
-import depositHistoryIcon from "@/assets/deposit_history.png";
-import refIcon from "@/assets/ref.png";
+import { Referral } from "@/components/Referral";
+import { StyledContainer } from "@/components/StyledContainer";
 import channelIcon from "@/assets/channel.png";
-import licenseIcon from "@/assets/license.png";
-import helpIcon from "@/assets/help.png";
-import supportIcon from "@/assets/support.png";
-import rightIcon from "@/assets/right.png";
 import copyIcon from "@/assets/copy.png";
-import tetherIcon from "@/assets/tether.png";
+import depositHistoryIcon from "@/assets/deposit_history.png";
+import helpIcon from "@/assets/help.png";
+import languageIcon from "@/assets/language.png";
+import licenseIcon from "@/assets/license.png";
+import refIcon from "@/assets/ref.png";
+import rightIcon from "@/assets/right.png";
+import sharpIcon from "@/assets/sharp.png";
 import slideDownIcon from "@/assets/slideDown.png";
-import { useMemo, useState } from "react";
-import LanguageSelector from "@/components/Language";
-import { useTranslation } from "react-i18next";
-import { openTelegramLink } from "@telegram-apps/sdk";
-import { useLanguage } from "@/hooks/useLanguage";
+import supportIcon from "@/assets/support.png";
+import tetherIcon from "@/assets/tether.png";
 import { MoreProps } from "@/types/components";
 
 const languageKeyMap: { [key: string]: string } = {
@@ -33,10 +34,7 @@ const languageKeyMap: { [key: string]: string } = {
 export function More({ userData, setCurrentPage }: MoreProps) {
   const { t } = useTranslation("common");
   const { currentLanguage } = useLanguage();
-  const userId = useMemo(
-    () => userData?.id?.toString() || "N/A",
-    [userData?.id],
-  );
+  const userId = useMemo(() => userData?.id?.toString() || "N/A", [userData?.id]);
   const [isEulaVisible, setIsEulaVisible] = useState(false);
   const [isReferralVisible, setIsReferralVisible] = useState(false);
   const [isGamerulesVisible, setIsGamerulesVisible] = useState(false);
@@ -58,12 +56,12 @@ export function More({ userData, setCurrentPage }: MoreProps) {
   };
 
   return (
-    <div className="bg-primary min-h-screen flex flex-col">
+    <div className="flex min-h-screen flex-col bg-primary">
       <div className="flex-1">
         {showSuccess && <PopSuccess onClose={() => setShowSuccess(false)} />}
         {/* Blur overlay and modal for language selector */}
 
-        <div className="mx-auto w-[93vw] flex flex-col items-center space-y-3 mt-6">
+        <div className="mx-auto mt-6 flex w-[93vw] flex-col items-center space-y-3">
           <Button
             variant="secondary"
             fullWidth
@@ -181,19 +179,15 @@ export function More({ userData, setCurrentPage }: MoreProps) {
             {t("support_chat")}
           </Button>
 
-          <div className="pt-4 w-full">
-            <h3 className="font-semibold text-lg text-white tracking-tighter leading-tight mb-2 text-left">
+          <div className="w-full pt-4">
+            <h3 className="mb-2 text-left text-lg font-semibold leading-tight tracking-tighter text-white">
               {t("wallet_for_withdraw")}
             </h3>
-            <hr className="w-full border-t border-white opacity-50 mb-4" />
+            <hr className="mb-4 w-full border-t border-white opacity-50" />
             <StyledContainer className="h-12">
-              <div className="flex items-center justify-between w-full px-4">
+              <div className="flex w-full items-center justify-between px-4">
                 <div className="flex items-center">
-                  <img
-                    src={tetherIcon}
-                    alt="USDT TON"
-                    className="w-6 h-6 mr-2"
-                  />
+                  <img src={tetherIcon} alt="USDT TON" className="mr-2 h-6 w-6" />
                   <span>USDT TON</span>
                 </div>
                 <YellowButton
@@ -215,12 +209,8 @@ export function More({ userData, setCurrentPage }: MoreProps) {
       />
       <Footer />
       {isEulaVisible && <Eula onClose={() => setIsEulaVisible(false)} />}
-      {isReferralVisible && (
-        <Referral onClose={() => setIsReferralVisible(false)} />
-      )}
-      {isGamerulesVisible && (
-        <Gamerules onClose={() => setIsGamerulesVisible(false)} />
-      )}
+      {isReferralVisible && <Referral onClose={() => setIsReferralVisible(false)} />}
+      {isGamerulesVisible && <Gamerules onClose={() => setIsGamerulesVisible(false)} />}
     </div>
   );
 }

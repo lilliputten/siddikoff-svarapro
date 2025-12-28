@@ -1,7 +1,10 @@
 import { useEffect } from "react";
+
 import "./PopSuccess.css";
-import completeIcon from "@/assets/complete.png";
+
 import { useTranslation } from "react-i18next";
+
+import completeIcon from "@/assets/complete.png";
 import { PopSuccessProps } from "@/types/components";
 
 export function PopSuccess({ message, onClose }: PopSuccessProps) {

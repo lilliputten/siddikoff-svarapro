@@ -1,6 +1,7 @@
-import sitdownArrowImage from "@/assets/game/sitdown_arrow.png";
-import inviteImage from "@/assets/game/invite.png";
 import { useTranslation } from "react-i18next";
+
+import inviteImage from "@/assets/game/invite.png";
+import sitdownArrowImage from "@/assets/game/sitdown_arrow.png";
 
 interface SeatButtonProps {
   type: "sitdown" | "invite";
@@ -68,10 +69,10 @@ export function SeatButton({
       disabled={disabled}
       style={containerStyle}
     >
-      <div className="absolute w-[71px] h-[71px] border-4 border-[#FFFFFF1A] rounded-full bg-[#232228]"></div>
+      <div className="absolute h-[71px] w-[71px] rounded-full border-4 border-[#FFFFFF1A] bg-[#232228]"></div>
       <img
         src={sitdownArrowImage}
-        className="absolute top-[-5px] object-contain w-[46px] h-[46px] animate-bounce"
+        className="absolute top-[-5px] h-[46px] w-[46px] animate-bounce object-contain"
         alt=""
       />
       <div className="absolute" style={sitDownTextStyle}>
@@ -88,7 +89,7 @@ export function SeatButton({
       <img
         src={inviteImage}
         alt={t("invite")}
-        className="absolute inset-0 w-full h-full object-contain"
+        className="absolute inset-0 h-full w-full object-contain"
       />
       <div className="absolute" style={inviteTextStyle}>
         {t("invite")}

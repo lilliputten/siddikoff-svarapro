@@ -1,4 +1,5 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect, useState } from "react";
+
 import coinImage from "@/assets/game/coin.png";
 
 interface ChipsStackProps {
@@ -14,11 +15,7 @@ interface ChipPosition {
   zIndex: number;
 }
 
-const ChipsStack: React.FC<ChipsStackProps> = ({
-  totalChips,
-  gameStatus,
-  pot,
-}) => {
+const ChipsStack: React.FC<ChipsStackProps> = ({ totalChips, gameStatus, pot }) => {
   const [chipPositions, setChipPositions] = useState<ChipPosition[]>([]);
   const [shouldHide, setShouldHide] = useState(false);
 
@@ -27,8 +24,8 @@ const ChipsStack: React.FC<ChipsStackProps> = ({
     const positions = chipPositions;
 
     // Позиции столбиков (относительно центра стола)
-    let baseX = -12 + Math.random() * 16 - 8;
-    let baseY = 10 + Math.random() * 16 - 8;
+    const baseX = -12 + Math.random() * 16 - 8;
+    const baseY = 10 + Math.random() * 16 - 8;
 
     // Позиция фишки в столбике (слой за слоем)
     const x = baseX;
@@ -37,12 +34,12 @@ const ChipsStack: React.FC<ChipsStackProps> = ({
     // Прозрачность: верхняя фишка полная, нижние затемнены
     const opacity = 1;
 
-    let zIndex = 1;
+    const zIndex = 1;
 
     positions.push({ x, y, opacity, zIndex });
 
     setChipPositions(positions);
-  }, [totalChips]);
+  }, [chipPositions, totalChips]);
 
   // Логика для скрытия фишек после завершения раунда
   useEffect(() => {
@@ -63,7 +60,7 @@ const ChipsStack: React.FC<ChipsStackProps> = ({
 
   return (
     <div
-      className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2"
+      className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 transform"
       style={{ zIndex: 1, marginTop: "30px" }}
     >
       {chipPositions.map((position, index) => (
@@ -79,11 +76,7 @@ const ChipsStack: React.FC<ChipsStackProps> = ({
             height: "18px",
           }}
         >
-          <img
-            src={coinImage}
-            alt="chip"
-            className="w-full h-full object-contain"
-          />
+          <img src={coinImage} alt="chip" className="h-full w-full object-contain" />
         </div>
       ))}
     </div>

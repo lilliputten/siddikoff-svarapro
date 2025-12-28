@@ -1,6 +1,8 @@
-import { useLanguage } from "@/hooks/useLanguage";
-import { useTranslation } from "react-i18next";
 import { useState } from "react";
+import { useTranslation } from "react-i18next";
+
+import { useLanguage } from "@/hooks/useLanguage";
+
 import { Slider } from "../Slider";
 
 const LANGUAGES = [
@@ -14,11 +16,7 @@ interface LanguageSelectorProps {
   zIndex?: number;
 }
 
-export function LanguageSelector({
-  isOpen,
-  onClose,
-  zIndex,
-}: LanguageSelectorProps) {
+export function LanguageSelector({ isOpen, onClose, zIndex }: LanguageSelectorProps) {
   const { currentLanguage, changeLanguage } = useLanguage();
   const { t } = useTranslation("common");
   const [pressed, setPressed] = useState<string | null>(null);
@@ -32,8 +30,8 @@ export function LanguageSelector({
 
   return (
     <Slider isOpen={isOpen} onClose={onClose} height="245px" zIndex={zIndex}>
-      <div className="relative z-10 flex flex-col items-center justify-center h-full">
-        <div className="absolute left-[50%] top-[10px] -translate-x-[50%] bg-[#949494] w-[47px] h-[4px] rounded-2xl bg-opacity-50"></div>
+      <div className="relative z-10 flex h-full flex-col items-center justify-center">
+        <div className="absolute left-[50%] top-[10px] h-[4px] w-[47px] -translate-x-[50%] rounded-2xl bg-[#949494] bg-opacity-50"></div>
         {LANGUAGES.map((lang) => {
           const isActive = currentLanguage === lang.code;
           const isPressed = pressed === lang.code;

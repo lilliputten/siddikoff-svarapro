@@ -1,8 +1,9 @@
-import { Telegraf, Context } from "telegraf";
-import rateLimit from "telegraf-ratelimit";
 import dotenv from "dotenv";
-import { getMessage } from "./src/locales/index.js";
+import { Context, Telegraf } from "telegraf";
+import rateLimit from "telegraf-ratelimit";
+
 import { AdminHandlers } from "./src/handlers/admin.handlers.js";
+import { getMessage } from "./src/locales/index.js";
 import { AdminService } from "./src/services/admin.service.js";
 
 dotenv.config();
@@ -27,8 +28,7 @@ bot.use(
   rateLimit({
     window: 3000,
     limit: 1,
-    onLimitExceeded: (ctx) =>
-      ctx.reply("Too many requests, please try again later."),
+    onLimitExceeded: (ctx) => ctx.reply("Too many requests, please try again later."),
   }),
 );
 
@@ -49,12 +49,7 @@ bot.start(async (ctx) => {
   const user = ctx.from;
   if (!user) return;
   const locale = ctx.locale || "ru";
-  const welcomeMessage = getMessage(
-    locale,
-    "welcome",
-    user.first_name,
-    ctx.isAdmin,
-  );
+  const welcomeMessage = getMessage(locale, "welcome", user.first_name, ctx.isAdmin);
   await ctx.reply(welcomeMessage);
 });
 
@@ -62,9 +57,7 @@ bot.help(async (ctx) => {
   const locale = ctx.locale || "ru";
   const isAdmin = ctx.isAdmin;
   const helpText =
-    getMessage(locale, "help.title") +
-    getMessage(locale, "help.common").join("\n") +
-    "\n\n";
+    getMessage(locale, "help.title") + getMessage(locale, "help.common").join("\n") + "\n\n";
   if (isAdmin) {
     const adminCommands = getMessage(locale, "help.admin").join("\n");
     await ctx.reply(helpText + adminCommands);

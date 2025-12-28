@@ -1,12 +1,13 @@
 import { useState } from "react";
+import { useTranslation } from "react-i18next";
+
 import { Button } from "@/components/Button/Button";
+import { ErrorAlert } from "@/components/ErrorAlert";
+import { LoadingPage } from "@/components/LoadingPage";
+import rightIcon from "@/assets/right.png";
 import tetherIcon from "@/assets/tether.png";
 import tonIcon from "@/assets/ton.png";
-import rightIcon from "@/assets/right.png";
 import { apiService } from "@/services/api/api";
-import { LoadingPage } from "@/components/LoadingPage";
-import { useTranslation } from "react-i18next";
-import { ErrorAlert } from "@/components/ErrorAlert";
 import { DepositProps } from "@/types/components";
 
 export function Deposit({ setCurrentPage }: DepositProps) {
@@ -26,8 +27,7 @@ export function Deposit({ setCurrentPage }: DepositProps) {
         currency, // Явно задаем currency из аргумента
       });
     } catch (error) {
-      const errorMessage =
-        error instanceof Error ? error.message : "Failed to initiate deposit";
+      const errorMessage = error instanceof Error ? error.message : "Failed to initiate deposit";
       console.error("Failed to initiate deposit:", error);
       setError(errorMessage);
     } finally {
@@ -53,10 +53,10 @@ export function Deposit({ setCurrentPage }: DepositProps) {
   }
 
   return (
-    <div className="bg-primary min-h-screen flex flex-col items-center pt-4 px-4">
+    <div className="flex min-h-screen flex-col items-center bg-primary px-4 pt-4">
       {/* Cryptocurrency selector element */}
       <div
-        className="w-[93vw] flex items-center justify-between mb-4"
+        className="mb-4 flex w-[93vw] items-center justify-between"
         style={{
           height: "53px",
           borderRadius: "8px",
@@ -79,8 +79,7 @@ export function Deposit({ setCurrentPage }: DepositProps) {
               width: "100%",
               height: "40px",
               borderRadius: "8px",
-              background:
-                "linear-gradient(0deg, #36333B 7.5%, #46434B 100%, #48454D 100%)",
+              background: "linear-gradient(0deg, #36333B 7.5%, #46434B 100%, #48454D 100%)",
               color: "#FFFFFF",
               fontWeight: 600,
               fontSize: "16px",
@@ -103,7 +102,7 @@ export function Deposit({ setCurrentPage }: DepositProps) {
           }}
         >
           <button
-            className={`flex items-center justify-center cursor-pointer transition-opacity hover:opacity-80 ${isMoreButtonPressed ? "button-press" : ""}`}
+            className={`flex cursor-pointer items-center justify-center transition-opacity hover:opacity-80 ${isMoreButtonPressed ? "button-press" : ""}`}
             onClick={handleMoreButtonPress}
             style={{
               color: "#808797",
@@ -125,11 +124,11 @@ export function Deposit({ setCurrentPage }: DepositProps) {
         </div>
       </div>
 
-      <h2 className="text-lg font-semibold text-gray-400 mb-4 self-start">
+      <h2 className="mb-4 self-start text-lg font-semibold text-gray-400">
         {t("select_currency")}
       </h2>
 
-      <div className="w-[93vw] flex flex-col items-start space-y-3">
+      <div className="flex w-[93vw] flex-col items-start space-y-3">
         <Button
           variant="secondary"
           size="xl"

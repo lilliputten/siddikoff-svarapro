@@ -1,7 +1,8 @@
+import { useState } from "react";
 import { useTranslation } from "react-i18next";
+
 import noconnectIcon from "../../assets/noconnect.png";
 import { Slider } from "../Slider";
-import { useState } from "react";
 
 interface NoConnectProps {
   isVisible: boolean;
@@ -14,7 +15,7 @@ export function NoConnect({ isVisible, onRetry }: NoConnectProps) {
 
   return (
     <Slider isOpen={isVisible} onClose={onRetry || (() => {})} height="209px">
-      <div className="relative z-10 flex flex-col items-center justify-center text-center px-6 h-full">
+      <div className="relative z-10 flex h-full flex-col items-center justify-center px-6 text-center">
         {/* Иконка */}
         <div
           style={{
@@ -55,7 +56,7 @@ export function NoConnect({ isVisible, onRetry }: NoConnectProps) {
 
         {/* Заголовок */}
         <h3
-          className="text-white mb-2"
+          className="mb-2 text-white"
           style={{
             fontWeight: 700,
             fontStyle: "normal",

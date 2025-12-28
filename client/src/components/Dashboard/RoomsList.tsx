@@ -1,9 +1,11 @@
-import { useState, useEffect } from "react";
-import { Room as RoomComponent } from "./Room";
-import { Button } from "@/components/Button/Button";
+import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { Room } from "@/types/game";
+
+import { Button } from "@/components/Button/Button";
 import { RoomsListProps } from "@/types/components";
+import { Room } from "@/types/game";
+
+import { Room as RoomComponent } from "./Room";
 
 import "./RoomsList.css";
 
@@ -47,30 +49,18 @@ export function RoomsList({
 
   const filteredRooms = rooms.filter((room) => {
     const matchesSearch = searchId === "" || room.roomId === searchId;
-    const matchesAvailability =
-      !isAvailableFilter || room.players.length < room.maxPlayers;
-    const matchesStake =
-      room.minBet >= stakeRange[0] && room.minBet <= stakeRange[1];
-    return (
-      matchesSearch &&
-      matchesAvailability &&
-      matchesStake &&
-      room.type === "public"
-    ); // Только публичные
+    const matchesAvailability = !isAvailableFilter || room.players.length < room.maxPlayers;
+    const matchesStake = room.minBet >= stakeRange[0] && room.minBet <= stakeRange[1];
+    return matchesSearch && matchesAvailability && matchesStake && room.type === "public"; // Только публичные
   });
 
   const totalPages = Math.ceil(filteredRooms.length / ITEMS_PER_PAGE);
   const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
-  const paginatedRooms = filteredRooms.slice(
-    startIndex,
-    startIndex + ITEMS_PER_PAGE,
-  );
+  const paginatedRooms = filteredRooms.slice(startIndex, startIndex + ITEMS_PER_PAGE);
 
   return (
-    <div className="space-y-4 mx-auto w-[93vw]">
-      <p className="adaprive_font text-white text-center mb-2">
-        {t("join_game_now")}
-      </p>
+    <div className="mx-auto w-[93vw] space-y-4">
+      <p className="adaprive_font mb-2 text-center text-white">{t("join_game_now")}</p>
       {paginatedRooms.length > 0 ? (
         paginatedRooms.map((room) => (
           <RoomComponent
@@ -84,23 +74,21 @@ export function RoomsList({
           />
         ))
       ) : (
-        <p className="text-white text-center">{t("rooms_not_found")}</p>
+        <p className="text-center text-white">{t("rooms_not_found")}</p>
       )}
       {totalPages > 1 && (
-        <div className="flex justify-center space-x-2 mt-4">
-          {Array.from({ length: totalPages }, (_, index) => index + 1).map(
-            (page) => (
-              <Button
-                key={page}
-                variant="secondary"
-                className="w-[32px] h-[25px] text-sm text-gray-400"
-                isActive={page === currentPage}
-                onClick={() => setPage(page)}
-              >
-                {page}
-              </Button>
-            ),
-          )}
+        <div className="mt-4 flex justify-center space-x-2">
+          {Array.from({ length: totalPages }, (_, index) => index + 1).map((page) => (
+            <Button
+              key={page}
+              variant="secondary"
+              className="h-[25px] w-[32px] text-sm text-gray-400"
+              isActive={page === currentPage}
+              onClick={() => setPage(page)}
+            >
+              {page}
+            </Button>
+          ))}
         </div>
       )}
     </div>

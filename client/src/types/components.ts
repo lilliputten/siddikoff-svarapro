@@ -1,7 +1,8 @@
-import { Socket } from "socket.io-client";
-import { Page } from "./page";
-import { UserData } from "./entities";
 import React from "react";
+import { Socket } from "socket.io-client";
+
+import { UserData } from "./entities";
+import { Page } from "./page";
 
 export type DashboardProps = {
   onMoreClick: () => void;

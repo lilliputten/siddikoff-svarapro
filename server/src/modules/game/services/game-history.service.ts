@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 
 @Injectable()
 export class GameHistoryService {
-  create(history: any): Promise<any> {
+  create(_history: any): Promise<any> {
     return Promise.resolve({});
   }
 }

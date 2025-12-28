@@ -1,35 +1,34 @@
-import { useEffect, useState, useCallback, useRef, useMemo } from "react";
-import { GameRoomProps, GameState, Player } from "@/types/game";
-import { NotificationType } from "@/types/components";
-import { Notification } from "@/components/Notification";
-import { useGameState } from "@/hooks/useGameState";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import WebApp from "@twa-dev/sdk";
+import { useTranslation } from "react-i18next";
+import { Socket } from "socket.io-client";
+
+import { useAppBackButton } from "@/hooks/useAppBackButton";
 import { useAssetPreloader } from "@/hooks/useAssetPreloader";
-import GameTable from "../../components/GameProcess/GameTable";
+import { useGameState } from "@/hooks/useGameState";
+import { useHapticFeedback } from "@/hooks/useHapticFeedback";
+import { Notification } from "@/components/Notification";
+import { TURN_DURATION_SECONDS } from "@/constants";
+import { NotificationType } from "@/types/components";
+import { PageData, UserData } from "@/types/entities";
+import { GameRoomProps, GameState, Player } from "@/types/game";
+import { Page } from "@/types/page";
+
+import backgroundImage from "../../assets/game/background.jpg";
+import chatButton from "../../assets/game/chatButton.png";
+import menuIcon from "../../assets/game/menu.svg";
 import { ActionButtons } from "../../components/GameProcess/ActionButton";
 import { BetSlider } from "../../components/GameProcess/BetSlider";
-import { Socket } from "socket.io-client";
-import { LoadingPage } from "../../components/LoadingPage";
+import { ChatMenu } from "../../components/GameProcess/ChatMenu";
+import FlyingChip from "../../components/GameProcess/FlyingChip";
+import { GameMenu } from "../../components/GameProcess/GameMenu";
+import GameTable from "../../components/GameProcess/GameTable";
 import { PlayerSpot } from "../../components/GameProcess/PlayerSpot";
 import { SeatButton } from "../../components/GameProcess/SeatButton";
-import { UserData, PageData } from "@/types/entities";
-import FlyingChip from "../../components/GameProcess/FlyingChip";
-import FlyingCard from "../../components/GameProcess/FlyingCard";
-import { Page } from "@/types/page";
-import backgroundImage from "../../assets/game/background.jpg";
-import menuIcon from "../../assets/game/menu.svg";
-import chatButton from "../../assets/game/chatButton.png";
-import { GameMenu } from "../../components/GameProcess/GameMenu";
-import { ChatMenu } from "../../components/GameProcess/ChatMenu";
 import { SvaraAnimation } from "../../components/GameProcess/SvaraAnimation";
 import { SvaraJoinPopup } from "../../components/GameProcess/SvaraJoinPopup";
+import { LoadingPage } from "../../components/LoadingPage";
 import { NoConnect } from "../../components/NoConnect";
-import { TURN_DURATION_SECONDS } from "@/constants";
-import { useHapticFeedback } from "@/hooks/useHapticFeedback";
-import { useAppBackButton } from "@/hooks/useAppBackButton";
-import { useTranslation } from "react-i18next";
-import WebApp from "@twa-dev/sdk";
-import { CardsDeck } from "@/components/CardsDeck/CardsDeck";
-import { Bids } from "@/components/Bids/Bids";
 
 interface ChipAnimation {
   id: string;
@@ -40,14 +39,14 @@ interface ChipAnimation {
   delay: number;
 }
 
-interface CardAnimation {
-  id: string;
-  fromX: number;
-  fromY: number;
-  toX: number;
-  toY: number;
-  delay: number;
-}
+// interface CardAnimation {
+//   id: string;
+//   fromX: number;
+//   fromY: number;
+//   toX: number;
+//   toY: number;
+//   delay: number;
+// }
 
 interface GameRoomPropsExtended extends GameRoomProps {
   socket: Socket | null;
@@ -65,13 +64,9 @@ const useWindowSize = () => {
     function updateSize() {
       // Для iOS Safari используем более надежный способ получения размеров
       const width =
-        window.innerWidth ||
-        document.documentElement.clientWidth ||
-        document.body.clientWidth;
+        window.innerWidth || document.documentElement.clientWidth || document.body.clientWidth;
       const height =
-        window.innerHeight ||
-        document.documentElement.clientHeight ||
-        document.body.clientHeight;
+        window.innerHeight || document.documentElement.clientHeight || document.body.clientHeight;
       setSize([width, height]);
     }
 
@@ -106,15 +101,12 @@ const useTablePositioning = (gameStateLoaded: boolean) => {
 
   // Улучшенный расчет scale для iOS Safari
   // Откладываем расчет до загрузки gameState
-  let scale =
+  const scale =
     gameStateLoaded && windowWidth > 0
       ? Math.max(0.5, (windowWidth * 0.85) / tableSize.width)
       : 0.5;
 
-  const getPositionClasses = (
-    position: number,
-    isShowdown: boolean,
-  ): string => {
+  const getPositionClasses = (position: number, isShowdown: boolean): string => {
     const zIndex = isShowdown ? "z-40" : "z-30";
     const baseClasses = `absolute ${zIndex} transition-all duration-300 ease-in-out hover:scale-105 hover:z-40 w-20 h-24 flex items-center justify-center`;
     const positionClasses = {
@@ -165,21 +157,15 @@ export function GameRoom({
   const [activeChats, setActiveChats] = useState<
     Record<string, { phrase: string; timerId: NodeJS.Timeout }>
   >({});
-  const [notification, setNotification] = useState<NotificationType | null>(
-    null,
-  );
-  const { getPositionStyle, getPositionClasses, scale } =
-    useTablePositioning(!!gameState);
+  const [notification, setNotification] = useState<NotificationType | null>(null);
+  const { getPositionStyle, getPositionClasses, scale } = useTablePositioning(!!gameState);
   const [turnTimer, setTurnTimer] = useState(TURN_DURATION_SECONDS);
-  const [svaraStep, setSvaraStep] = useState<"none" | "animating" | "joining">(
+  const [svaraStep, setSvaraStep] = useState<"none" | "animating" | "joining">("none");
+  const { triggerImpact } = useHapticFeedback();
+  const currentUserId = window.Telegram?.WebApp?.initDataUnsafe?.user?.id?.toString() || "";
+  const [winSequenceStep, setWinSequenceStep] = useState<"none" | "showdown" | "winner" | "chips">(
     "none",
   );
-  const { triggerImpact } = useHapticFeedback();
-  const currentUserId =
-    window.Telegram?.WebApp?.initDataUnsafe?.user?.id?.toString() || "";
-  const [winSequenceStep, setWinSequenceStep] = useState<
-    "none" | "showdown" | "winner" | "chips"
-  >("none");
   const [isSittingDown, setIsSittingDown] = useState(false);
   const [isMenuButtonPressed, setIsMenuButtonPressed] = useState(false);
 
@@ -194,12 +180,10 @@ export function GameRoom({
   const currentUserPosition = currentPlayer?.position;
 
   // Объявляем состояния для useCallback
-  const [chipAnimations, setChipAnimations] = useState<Array<ChipAnimation>>(
-    [],
-  );
-  const [cardAnimations, setCardAnimations] = useState<Array<CardAnimation>>(
-    [],
-  );
+  const [chipAnimations, setChipAnimations] = useState<Array<ChipAnimation>>([]);
+  // const [cardAnimations, setCardAnimations] = useState<Array<CardAnimation>>(
+  //   [],
+  // );
 
   const getScreenPosition = useCallback(
     (absolutePosition: number) => {
@@ -212,7 +196,7 @@ export function GameRoom({
     [currentUserPosition, isSeated],
   );
 
-  const [newCallAmount, setNewCallAmount] = useState(0);
+  // const [newCallAmount, setNewCallAmount] = useState(0);
 
   const handlePlayerBet = useCallback(
     (playerId: string) => {
@@ -223,9 +207,7 @@ export function GameRoom({
       }
 
       // Проверяем, не создается ли уже анимация для этого игрока
-      const existingAnimation = chipAnimations.find((chip) =>
-        chip.id.includes(playerId),
-      );
+      const existingAnimation = chipAnimations.find((chip) => chip.id.includes(playerId));
       if (existingAnimation) {
         return;
       }
@@ -235,9 +217,7 @@ export function GameRoom({
       const absolutePosition = player.position;
       const isCurrentPlayer = player.id === currentUserId;
       // Текущий игрок ВСЕГДА в позиции 4 (снизу по центру), другие игроки преобразуются через getScreenPosition
-      const relativePosition = isCurrentPlayer
-        ? 4
-        : getScreenPosition(absolutePosition);
+      const relativePosition = isCurrentPlayer ? 4 : getScreenPosition(absolutePosition);
 
       // Получаем координаты на основе CSS классов позиций PlayerSpot
       let playerX = 0;
@@ -280,7 +260,7 @@ export function GameRoom({
           break;
       }
 
-      let currBet = player.totalBet;
+      const currBet = player.totalBet;
 
       let quantChip = 3;
 
@@ -339,7 +319,7 @@ export function GameRoom({
     [handlePlayerBet],
   );
 
-  const handleChipsAnte = () => {
+  const handleChipsAnte = useCallback(() => {
     if (!gameState) return;
     const centerX = window.innerWidth / 2;
     const centerY = window.innerHeight / 2;
@@ -353,9 +333,7 @@ export function GameRoom({
       if (!player.isActive) return;
 
       const isCurrentPlayer = player.id === currentUserId;
-      const relativePosition = isCurrentPlayer
-        ? 4
-        : getScreenPosition(player.position);
+      const relativePosition = isCurrentPlayer ? 4 : getScreenPosition(player.position);
 
       // Вычисляем позицию игрока
       let playerX = 0;
@@ -407,7 +385,7 @@ export function GameRoom({
       ]);
       // Проигрываем звук fold.mp3 для каждой карты с задержкой
     });
-  };
+  }, [actions, currentUserId, gameState, getScreenPosition, scale]);
 
   const handleChipsToWinner = useCallback(() => {
     if (!gameState?.winners || gameState.winners.length === 0) {
@@ -433,9 +411,7 @@ export function GameRoom({
     const verticalOffset = 100;
 
     const isCurrentPlayer = winnerPlayer.id === currentUserId;
-    const relativePosition = isCurrentPlayer
-      ? 4
-      : getScreenPosition(winnerPlayer.position);
+    const relativePosition = isCurrentPlayer ? 4 : getScreenPosition(winnerPlayer.position);
 
     // Вычисляем позицию победителя
     let winnerX = 0;
@@ -486,14 +462,7 @@ export function GameRoom({
         },
       ]);
     }
-  }, [
-    gameState?.winners,
-    gameState?.players,
-    scale,
-    currentUserId,
-    getScreenPosition,
-    setChipAnimations,
-  ]);
+  }, [gameState?.winners, gameState?.players, scale, currentUserId, getScreenPosition, actions]);
 
   const handleFoldCards = useCallback(
     (playerId: string) => {
@@ -638,7 +607,7 @@ export function GameRoom({
     }
 
     prevGameStateRef.current = gameState;
-  }, [gameState, handleChipsToWinner]);
+  }, [gameState, handleChipsAnte, handleChipsToWinner]);
 
   // Эффективное состояние игры, управляемое новой машиной состояний
   const effectiveGameStatus =
@@ -648,13 +617,7 @@ export function GameRoom({
   useEffect(() => {
     if (!socket) return;
 
-    const handleNewChatMessage = ({
-      playerId,
-      phrase,
-    }: {
-      playerId: string;
-      phrase: string;
-    }) => {
+    const handleNewChatMessage = ({ playerId, phrase }: { playerId: string; phrase: string }) => {
       setActiveChats((prev) => {
         if (prev[playerId]) {
           clearTimeout(prev[playerId].timerId);
@@ -689,10 +652,7 @@ export function GameRoom({
     }
   };
 
-  const activeGamePhases: GameState["status"][] = useMemo(
-    () => ["blind_betting", "betting"],
-    [],
-  );
+  const activeGamePhases: GameState["status"][] = useMemo(() => ["blind_betting", "betting"], []);
   const isCurrentUserTurn = !!(
     isSeated &&
     gameState &&
@@ -710,9 +670,7 @@ export function GameRoom({
     }
 
     const updateTimer = () => {
-      const elapsed = Math.floor(
-        (Date.now() - (gameState.turnStartTime || 0)) / 1000,
-      );
+      const elapsed = Math.floor((Date.now() - (gameState.turnStartTime || 0)) / 1000);
       const remaining = Math.max(0, TURN_DURATION_SECONDS - elapsed);
       setTurnTimer(remaining);
     };
@@ -781,11 +739,7 @@ export function GameRoom({
         handleFoldCards(lastAction.telegramId);
       }
 
-      console.error(
-        "анимация не запустилась. Код 1",
-        lastAction,
-        lastAction.type,
-      );
+      console.error("анимация не запустилась. Код 1", lastAction, lastAction.type);
       // Анимация фишек для ante действий
       if (lastAction && lastAction.type == "ante") {
         console.error("анимация не запустилась. Код 0");
@@ -805,15 +759,13 @@ export function GameRoom({
   ]);
 
   // Отслеживаем изменения в игроках для автоматического запуска анимации раздачи карт
-  const prevPlayersRef = useRef<Player[]>([]);
+  const _prevPlayersRef = useRef<Player[]>([]);
 
   // Функция для сброса карт при fold
   // Play win sound for current user if they won
   useEffect(() => {
     if (winSequenceStep === "winner") {
-      const currentUserWon = gameState?.winners?.some(
-        (winner) => winner.id === currentUserId,
-      );
+      const currentUserWon = gameState?.winners?.some((winner) => winner.id === currentUserId);
       if (currentUserWon && !winSoundPlayed) {
         actions.playSound("win");
         setWinSoundPlayed(true);
@@ -821,13 +773,7 @@ export function GameRoom({
     } else if (winSequenceStep === "none") {
       setWinSoundPlayed(false); // Reset for next round
     }
-  }, [
-    winSequenceStep,
-    gameState?.winners,
-    currentUserId,
-    actions,
-    winSoundPlayed,
-  ]);
+  }, [winSequenceStep, gameState?.winners, currentUserId, actions, winSoundPlayed]);
 
   const handleChipAnimationComplete = useCallback((chipId: string) => {
     setChipAnimations((prev) => {
@@ -837,9 +783,7 @@ export function GameRoom({
       const remainingWinnerChips = newAnimations.filter((chip) =>
         chip.id.startsWith("winner-chip-"),
       );
-      const hasWinnerChips = prev.some((chip) =>
-        chip.id.startsWith("winner-chip-"),
-      );
+      const hasWinnerChips = prev.some((chip) => chip.id.startsWith("winner-chip-"));
 
       if (hasWinnerChips && remainingWinnerChips.length === 0) {
         setShowChipStack(false);
@@ -863,18 +807,17 @@ export function GameRoom({
     }
   }, [pageData, isSeated, gameState, actions, userData, isSittingDown]);
 
-  if (loading || assetsLoading)
-    return <LoadingPage isLoading={loading || assetsLoading} />;
+  if (loading || assetsLoading) return <LoadingPage isLoading={loading || assetsLoading} />;
 
   if (error) {
     return (
-      <div className="bg-primary min-h-screen flex flex-col items-center justify-center">
-        <div className="text-red-500 text-xl mb-4">
+      <div className="flex min-h-screen flex-col items-center justify-center bg-primary">
+        <div className="mb-4 text-xl text-red-500">
           {t("error_colon")} {error}
         </div>
         <button
           onClick={() => window.location.reload()}
-          className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
+          className="rounded bg-blue-500 px-4 py-2 text-white hover:bg-blue-600"
         >
           Перезагрузить страницу
         </button>
@@ -884,27 +827,21 @@ export function GameRoom({
 
   if (!gameState) {
     return (
-      <div className="bg-primary min-h-screen flex flex-col items-center justify-center">
-        <div className="text-red-500 text-xl">
-          {t("error_loading_game_state")}
-        </div>
+      <div className="flex min-h-screen flex-col items-center justify-center bg-primary">
+        <div className="text-xl text-red-500">{t("error_loading_game_state")}</div>
       </div>
     );
   }
 
   const isAnimating = !!gameState.isAnimating;
-  const postLookActions =
-    isCurrentUserTurn && !!currentPlayer?.hasLookedAndMustAct;
+  const postLookActions = isCurrentUserTurn && !!currentPlayer?.hasLookedAndMustAct;
   const postLookCallAmount =
     gameState.lastBlindBet > 0 ? gameState.lastBlindBet * 2 : gameState.minBet;
 
   // ИСПРАВЛЕНИЕ: Улучшенный расчет callAmount с учетом blind ставок
   const callAmount = (() => {
     if (postLookActions) {
-      const result =
-        gameState.lastBlindBet > 0
-          ? gameState.lastBlindBet * 2
-          : gameState.minBet;
+      const result = gameState.lastBlindBet > 0 ? gameState.lastBlindBet * 2 : gameState.minBet;
       console.log(
         `[CALL_AMOUNT_DEBUG] postLookActions: lastBlindBet=${gameState.lastBlindBet}, result=${result}`,
       );
@@ -918,16 +855,13 @@ export function GameRoom({
 
   const minRaiseAmount = (() => {
     if (postLookActions) {
-      return gameState.lastBlindBet > 0
-        ? gameState.lastBlindBet * 2
-        : gameState.minBet;
+      return gameState.lastBlindBet > 0 ? gameState.lastBlindBet * 2 : gameState.minBet;
     }
     return gameState.lastActionAmount * 2;
   })();
 
   const maxRaise = currentPlayer?.balance || 0;
-  const blindBetAmount =
-    gameState.lastBlindBet > 0 ? gameState.lastBlindBet * 2 : gameState.minBet;
+  const blindBetAmount = gameState.lastBlindBet > 0 ? gameState.lastBlindBet * 2 : gameState.minBet;
 
   const canPerformBettingActions = !!(
     isCurrentUserTurn &&
@@ -950,8 +884,7 @@ export function GameRoom({
 
   // ИСПРАВЛЕНИЕ: Дополнительная проверка для look в blind_betting
   // Если у игрока нет денег на blind, но есть на look, то после look call/raise будут disabled
-  const canMakeCallAfterLook =
-    (currentPlayer?.balance || 0) >= blindBetAmount * 2;
+  const canMakeCallAfterLook = (currentPlayer?.balance || 0) >= blindBetAmount * 2;
 
   // ИСПРАВЛЕНИЕ: Правильная логика disabled кнопок с проверкой баланса
   const isCallDisabled = !!(
@@ -1045,11 +978,11 @@ export function GameRoom({
         left: "0",
         width: "100%",
       }}
-      className="flex flex-col relative game-container"
+      className="game-container relative flex flex-col"
     >
       {/* Затемняющий оверлей для фазы вскрытия карт */}
       {winSequenceStep === "showdown" && (
-        <div className="fixed inset-0 bg-black bg-opacity-60 z-20 transition-opacity duration-500" />
+        <div className="fixed inset-0 z-20 bg-black bg-opacity-60 transition-opacity duration-500" />
       )}
 
       {svaraStep === "animating" && winSequenceStep === "none" && (
@@ -1058,14 +991,10 @@ export function GameRoom({
 
       {svaraStep === "joining" &&
         !(gameState.svaraParticipants?.includes(currentUserId) ?? false) && (
-          <SvaraJoinPopup
-            gameState={gameState}
-            userData={userData}
-            actions={actions}
-          />
+          <SvaraJoinPopup gameState={gameState} userData={userData} actions={actions} />
         )}
 
-      <div className="relative z-30 text-white p-4 flex justify-between items-center">
+      <div className="relative z-30 flex items-center justify-between p-4 text-white">
         <h2 className="text-xs font-semibold">
           {t("room_number_colon")}
           {roomId.slice(0, 8)}
@@ -1075,15 +1004,15 @@ export function GameRoom({
             onClick={handleMenuButtonPress}
             className={`transition-all duration-200 ease-in-out hover:opacity-75 ${isMenuButtonPressed ? "button-press" : ""}`}
           >
-            <img src={menuIcon} alt={t("menu")} className="w-5 h-5" />
+            <img src={menuIcon} alt={t("menu")} className="h-5 w-5" />
           </button>
         </div>
       </div>
 
-      <div className="flex-grow relative p-4">
-        <div className="relative flex justify-center items-center min-h-[70vh] w-full p-4 sm:p-5 lg:p-6 game-table-container -mt-8">
-          <div className="relative flex justify-center items-center w-full h-full">
-            <div className="flex-shrink-0 relative z-10">
+      <div className="relative flex-grow p-4">
+        <div className="game-table-container relative -mt-8 flex min-h-[70vh] w-full items-center justify-center p-4 sm:p-5 lg:p-6">
+          <div className="relative flex h-full w-full items-center justify-center">
+            <div className="relative z-10 flex-shrink-0">
               <GameTable
                 gameState={gameState}
                 currentUserId={currentUserId}
@@ -1101,17 +1030,11 @@ export function GameRoom({
             {Array.from({ length: 6 }).map((_, index) => {
               const absolutePosition = index + 1;
               const screenPosition = getScreenPosition(absolutePosition);
-              const player = gameState.players.find(
-                (p) => p.position === absolutePosition,
-              );
+              const player = gameState.players.find((p) => p.position === absolutePosition);
               const positionStyle = getPositionStyle(screenPosition);
-              const positionClasses = getPositionClasses(
-                screenPosition,
-                showCards,
-              );
+              const positionClasses = getPositionClasses(screenPosition, showCards);
 
-              let cardSide =
-                screenPosition === 2 || screenPosition === 3 ? "left" : "right";
+              let cardSide = screenPosition === 2 || screenPosition === 3 ? "left" : "right";
 
               if (screenPosition == 4) {
                 cardSide = "bottom";
@@ -1142,37 +1065,24 @@ export function GameRoom({
               const isTurn = !!(
                 gameState &&
                 player &&
-                gameState.players[gameState.currentPlayerIndex]?.id ===
-                  player.id
+                gameState.players[gameState.currentPlayerIndex]?.id === player.id
               );
-              const chatPhrase = player
-                ? activeChats[player.id]?.phrase
-                : undefined;
+              const chatPhrase = player ? activeChats[player.id]?.phrase : undefined;
 
               return (
-                <div
-                  key={absolutePosition}
-                  style={positionStyle}
-                  className={positionClasses}
-                >
+                <div key={absolutePosition} style={positionStyle} className={positionClasses}>
                   {player ? (
                     (() => {
                       const isCurrentUser =
-                        userData &&
-                        userData.id &&
-                        player.id.toString() === userData.id.toString();
+                        userData && userData.id && player.id.toString() === userData.id.toString();
                       const isWinner = !!(
                         gameState.winners &&
                         gameState.winners.some(
-                          (winner) =>
-                            winner.id.toString() === player.id.toString(),
+                          (winner) => winner.id.toString() === player.id.toString(),
                         )
                       );
-                      const winAmount = isWinner
-                        ? player.lastWinAmount || 0
-                        : 0;
-                      const showWinIndicator =
-                        winSequenceStep === "winner" && isWinner;
+                      const winAmount = isWinner ? player.lastWinAmount || 0 : 0;
+                      const showWinIndicator = winSequenceStep === "winner" && isWinner;
 
                       let notificationType:
                         | "blind"
@@ -1209,10 +1119,7 @@ export function GameRoom({
                       if (isCurrentUser) {
                         const mergedPlayer = {
                           ...player,
-                          username:
-                            userData.username ||
-                            userData.first_name ||
-                            player.username,
+                          username: userData.username || userData.first_name || player.username,
                           avatar: userData.photo_url || player.avatar,
                         };
                         return (
@@ -1270,12 +1177,12 @@ export function GameRoom({
       </div>
 
       {isSeated && (
-        <div className="px-4 -mt-2 pb-4">
+        <div className="-mt-2 px-4 pb-4">
           <div className="flex flex-col items-center space-y-4">
             <div>
               {effectiveGameStatus === "waiting" ? (
-                <div className="p-4 flex items-center justify-center h-full">
-                  <p className="text-white font-bold text-[10px] leading-[150%] tracking-[-0.011em] text-center">
+                <div className="flex h-full items-center justify-center p-4">
+                  <p className="text-center text-[10px] font-bold leading-[150%] tracking-[-0.011em] text-white">
                     {t("waiting_for_players")}
                   </p>
                 </div>
@@ -1299,15 +1206,11 @@ export function GameRoom({
                   isCallDisabled={isCallDisabled || isProcessing}
                   isRaiseDisabled={isRaiseDisabled || isProcessing}
                   isBlindBetDisabled={isBlindBetDisabled || isProcessing}
-                  minBet={
-                    effectiveGameStatus === "blind_betting"
-                      ? blindBetAmount
-                      : minRaiseAmount
-                  }
+                  minBet={effectiveGameStatus === "blind_betting" ? blindBetAmount : minRaiseAmount}
                 />
               ) : gameState?.status === "waiting" ? (
-                <div className="p-4 flex items-center justify-center h-full">
-                  <p className="text-white font-bold text-[10px] leading-[150%] tracking-[-0.011em] text-center">
+                <div className="flex h-full items-center justify-center p-4">
+                  <p className="text-center text-[10px] font-bold leading-[150%] tracking-[-0.011em] text-white">
                     {t("waiting_for_next_round")}
                   </p>
                 </div>
@@ -1363,18 +1266,13 @@ export function GameRoom({
             left: "18px",
           }}
         >
-          <img src={chatButton} alt="Chat" className="w-full h-full" />
+          <img src={chatButton} alt="Chat" className="h-full w-full" />
         </button>
       )}
 
-      {notification && (
-        <Notification
-          type={notification}
-          onClose={() => setNotification(null)}
-        />
-      )}
+      {notification && <Notification type={notification} onClose={() => setNotification(null)} />}
 
-      <div className="fixed inset-0 pointer-events-none" style={{ zIndex: 50 }}>
+      <div className="pointer-events-none fixed inset-0" style={{ zIndex: 50 }}>
         {chipAnimations.map((chip) => (
           <FlyingChip
             key={chip.id}

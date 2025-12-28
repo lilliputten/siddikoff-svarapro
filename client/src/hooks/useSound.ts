@@ -1,11 +1,11 @@
-import { useState, useEffect, useCallback, useMemo, useRef } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 
+import chipSoundSrc from "@/assets/game/chip.mp3";
+import dealSoundSrc from "@/assets/game/deal.mp3";
 // Import sound files
 import foldSoundSrc from "@/assets/game/fold.mp3";
 import turnSoundSrc from "@/assets/game/turn.mp3";
 import winSoundSrc from "@/assets/game/win.mp3";
-import chipSoundSrc from "@/assets/game/chip.mp3";
-import dealSoundSrc from "@/assets/game/deal.mp3";
 
 export type SoundType = "fold" | "turn" | "win" | "chip" | "deal";
 
@@ -72,11 +72,7 @@ export const useSound = () => {
         if (sound) {
           sound.volume = 0.5; // Фиксированная громкость 50%
           sound.currentTime = 0;
-          sound
-            .play()
-            .catch((error) =>
-              console.error(`Error playing sound: ${type}`, error),
-            );
+          sound.play().catch((error) => console.error(`Error playing sound: ${type}`, error));
         }
       } catch (error) {
         console.error(`Error accessing sound: ${type}`, error);

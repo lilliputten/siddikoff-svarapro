@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useEffect, useState } from "react";
 
 export const useFilterState = (): [boolean, (value: boolean) => void] => {
   const [isAvailable, setIsAvailable] = useState(() => {
@@ -6,10 +6,7 @@ export const useFilterState = (): [boolean, (value: boolean) => void] => {
       const saved = localStorage.getItem("isAvailableFilter");
       return saved !== null ? JSON.parse(saved) : false;
     } catch (error) {
-      console.error(
-        "Failed to parse isAvailableFilter from localStorage",
-        error,
-      );
+      console.error("Failed to parse isAvailableFilter from localStorage", error);
       return false;
     }
   });

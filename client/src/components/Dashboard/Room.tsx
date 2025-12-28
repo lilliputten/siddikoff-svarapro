@@ -1,10 +1,11 @@
-import { StyledContainer } from "@/components/StyledContainer";
-import { YellowButton } from "@/components/Button/YellowButton";
-import { useTranslation } from "react-i18next";
-import { apiService } from "@/services/api/api";
 import { useState } from "react";
-import { RoomProps } from "@/types/components";
+import { useTranslation } from "react-i18next";
+
+import { YellowButton } from "@/components/Button/YellowButton";
 import { LoadingPage } from "@/components/LoadingPage";
+import { StyledContainer } from "@/components/StyledContainer";
+import { apiService } from "@/services/api/api";
+import { RoomProps } from "@/types/components";
 
 export function Room({
   roomId,
@@ -66,7 +67,7 @@ export function Room({
   }
 
   return (
-    <StyledContainer className="w-[100%] h-[105px] p-4 rounded-[15px]">
+    <StyledContainer className="h-[105px] w-[100%] rounded-[15px] p-4">
       <div
         className="grid"
         style={{
@@ -75,20 +76,10 @@ export function Room({
           gap: "6px 25px",
         }}
       >
-        <p className="text-sm font-semibold text-[#C9C6CE] text-center m-0">
-          {t("room")}
-        </p>
-        <p className="text-sm font-semibold text-[#C9C6CE] text-center m-0">
-          {t("players")}
-        </p>
-        <p className="text-sm font-semibold text-[#C9C6CE] text-center m-0">
-          {t("stake")}
-        </p>
-        <YellowButton
-          style={{ marginTop: "5px" }}
-          onClick={handleJoin}
-          disabled={isJoining}
-        >
+        <p className="m-0 text-center text-sm font-semibold text-[#C9C6CE]">{t("room")}</p>
+        <p className="m-0 text-center text-sm font-semibold text-[#C9C6CE]">{t("players")}</p>
+        <p className="m-0 text-center text-sm font-semibold text-[#C9C6CE]">{t("stake")}</p>
+        <YellowButton style={{ marginTop: "5px" }} onClick={handleJoin} disabled={isJoining}>
           {t("enter")}
         </YellowButton>
         <div
@@ -102,16 +93,12 @@ export function Room({
             opacity: 0.05,
           }}
         />
-        <p className="text-base font-semibold text-white text-left m-0">
-          №{roomId.slice(0, 8)}
-        </p>
-        <p className="text-base font-semibold text-center m-0">
+        <p className="m-0 text-left text-base font-semibold text-white">№{roomId.slice(0, 8)}</p>
+        <p className="m-0 text-center text-base font-semibold">
           <span style={{ color: "#12B754" }}>{players}</span>
           <span className="text-white"> / 6</span>
         </p>
-        <p className="text-base font-semibold text-white text-center m-0">
-          ${stake}
-        </p>
+        <p className="m-0 text-center text-base font-semibold text-white">${stake}</p>
         <button
           style={{
             height: "21px",

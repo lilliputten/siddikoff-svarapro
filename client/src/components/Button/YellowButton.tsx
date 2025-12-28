@@ -1,6 +1,7 @@
-import { clsx } from "clsx";
-import { ButtonProps } from "@/types/components";
 import { useState } from "react";
+import { clsx } from "clsx";
+
+import { ButtonProps } from "@/types/components";
 
 export function YellowButton({
   children,
@@ -25,8 +26,7 @@ export function YellowButton({
   };
   const finalSizeClasses = sizeClasses[size];
 
-  const activeClasses =
-    "text-black bg-[linear-gradient(180deg,#FFC53F_7.5%,#AF6600_100%)]";
+  const activeClasses = "text-black bg-[linear-gradient(180deg,#FFC53F_7.5%,#AF6600_100%)]";
   const inactiveClasses = "bg-[#48454D] text-[#3B3846]";
 
   const buttonClasses = clsx(
@@ -46,18 +46,13 @@ export function YellowButton({
   );
 
   return (
-    <button
-      onClick={handleClick}
-      className={buttonClasses}
-      disabled={!isActive}
-      {...rest}
-    >
+    <button onClick={handleClick} className={buttonClasses} disabled={!isActive} {...rest}>
       {icon && iconPosition === "left" && (
-        <img src={icon} alt="" className="w-[24px] h-[24px] mr-2" />
+        <img src={icon} alt="" className="mr-2 h-[24px] w-[24px]" />
       )}
       {children}
       {icon && iconPosition === "right" && (
-        <img src={icon} alt="" className="w-[24px] h-[24px] ml-2" />
+        <img src={icon} alt="" className="ml-2 h-[24px] w-[24px]" />
       )}
     </button>
   );

@@ -1,6 +1,8 @@
 import React from "react";
-import chatButtonBg from "@/assets/game/chat.png";
 import { useTranslation } from "react-i18next";
+
+import chatButtonBg from "@/assets/game/chat.png";
+
 import { Slider } from "../Slider";
 
 interface ChatMenuProps {
@@ -46,7 +48,7 @@ export function ChatMenu({ isOpen, onClose, onSelectPhrase }: ChatMenuProps) {
   return (
     <Slider isOpen={isOpen} onClose={onClose} height="317px">
       {/* Content Grid */}
-      <div className="relative z-10 p-4 h-full flex items-center justify-center">
+      <div className="relative z-10 flex h-full items-center justify-center p-4">
         <div className="grid grid-cols-4 gap-x-2 gap-y-3">
           {chatPhrases.map((phrase, index) => (
             <button

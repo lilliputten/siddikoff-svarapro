@@ -1,5 +1,6 @@
-import { ButtonProps } from "@/types/components";
 import { useState } from "react";
+
+import { ButtonProps } from "@/types/components";
 
 export function GreenButton({ children, onClick, ...rest }: ButtonProps) {
   const [isPressed, setIsPressed] = useState(false);
@@ -11,16 +12,15 @@ export function GreenButton({ children, onClick, ...rest }: ButtonProps) {
   };
   return (
     <button
-      className={`text-white rounded-[6px] w-[85px] h-[28px] flex items-center justify-center ${isPressed ? "button-press" : ""}`}
+      className={`flex h-[28px] w-[85px] items-center justify-center rounded-[6px] text-white ${isPressed ? "button-press" : ""}`}
       style={{
         ...rest.style,
         backgroundColor: "rgb(18 183 84)",
-        textShadow:
-          "0px 1px 2px rgba(0, 0, 0, 0.3), 0px 1px 3px rgba(0, 0, 0, 0.15)",
+        textShadow: "0px 1px 2px rgba(0, 0, 0, 0.3), 0px 1px 3px rgba(0, 0, 0, 0.15)",
       }}
       onClick={handleClick}
     >
-      <span className="font-inter font-semibold text-[13px] leading-[20px] text-center">
+      <span className="text-center font-inter text-[13px] font-semibold leading-[20px]">
         {children}
       </span>
     </button>

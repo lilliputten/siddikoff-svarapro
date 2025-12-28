@@ -1,6 +1,8 @@
 import "./AddWalletWindow.css";
-import { useTranslation } from "react-i18next";
+
 import { useState } from "react";
+import { useTranslation } from "react-i18next";
+
 import { AddWalletWindowProps } from "@/types/components";
 
 export function AddWalletWindow({ onClose, onAdd }: AddWalletWindowProps) {
@@ -15,10 +17,7 @@ export function AddWalletWindow({ onClose, onAdd }: AddWalletWindowProps) {
         <p className="add-wallet-text">{t("add_wallet_window_text")}</p>
       </div>
       <div className="add-wallet-buttons">
-        <button
-          className="add-wallet-button add-wallet-add-button"
-          onClick={onAdd}
-        >
+        <button className="add-wallet-button add-wallet-add-button" onClick={onAdd}>
           {t("add")}
         </button>
         <button

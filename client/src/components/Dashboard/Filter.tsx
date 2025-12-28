@@ -1,19 +1,17 @@
-import { useState, useEffect } from "react";
-import { StyledContainer } from "@/components/StyledContainer";
+import { useEffect, useState } from "react";
+import { useTranslation } from "react-i18next";
+
+import { useFilterState } from "@/hooks/useFilterState";
 import { Button } from "@/components/Button/Button";
+import { StyledContainer } from "@/components/StyledContainer";
 import searchIcon from "@/assets/search.svg";
 import slideDownIcon from "@/assets/slideDown.png";
-import { CSSTransition } from "react-transition-group";
-import { SlidePanel } from "./SlidePanel";
-import { useTranslation } from "react-i18next";
 import { FilterProps } from "@/types/components";
-import { useFilterState } from "@/hooks/useFilterState";
 
-export function Filter({
-  onSearchChange,
-  onAvailabilityChange,
-  onRangeChange,
-}: FilterProps) {
+// import { CSSTransition } from "react-transition-group";
+import { SlidePanel } from "./SlidePanel";
+
+export function Filter({ onSearchChange, onAvailabilityChange, onRangeChange }: FilterProps) {
   const [isPanelOpen, setIsPanelOpen] = useState(false);
   const [isToggleOn, setIsToggleOn] = useFilterState();
   const [searchId, setSearchId] = useState("");
@@ -41,9 +39,9 @@ export function Filter({
   };
 
   return (
-    <div className="mb-4 relative" style={{ zIndex: 25 }}>
+    <div className="relative mb-4" style={{ zIndex: 25 }}>
       <StyledContainer
-        className="mx-auto mt-6 w-[93vw] h-[50px]"
+        className="mx-auto mt-6 h-[50px] w-[93vw]"
         contentClassName="w-full h-full flex items-center justify-between p-2"
       >
         <div className="relative w-[104px]">
@@ -52,7 +50,7 @@ export function Filter({
             placeholder={t("room_number")}
             value={searchId}
             onChange={handleSearchChange}
-            className="w-full h-[30px] bg-[rgba(19,18,23,0.34)] p-2 pl-8 rounded-lg text-white text-center text-[10px]"
+            className="h-[30px] w-full rounded-lg bg-[rgba(19,18,23,0.34)] p-2 pl-8 text-center text-[10px] text-white"
             style={{
               boxShadow: "inset 0px 0px 4px rgba(0, 0, 0, 0.25)",
               borderRadius: "6px",
@@ -61,7 +59,7 @@ export function Filter({
           <img
             src={searchIcon}
             alt="Search icon"
-            className="absolute left-2 top-1/2 transform -translate-y-1/2 w-[22px] h-[22px]"
+            className="absolute left-2 top-1/2 h-[22px] w-[22px] -translate-y-1/2 transform"
           />
         </div>
         <Button
@@ -70,17 +68,15 @@ export function Filter({
           iconPosition="right"
           iconClassName={`w-[15px] h-[7px] transition-transform duration-300 ${isPanelOpen ? "rotate-180" : ""}`}
           onClick={handleTogglePanel}
-          className="w-[48px] h-[34px] mx-2"
+          className="mx-2 h-[34px] w-[48px]"
           style={{ fontSize: "10px" }}
         >
           {t("stakes")}
         </Button>
         <div className="flex items-center">
-          <span className="text-white text-[12px] mr-2">
-            {t("available_colon")}
-          </span>
+          <span className="mr-2 text-[12px] text-white">{t("available_colon")}</span>
           <div
-            className="relative w-[40px] h-[20px] rounded-full flex items-center p-0.5 cursor-pointer"
+            className="relative flex h-[20px] w-[40px] cursor-pointer items-center rounded-full p-0.5"
             style={{
               background: isToggleOn
                 ? "linear-gradient(180deg, #AF6600 0%, #FFC53F 100%)"
@@ -89,7 +85,7 @@ export function Filter({
             onClick={handleToggleSwitch}
           >
             <div
-              className="w-[16px] h-[16px] bg-white rounded-full transition-all duration-300"
+              className="h-[16px] w-[16px] rounded-full bg-white transition-all duration-300"
               style={{
                 transform: isToggleOn ? "translateX(20px)" : "translateX(0)",
               }}
@@ -98,11 +94,7 @@ export function Filter({
         </div>
       </StyledContainer>
 
-      <SlidePanel
-        isOpen={isPanelOpen}
-        onClose={handleTogglePanel}
-        onRangeChange={onRangeChange}
-      />
+      <SlidePanel isOpen={isPanelOpen} onClose={handleTogglePanel} onRangeChange={onRangeChange} />
     </div>
   );
 }
