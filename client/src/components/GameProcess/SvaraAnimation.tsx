@@ -1,14 +1,14 @@
-import { useEffect } from "react";
-import { useTranslation } from "react-i18next";
+import { useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
 
-import starIcon from "@/assets/game/star.png";
+import starIcon from '@/assets/game/star.png';
 
 interface SvaraAnimationProps {
   onAnimationComplete: () => void;
 }
 
 export function SvaraAnimation({ onAnimationComplete }: SvaraAnimationProps) {
-  const { t } = useTranslation("common");
+  const { t } = useTranslation('common');
   useEffect(() => {
     const timer = setTimeout(() => {
       onAnimationComplete();
@@ -23,7 +23,7 @@ export function SvaraAnimation({ onAnimationComplete }: SvaraAnimationProps) {
         <div className="mx-2 flex items-center">
           <img src={starIcon} alt="*" className="h-8 w-8" />
           <h1 className="mx-2 text-3xl font-semibold text-white">
-            {t("svara")}
+            {t('svara')}
           </h1>
           <img src={starIcon} alt="*" className="h-8 w-8" />
         </div>

@@ -1,8 +1,8 @@
 export type Transaction = {
-  type: "deposit" | "withdraw";
-  currency: "USDTTON" | "TON";
+  type: 'deposit' | 'withdraw';
+  currency: 'USDTTON' | 'TON';
   amount: number;
-  status: "canceled" | "pending" | "confirmed";
+  status: 'canceled' | 'pending' | 'confirmed';
   tracker_id: string;
   createdAt: string;
 };

@@ -1,19 +1,19 @@
-import { useState } from "react";
-import { useTranslation } from "react-i18next";
+import { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 
-import { GameState } from "@/types/game";
+import { GameState } from '@/types/game';
 
-import lookIcon from "../../assets/game/look.svg";
-import passIcon from "../../assets/game/pass.svg";
-import raiseIcon from "../../assets/game/raise.svg";
+import lookIcon from '../../assets/game/look.svg';
+import passIcon from '../../assets/game/pass.svg';
+import raiseIcon from '../../assets/game/raise.svg';
 
 const formatAmount = (amount: number): string => {
   const num = Number(amount);
   const fixed = num.toFixed(2);
-  if (fixed.endsWith(".00")) {
+  if (fixed.endsWith('.00')) {
     return String(Math.round(num));
   }
-  if (fixed.endsWith("0")) {
+  if (fixed.endsWith('0')) {
     return fixed.slice(0, -1);
   }
   return fixed;
@@ -62,7 +62,7 @@ export function ActionButtons({
   isBlindBetDisabled,
   postLookActions,
 }: ActionButtonsProps) {
-  const { t } = useTranslation("common");
+  const { t } = useTranslation('common');
 
   // Состояния для анимации нажатия каждой кнопки
   const [isPressed, setIsPressed] = useState({
@@ -77,12 +77,12 @@ export function ActionButtons({
     buttonType: keyof typeof isPressed,
     callback: () => void,
   ) => {
-    console.log(
-      "🎯 Button press:",
-      buttonType,
-      "isPressed:",
-      isPressed[buttonType],
-    );
+    // console.log(
+    //   '🎯 Button press:',
+    //   buttonType,
+    //   'isPressed:',
+    //   isPressed[buttonType],
+    // );
     setIsPressed((prev) => ({ ...prev, [buttonType]: true }));
     setTimeout(() => {
       setIsPressed((prev) => ({ ...prev, [buttonType]: false }));
@@ -101,39 +101,39 @@ export function ActionButtons({
           {/* Fold Button */}
           <div className="relative">
             <button
-              onClick={() => handleButtonPress("fold", onFold)}
-              className={`action-button-shadow flex h-[42px] w-[95px] flex-col items-center justify-center rounded-lg text-white ${isPressed.fold ? "button-press" : ""}`}
-              style={{ backgroundColor: "#FF443A" }}
+              onClick={() => handleButtonPress('fold', onFold)}
+              className={`action-button-shadow flex h-[42px] w-[95px] flex-col items-center justify-center rounded-lg text-white ${isPressed.fold ? 'button-press' : ''}`}
+              style={{ backgroundColor: '#FF443A' }}
             >
               <img
                 src={passIcon}
-                alt={t("pass")}
-                style={{ width: "16px", height: "16px" }}
+                alt={t('pass')}
+                style={{ width: '16px', height: '16px' }}
               />
-              <span className="-mt-1">{t("pass")}</span>
+              <span className="-mt-1">{t('pass')}</span>
             </button>
             <div
               className="absolute w-full text-center text-white"
               style={{
                 fontWeight: 500,
-                fontSize: "12px",
-                lineHeight: "100%",
-                bottom: "-15px",
-                left: "50%",
-                transform: "translateX(-50%)",
+                fontSize: '12px',
+                lineHeight: '100%',
+                bottom: '-15px',
+                left: '50%',
+                transform: 'translateX(-50%)',
               }}
             >
-              ({turnTimer}) {t("sec")}
+              ({turnTimer}) {t('sec')}
             </div>
           </div>
 
           {/* Call Button */}
           <button
-            onClick={() => handleButtonPress("call", onCall)}
+            onClick={() => handleButtonPress('call', onCall)}
             className={`action-button-shadow flex h-[42px] w-[95px] flex-col items-center justify-center rounded-lg text-white ${
-              isCallDisabled ? "cursor-not-allowed opacity-50" : ""
-            } ${isPressed.call ? "button-press" : ""}`}
-            style={{ backgroundColor: "#0E5C89" }}
+              isCallDisabled ? 'cursor-not-allowed opacity-50' : ''
+            } ${isPressed.call ? 'button-press' : ''}`}
+            style={{ backgroundColor: '#0E5C89' }}
             disabled={isCallDisabled}
           >
             <span>
@@ -146,24 +146,24 @@ export function ActionButtons({
                   : 0,
               )}
             </span>
-            <span className="-mt-1">{t("pay")}</span>
+            <span className="-mt-1">{t('pay')}</span>
           </button>
 
           {/* Raise Button */}
           <button
-            onClick={() => handleButtonPress("raise", onRaise)}
+            onClick={() => handleButtonPress('raise', onRaise)}
             className={`action-button-shadow flex h-[42px] w-[95px] flex-col items-center justify-center rounded-lg text-white ${
-              isRaiseDisabled ? "cursor-not-allowed opacity-50" : ""
-            } ${isPressed.raise ? "button-press" : ""}`}
-            style={{ backgroundColor: "#56BF00" }}
+              isRaiseDisabled ? 'cursor-not-allowed opacity-50' : ''
+            } ${isPressed.raise ? 'button-press' : ''}`}
+            style={{ backgroundColor: '#56BF00' }}
             disabled={isRaiseDisabled}
           >
             <img
               src={raiseIcon}
-              alt={t("raise")}
-              style={{ width: "19px", height: "14px" }}
+              alt={t('raise')}
+              style={{ width: '19px', height: '14px' }}
             />
-            <span className="-mt-1">{t("raise")}</span>
+            <span className="-mt-1">{t('raise')}</span>
           </button>
         </div>
       </div>
@@ -176,96 +176,96 @@ export function ActionButtons({
         {canFold && (
           <div className="relative">
             <button
-              onClick={() => handleButtonPress("fold", onFold)}
-              className={`action-button-shadow flex h-[42px] w-[95px] flex-col items-center justify-center rounded-lg text-white ${isPressed.fold ? "button-press" : ""}`}
-              style={{ backgroundColor: "#FF443A" }}
+              onClick={() => handleButtonPress('fold', onFold)}
+              className={`action-button-shadow flex h-[42px] w-[95px] flex-col items-center justify-center rounded-lg text-white ${isPressed.fold ? 'button-press' : ''}`}
+              style={{ backgroundColor: '#FF443A' }}
             >
               <img
                 src={passIcon}
-                alt={t("pass")}
-                style={{ width: "16px", height: "16px" }}
+                alt={t('pass')}
+                style={{ width: '16px', height: '16px' }}
               />
-              <span className="-mt-1">{t("pass")}</span>
+              <span className="-mt-1">{t('pass')}</span>
             </button>
             <div
               className="absolute w-full text-center text-white"
               style={{
                 fontWeight: 500,
-                fontSize: "12px",
-                lineHeight: "100%",
-                bottom: "-15px",
-                left: "50%",
-                transform: "translateX(-50%)",
+                fontSize: '12px',
+                lineHeight: '100%',
+                bottom: '-15px',
+                left: '50%',
+                transform: 'translateX(-50%)',
               }}
             >
-              ({turnTimer}) {t("sec")}
+              ({turnTimer}) {t('sec')}
             </div>
           </div>
         )}
 
         {canCall && (
           <button
-            onClick={() => handleButtonPress("call", onCall)}
+            onClick={() => handleButtonPress('call', onCall)}
             className={`action-button-shadow flex h-[42px] w-[95px] flex-col items-center justify-center rounded-lg text-white ${
-              isCallDisabled ? "cursor-not-allowed opacity-50" : ""
-            } ${isPressed.call ? "button-press" : ""}`}
-            style={{ backgroundColor: "#0E5C89" }}
+              isCallDisabled ? 'cursor-not-allowed opacity-50' : ''
+            } ${isPressed.call ? 'button-press' : ''}`}
+            style={{ backgroundColor: '#0E5C89' }}
             disabled={isCallDisabled}
           >
             <span>${formatAmount(callAmount)}</span>
-            <span className="-mt-1">{t("pay")}</span>
+            <span className="-mt-1">{t('pay')}</span>
           </button>
         )}
 
         {canRaise && (
           <button
-            onClick={() => handleButtonPress("raise", onRaise)}
+            onClick={() => handleButtonPress('raise', onRaise)}
             className={`action-button-shadow flex h-[42px] w-[95px] flex-col items-center justify-center rounded-lg text-white ${
-              isRaiseDisabled ? "cursor-not-allowed opacity-50" : ""
-            } ${isPressed.raise ? "button-press" : ""}`}
-            style={{ backgroundColor: "#56BF00" }}
+              isRaiseDisabled ? 'cursor-not-allowed opacity-50' : ''
+            } ${isPressed.raise ? 'button-press' : ''}`}
+            style={{ backgroundColor: '#56BF00' }}
             disabled={isRaiseDisabled}
           >
             <img
               src={raiseIcon}
-              alt={t("raise")}
-              style={{ width: "19px", height: "14px" }}
+              alt={t('raise')}
+              style={{ width: '19px', height: '14px' }}
             />
-            <span className="-mt-1">{t("raise")}</span>
+            <span className="-mt-1">{t('raise')}</span>
           </button>
         )}
 
         {canLook && (
           <button
-            onClick={() => handleButtonPress("look", onLook)}
+            onClick={() => handleButtonPress('look', onLook)}
             className={`action-button-shadow flex h-[42px] w-[95px] flex-col items-center justify-center rounded-lg text-white ${
-              blindButtonsDisabled ? "cursor-not-allowed opacity-50" : ""
-            } ${isPressed.look ? "button-press" : ""}`}
-            style={{ backgroundColor: "#0E5C89" }}
+              blindButtonsDisabled ? 'cursor-not-allowed opacity-50' : ''
+            } ${isPressed.look ? 'button-press' : ''}`}
+            style={{ backgroundColor: '#0E5C89' }}
             disabled={blindButtonsDisabled}
           >
             <img
               src={lookIcon}
-              alt={t("open")}
-              style={{ width: "42px", height: "13px" }}
+              alt={t('open')}
+              style={{ width: '42px', height: '13px' }}
             />
-            <span className="-mt-1">{t("open")}</span>
+            <span className="-mt-1">{t('open')}</span>
           </button>
         )}
 
         {canBlindBet && (
           <button
-            onClick={() => handleButtonPress("blindBet", onBlindBet)}
+            onClick={() => handleButtonPress('blindBet', onBlindBet)}
             className={`action-button-shadow flex h-[42px] w-[95px] flex-col items-center justify-center rounded-lg text-white ${
               blindButtonsDisabled || isBlindBetDisabled
-                ? "cursor-not-allowed opacity-50"
-                : ""
-            } ${isPressed.blindBet ? "button-press" : ""}`}
-            style={{ backgroundColor: "#0E5C89" }}
+                ? 'cursor-not-allowed opacity-50'
+                : ''
+            } ${isPressed.blindBet ? 'button-press' : ''}`}
+            style={{ backgroundColor: '#0E5C89' }}
             disabled={blindButtonsDisabled || isBlindBetDisabled}
           >
             <span>${formatAmount(minBet)}</span>
-            <span className="-mt-1">{t("blind")}</span>
+            <span className="-mt-1">{t('blind')}</span>
           </button>
         )}
       </div>

@@ -1,30 +1,30 @@
-import { useCallback, useEffect, useMemo, useState } from "react";
-import { isMiniAppDark, retrieveLaunchParams } from "@telegram-apps/sdk-react";
-import { AppRoot } from "@telegram-apps/telegram-ui";
-import axios from "axios";
-import { Socket } from "socket.io-client";
+import { useCallback, useEffect, useMemo, useState } from 'react';
+import { isMiniAppDark, retrieveLaunchParams } from '@telegram-apps/sdk-react';
+import { AppRoot } from '@telegram-apps/telegram-ui';
+import axios from 'axios';
+import { Socket } from 'socket.io-client';
 
-import { ErrorAlert } from "./components/ErrorAlert";
-import { Notification } from "./components/Notification";
-import { PopSuccess } from "./components/PopSuccess";
-import { TurnPhoneOver } from "./components/TurnPhoneOver";
-import { PositionsProvider } from "./context/PositionsContext";
-import { SoundProvider } from "./context/SoundContext";
-import { useAppBackButton } from "./hooks/useAppBackButton";
-import { useAppUpdate } from "./hooks/useAppUpdate";
-import { AddWallet } from "./pages/AddWallet";
-import { ConfirmDeposit } from "./pages/ConfirmDeposit";
-import { ConfirmWithdraw } from "./pages/ConfirmWithdraw";
-import { Dashboard } from "./pages/Dashboard";
-import { Deposit } from "./pages/Deposit";
-import { DepositHistory } from "./pages/DepositHistory";
-import { GameRoom } from "./pages/GameRoom";
-import { More } from "./pages/More";
-import { Withdraw } from "./pages/Withdraw";
-import { apiService } from "./services/api/api";
-import { initSocket } from "./services/websocket";
-import { NotificationType } from "./types/components";
-import { initTelegramSdk } from "./utils/init";
+import { ErrorAlert } from './components/ErrorAlert';
+import { Notification } from './components/Notification';
+import { PopSuccess } from './components/PopSuccess';
+import { TurnPhoneOver } from './components/TurnPhoneOver';
+import { PositionsProvider } from './context/PositionsContext';
+import { SoundProvider } from './context/SoundContext';
+import { useAppBackButton } from './hooks/useAppBackButton';
+import { useAppUpdate } from './hooks/useAppUpdate';
+import { AddWallet } from './pages/AddWallet';
+import { ConfirmDeposit } from './pages/ConfirmDeposit';
+import { ConfirmWithdraw } from './pages/ConfirmWithdraw';
+import { Dashboard } from './pages/Dashboard';
+import { Deposit } from './pages/Deposit';
+import { DepositHistory } from './pages/DepositHistory';
+import { GameRoom } from './pages/GameRoom';
+import { More } from './pages/More';
+import { Withdraw } from './pages/Withdraw';
+import { apiService } from './services/api/api';
+import { initSocket } from './services/websocket';
+import { NotificationType } from './types/components';
+import { initTelegramSdk } from './utils/init';
 
 interface LaunchParams {
   initData?: string;
@@ -68,33 +68,33 @@ interface UserProfile {
 
 function isErrorResponse(data: unknown): data is { message: string } {
   return (
-    typeof data === "object" &&
+    typeof data === 'object' &&
     data !== null &&
-    "message" in data &&
-    typeof (data as { message: string }).message === "string"
+    'message' in data &&
+    typeof (data as { message: string }).message === 'string'
   );
 }
 
 type Page =
-  | "dashboard"
-  | "more"
-  | "deposit"
-  | "confirmDeposit"
-  | "withdraw"
-  | "confirmWithdraw"
-  | "addWallet"
-  | "depositHistory"
-  | "gameRoom";
+  | 'dashboard'
+  | 'more'
+  | 'deposit'
+  | 'confirmDeposit'
+  | 'withdraw'
+  | 'confirmWithdraw'
+  | 'addWallet'
+  | 'depositHistory'
+  | 'gameRoom';
 
 function App() {
   const isDark = isMiniAppDark();
   const [error, setError] = useState<string | null>(null);
   const [isSdkInitialized, setIsSdkInitialized] = useState(false);
-  const [currentPage, setCurrentPage] = useState<Page>("dashboard");
+  const [currentPage, setCurrentPage] = useState<Page>('dashboard');
   const [pageData, setPageData] = useState<PageData | null>(null);
-  const [balance, setBalance] = useState("0.00");
+  const [balance, setBalance] = useState('0.00');
   const [walletAddress, setWalletAddress] = useState<string | null>(null);
-  const [withdrawAmount, setWithdrawAmount] = useState("");
+  const [withdrawAmount, setWithdrawAmount] = useState('');
   const [socket, setSocket] = useState<Socket | null>(null);
   const [successMessage, setSuccessMessage] = useState<string | null>(null);
   const [notification, setNotification] = useState<NotificationType | null>(
@@ -109,7 +109,8 @@ function App() {
       setIsPhoneVertical(true);
     }
 
-    window.addEventListener("resize", () => {
+    window.addEventListener('resize', () => {
+      // eslint-disable-next-line no-console
       console.log(window.innerWidth, window.innerHeight);
       if (window.innerWidth >= window.innerHeight) {
         setIsPhoneVertical(false);
@@ -123,22 +124,22 @@ function App() {
 
   const handleBack = useCallback(() => {
     if (
-      currentPage === "more" ||
-      currentPage === "deposit" ||
-      currentPage === "withdraw" ||
-      currentPage === "addWallet" ||
-      currentPage === "depositHistory" ||
-      currentPage === "gameRoom"
+      currentPage === 'more' ||
+      currentPage === 'deposit' ||
+      currentPage === 'withdraw' ||
+      currentPage === 'addWallet' ||
+      currentPage === 'depositHistory' ||
+      currentPage === 'gameRoom'
     ) {
-      setCurrentPage("dashboard");
-    } else if (currentPage === "confirmDeposit") {
-      setCurrentPage("deposit");
-    } else if (currentPage === "confirmWithdraw") {
-      setCurrentPage("withdraw");
+      setCurrentPage('dashboard');
+    } else if (currentPage === 'confirmDeposit') {
+      setCurrentPage('deposit');
+    } else if (currentPage === 'confirmWithdraw') {
+      setCurrentPage('withdraw');
     }
   }, [currentPage]);
 
-  useAppBackButton(isSdkInitialized && currentPage !== "dashboard", handleBack);
+  useAppBackButton(isSdkInitialized && currentPage !== 'dashboard', handleBack);
 
   const userData = useMemo(() => {
     const params = retrieveLaunchParams() as LaunchParams;
@@ -156,8 +157,9 @@ function App() {
         await initTelegramSdk();
         setIsSdkInitialized(true);
       } catch (e) {
-        console.error("Failed to initialize SDK:", e);
-        setError("Failed to initialize Telegram SDK");
+        // eslint-disable-next-line no-console
+        console.error('Failed to initialize SDK:', e);
+        setError('Failed to initialize Telegram SDK');
       }
 
       const launchParams = retrieveLaunchParams() as LaunchParams;
@@ -166,9 +168,9 @@ function App() {
       if (!initData && launchParams.tgWebAppData) {
         initData = new URLSearchParams(
           Object.entries(launchParams.tgWebAppData)
-            .filter(([key]) => key !== "hash" && key !== "signature")
+            .filter(([key]) => key !== 'hash' && key !== 'signature')
             .map(([key, value]) => {
-              if (typeof value === "object" && value !== null) {
+              if (typeof value === 'object' && value !== null) {
                 return [key, JSON.stringify(value)];
               }
               return [key, value.toString()];
@@ -178,7 +180,7 @@ function App() {
 
       const loadData = async () => {
         if (!initData) {
-          setError("Telegram initialization data not found.");
+          setError('Telegram initialization data not found.');
           return;
         }
 
@@ -188,9 +190,9 @@ function App() {
 
           if (
             launchParams.startPayload &&
-            launchParams.startPayload.startsWith("join_")
+            launchParams.startPayload.startsWith('join_')
           ) {
-            const parts = launchParams.startPayload.split("_");
+            const parts = launchParams.startPayload.split('_');
             if (parts.length > 2) {
               // join_roomId_referrerId
               roomIdFromPayload = parts[1];
@@ -205,22 +207,22 @@ function App() {
           const profile = (await apiService.getProfile()) as UserProfile;
           setBalance(
             profile.balance !== undefined
-              ? typeof profile.balance === "number"
+              ? typeof profile.balance === 'number'
                 ? profile.balance.toFixed(2)
                 : parseFloat(profile.balance).toFixed(2)
-              : "0.00",
+              : '0.00',
           );
           setWalletAddress(profile.walletAddress || null);
 
           if (roomIdFromPayload) {
             try {
               await apiService.joinRoom(roomIdFromPayload);
-              handleSetCurrentPage("gameRoom", {
+              handleSetCurrentPage('gameRoom', {
                 roomId: roomIdFromPayload,
                 autoSit: true,
               });
             } catch (error) {
-              let errorMessage = "";
+              let errorMessage = '';
               if (
                 axios.isAxiosError(error) &&
                 isErrorResponse(error.response?.data)
@@ -229,14 +231,15 @@ function App() {
               }
 
               if (
-                errorMessage.toLowerCase().includes("insufficient") ||
-                errorMessage.toLowerCase().includes("funds")
+                errorMessage.toLowerCase().includes('insufficient') ||
+                errorMessage.toLowerCase().includes('funds')
               ) {
-                handleSetCurrentPage("deposit");
+                handleSetCurrentPage('deposit');
               } else {
-                console.error("Failed to join room:", error);
-                setCurrentPage("dashboard");
-                setNotification("gameJoinError");
+                // eslint-disable-next-line no-console
+                console.error('Failed to join room:', error);
+                setCurrentPage('dashboard');
+                setNotification('gameJoinError');
               }
             }
           }
@@ -244,8 +247,8 @@ function App() {
           // Создаем единое WebSocket соединение
           if (!socket) {
             const socketInstance = initSocket(profile.telegramId, {
-              username: profile.username || "Unknown",
-              photo_url: profile.avatar || "",
+              username: profile.username || 'Unknown',
+              photo_url: profile.avatar || '',
             });
             setSocket(socketInstance);
 
@@ -258,14 +261,14 @@ function App() {
             };
 
             window.addEventListener(
-              "balanceUpdated",
+              'balanceUpdated',
               handleBalanceUpdate as EventListener,
             );
 
             // Очистка обработчика при размонтировании
             return () => {
               window.removeEventListener(
-                "balanceUpdated",
+                'balanceUpdated',
                 handleBalanceUpdate as EventListener,
               );
             };
@@ -273,17 +276,18 @@ function App() {
         } catch (error) {
           const apiError = error as ApiError;
           const errorMessage =
-            typeof apiError === "string"
+            typeof apiError === 'string'
               ? apiError
-              : apiError.message || "Unknown error";
+              : apiError.message || 'Unknown error';
+          // eslint-disable-next-line no-console
           console.error(
-            "Login error:",
+            'Login error:',
             errorMessage,
-            typeof apiError === "object" && apiError.response
+            typeof apiError === 'object' && apiError.response
               ? apiError.response.data
-              : "No response data",
+              : 'No response data',
           );
-          setError("Failed to load data. Please try again later.");
+          setError('Failed to load data. Please try again later.');
         }
       };
 
@@ -302,7 +306,7 @@ function App() {
   return (
     <AppRoot
       className="overflow-x-hidden"
-      appearance={isDark ? "dark" : "light"}
+      appearance={isDark ? 'dark' : 'light'}
       platform="base"
     >
       <SoundProvider>
@@ -321,41 +325,41 @@ function App() {
         {!isPhoneVertical && <TurnPhoneOver />}
         {error ? (
           <ErrorAlert code={undefined} customMessage={error} />
-        ) : currentPage === "more" ? (
+        ) : currentPage === 'more' ? (
           <More userData={userData} setCurrentPage={handleSetCurrentPage} />
-        ) : currentPage === "deposit" ? (
+        ) : currentPage === 'deposit' ? (
           <Deposit setCurrentPage={handleSetCurrentPage} />
-        ) : currentPage === "confirmDeposit" &&
+        ) : currentPage === 'confirmDeposit' &&
           pageData &&
           pageData.address &&
           pageData.trackerId ? (
           <ConfirmDeposit
             address={pageData.address}
-            currency={pageData.currency ?? "USDTTON"}
+            currency={pageData.currency ?? 'USDTTON'}
             trackerId={pageData.trackerId}
           />
-        ) : currentPage === "withdraw" ? (
+        ) : currentPage === 'withdraw' ? (
           <Withdraw
             balance={balance}
             setCurrentPage={handleSetCurrentPage}
             setWithdrawAmount={setWithdrawAmount}
           />
-        ) : currentPage === "confirmWithdraw" ? (
+        ) : currentPage === 'confirmWithdraw' ? (
           <ConfirmWithdraw
             withdrawAmount={withdrawAmount}
-            walletAddress={walletAddress || ""}
+            walletAddress={walletAddress || ''}
           />
-        ) : currentPage === "addWallet" ? (
+        ) : currentPage === 'addWallet' ? (
           <AddWallet
             setCurrentPage={handleSetCurrentPage}
             setWalletAddress={setWalletAddress}
           />
-        ) : currentPage === "depositHistory" ? (
+        ) : currentPage === 'depositHistory' ? (
           <DepositHistory
             setCurrentPage={handleSetCurrentPage}
             userId={String(userData.id)}
           />
-        ) : currentPage === "gameRoom" && pageData && pageData.roomId ? (
+        ) : currentPage === 'gameRoom' && pageData && pageData.roomId ? (
           <PositionsProvider>
             <GameRoom
               roomId={pageData.roomId}
@@ -368,7 +372,7 @@ function App() {
           </PositionsProvider>
         ) : (
           <Dashboard
-            onMoreClick={() => handleSetCurrentPage("more")}
+            onMoreClick={() => handleSetCurrentPage('more')}
             setCurrentPage={handleSetCurrentPage}
             balance={balance}
             walletAddress={walletAddress}

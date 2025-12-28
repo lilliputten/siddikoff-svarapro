@@ -32,6 +32,8 @@
   },
   "scripts": {
     "type-check-all": "echo --Run typescript linter-- && pnpm --filter server run type-check && pnpm --filter client run type-check",
+    "format": "prettier --write --cache .",
+    "format-quick": "pretty-quick --write --cache .",
     "format-all": "pnpm --filter svara-pro-server --filter svara-pro-bot --filter svara-pro-client --filter svara-pro-service-bot format",
     "lint-all": "pnpm --filter svara-pro-server --filter svara-pro-bot --filter svara-pro-client --filter svara-pro-service-bot lint",
     "check-all": "echo --Run all pre-commit check-ups-- && npm-run-all lint-all && echo --All checks passed--",

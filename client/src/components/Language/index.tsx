@@ -1,13 +1,13 @@
-import { useState } from "react";
-import { useTranslation } from "react-i18next";
+import { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 
-import { useLanguage } from "@/hooks/useLanguage";
+import { useLanguage } from '@/hooks/useLanguage';
 
-import { Slider } from "../Slider";
+import { Slider } from '../Slider';
 
 const LANGUAGES = [
-  { code: "ru", labelKey: "russian" },
-  { code: "en", labelKey: "english" },
+  { code: 'ru', labelKey: 'russian' },
+  { code: 'en', labelKey: 'english' },
 ];
 
 interface LanguageSelectorProps {
@@ -22,7 +22,7 @@ export function LanguageSelector({
   zIndex,
 }: LanguageSelectorProps) {
   const { currentLanguage, changeLanguage } = useLanguage();
-  const { t } = useTranslation("common");
+  const { t } = useTranslation('common');
   const [pressed, setPressed] = useState<string | null>(null);
 
   const handleSelect = (code: string) => {
@@ -40,11 +40,11 @@ export function LanguageSelector({
           const isActive = currentLanguage === lang.code;
           const isPressed = pressed === lang.code;
 
-          let background = "none";
+          let background = 'none';
           if (isActive) {
-            background = "#131217";
+            background = '#131217';
           } else if (isPressed) {
-            background = "#bebebe"; // Darker for pressed
+            background = '#bebebe'; // Darker for pressed
           }
 
           return (
@@ -55,12 +55,12 @@ export function LanguageSelector({
                 height: 39,
                 background: background,
                 borderRadius: isActive ? 8 : 0,
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
                 marginBottom: 8,
-                cursor: "pointer",
-                transition: "background 0.2s",
+                cursor: 'pointer',
+                transition: 'background 0.2s',
               }}
               onClick={() => handleSelect(lang.code)}
               onMouseDown={() => setPressed(lang.code)}
@@ -72,10 +72,10 @@ export function LanguageSelector({
                 style={{
                   fontWeight: 600,
                   fontSize: 16,
-                  fontStyle: "normal",
-                  lineHeight: "24px",
+                  fontStyle: 'normal',
+                  lineHeight: '24px',
                   letterSpacing: -0.5,
-                  color: "#fff",
+                  color: '#fff',
                   opacity: isActive ? 1 : 0.8,
                   paddingLeft: 12,
                   paddingRight: 12,

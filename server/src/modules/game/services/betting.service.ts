@@ -1,5 +1,6 @@
 import { Injectable } from '@nestjs/common';
-import { GameState, Player, GameAction } from '../../../types/game';
+
+import { GameAction, GameState, Player } from '../../../types/game';
 import { FinancesService } from '../../finances/finances.service';
 
 @Injectable()

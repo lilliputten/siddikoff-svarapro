@@ -1,12 +1,12 @@
-import React, { useState } from "react";
-import { useTranslation } from "react-i18next";
+import React, { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 
-import completeIcon from "@/assets/completeSmallGreen.png";
-import incompleteIcon from "@/assets/completeSmallGrey.png";
-import dollarIcon from "@/assets/dollar.png";
-import lockIcon from "@/assets/lock.png";
-import { apiService } from "@/services/api/api";
-import { CreatePrivateProps } from "@/types/components";
+import completeIcon from '@/assets/completeSmallGreen.png';
+import incompleteIcon from '@/assets/completeSmallGrey.png';
+import dollarIcon from '@/assets/dollar.png';
+import lockIcon from '@/assets/lock.png';
+import { apiService } from '@/services/api/api';
+import { CreatePrivateProps } from '@/types/components';
 
 export const CreatePrivate: React.FC<CreatePrivateProps> = ({
   onClose,
@@ -16,9 +16,9 @@ export const CreatePrivate: React.FC<CreatePrivateProps> = ({
   setNotification,
   setIsCreatingRoom,
 }) => {
-  const { t } = useTranslation("common");
-  const [password, setPassword] = useState("");
-  const [stake, setStake] = useState("");
+  const { t } = useTranslation('common');
+  const [password, setPassword] = useState('');
+  const [stake, setStake] = useState('');
   const [isPasswordValid, setIsPasswordValid] = useState(false);
   const [isStakeValid, setIsStakeValid] = useState(false);
   const [isProcessing, setIsProcessing] = useState(false);
@@ -48,7 +48,7 @@ export const CreatePrivate: React.FC<CreatePrivateProps> = ({
     const userBalance = parseFloat(balance);
 
     if (userBalance < bet * 10) {
-      setNotification("insufficientBalance");
+      setNotification('insufficientBalance');
       return;
     }
 
@@ -61,7 +61,7 @@ export const CreatePrivate: React.FC<CreatePrivateProps> = ({
 
     const startTime = Date.now();
     try {
-      const room = await apiService.createRoom(bet, "private", password);
+      const room = await apiService.createRoom(bet, 'private', password);
 
       const elapsedTime = Date.now() - startTime;
       const remainingTime = 3000 - elapsedTime;
@@ -70,11 +70,11 @@ export const CreatePrivate: React.FC<CreatePrivateProps> = ({
         await new Promise((resolve) => setTimeout(resolve, remainingTime));
       }
 
-      setCurrentPage("gameRoom", { roomId: room.roomId, autoSit: true });
+      setCurrentPage('gameRoom', { roomId: room.roomId, autoSit: true });
     } catch (error: unknown) {
       setError(
         (error as { response?: { data?: { message?: string } } }).response?.data
-          ?.message || "Failed to create room",
+          ?.message || 'Failed to create room',
       );
       setIsCreatingRoom(false); // Hide loading on error
     }
@@ -91,7 +91,7 @@ export const CreatePrivate: React.FC<CreatePrivateProps> = ({
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50 backdrop-blur-sm">
       <div className="relative flex h-[215px] w-[316px] flex-col items-center rounded-lg bg-[#47444C] px-4 py-4">
         <h2 className="mb-4 text-lg font-semibold text-white">
-          {t("create_private_room")}
+          {t('create_private_room')}
         </h2>
         {error && <p className="mb-2 text-sm text-red-500">{error}</p>}
         <div className="relative mb-4 w-full">
@@ -105,7 +105,7 @@ export const CreatePrivate: React.FC<CreatePrivateProps> = ({
             inputMode="numeric"
             value={password}
             onChange={handlePasswordChange}
-            placeholder={t("come_up_with_a_password")}
+            placeholder={t('come_up_with_a_password')}
             className="h-[36px] w-full rounded-lg bg-[#13121780] pl-10 pr-10 text-center text-base font-normal text-white"
           />
           <img
@@ -125,7 +125,7 @@ export const CreatePrivate: React.FC<CreatePrivateProps> = ({
             inputMode="decimal"
             value={stake}
             onChange={handleStakeChange}
-            placeholder={t("min_stake")}
+            placeholder={t('min_stake')}
             className="h-[36px] w-full rounded-lg bg-[#13121780] pl-10 pr-10 text-center text-base font-normal text-white"
           />
           <img
@@ -140,14 +140,14 @@ export const CreatePrivate: React.FC<CreatePrivateProps> = ({
             onClick={handleCreate}
             disabled={!isFormValid || isProcessing}
           >
-            {t("create")}
+            {t('create')}
           </button>
           <button
             className="h-[49px] w-[164px] border-t border-white border-opacity-10 text-[#5F8BE7]"
             onClick={handleCancel}
             disabled={isProcessing}
           >
-            {t("cancel")}
+            {t('cancel')}
           </button>
         </div>
       </div>

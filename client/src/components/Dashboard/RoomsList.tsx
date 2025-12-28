@@ -1,13 +1,13 @@
-import { useEffect, useState } from "react";
-import { useTranslation } from "react-i18next";
+import { useEffect, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 
-import { Button } from "@/components/Button/Button";
-import { RoomsListProps } from "@/types/components";
-import { Room } from "@/types/game";
+import { Button } from '@/components/Button/Button';
+import { RoomsListProps } from '@/types/components';
+import { Room } from '@/types/game';
 
-import { Room as RoomComponent } from "./Room";
+import { Room as RoomComponent } from './Room';
 
-import "./RoomsList.css";
+import './RoomsList.css';
 
 const ITEMS_PER_PAGE = 10;
 
@@ -20,25 +20,25 @@ export function RoomsList({
   balance,
   setNotification,
 }: RoomsListProps) {
-  const { t } = useTranslation("common");
+  const { t } = useTranslation('common');
   const [currentPage, setPage] = useState(1);
   const [rooms, setRooms] = useState<Room[]>([]);
 
   useEffect(() => {
     if (socket) {
       const handleRoomsUpdate = (data: { action: string; rooms?: Room[] }) => {
-        if (data.action === "initial" || data.action === "update") {
+        if (data.action === 'initial' || data.action === 'update') {
           if (data.rooms) {
             setRooms(data.rooms);
           }
         }
       };
 
-      socket.on("rooms", handleRoomsUpdate);
-      socket.emit("request_rooms");
+      socket.on('rooms', handleRoomsUpdate);
+      socket.emit('request_rooms');
 
       return () => {
-        socket.off("rooms", handleRoomsUpdate);
+        socket.off('rooms', handleRoomsUpdate);
       };
     }
   }, [socket]);
@@ -48,7 +48,7 @@ export function RoomsList({
   }, [searchId, isAvailableFilter, stakeRange]);
 
   const filteredRooms = rooms.filter((room) => {
-    const matchesSearch = searchId === "" || room.roomId === searchId;
+    const matchesSearch = searchId === '' || room.roomId === searchId;
     const matchesAvailability =
       !isAvailableFilter || room.players.length < room.maxPlayers;
     const matchesStake =
@@ -57,7 +57,7 @@ export function RoomsList({
       matchesSearch &&
       matchesAvailability &&
       matchesStake &&
-      room.type === "public"
+      room.type === 'public'
     ); // Только публичные
   });
 
@@ -71,7 +71,7 @@ export function RoomsList({
   return (
     <div className="mx-auto w-[93vw] space-y-4">
       <p className="adaprive_font mb-2 text-center text-white">
-        {t("join_game_now")}
+        {t('join_game_now')}
       </p>
       {paginatedRooms.length > 0 ? (
         paginatedRooms.map((room) => (
@@ -86,7 +86,7 @@ export function RoomsList({
           />
         ))
       ) : (
-        <p className="text-center text-white">{t("rooms_not_found")}</p>
+        <p className="text-center text-white">{t('rooms_not_found')}</p>
       )}
       {totalPages > 1 && (
         <div className="mt-4 flex justify-center space-x-2">

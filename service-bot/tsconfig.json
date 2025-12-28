@@ -17,11 +17,8 @@
     "noImplicitReturns": true,
     "noFallthroughCasesInSwitch": true,
     "noUncheckedIndexedAccess": true,
-    "typeRoots": [
-      "./node_modules/@types",
-      "./src/types",
-      "./node_modules/@telegraf/types"
-    ],
+    "lib": ["dom", "dom.iterable", "esnext", "ES2020"],
+    "typeRoots": ["./node_modules/@types", "./src/@types", "./src/types"],
     "types": ["node"]
   },
   "include": ["src/**/*"],

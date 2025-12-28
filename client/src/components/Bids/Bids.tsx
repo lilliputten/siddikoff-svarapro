@@ -1,9 +1,9 @@
-import { HTMLAttributes, useContext, useEffect, useRef } from "react";
+import { HTMLAttributes, useContext, useEffect, useRef } from 'react';
 
-import { PositionsContext } from "@/context/PositionsContext";
-import { cn } from "@/utils/cn";
+import { PositionsContext } from '@/context/PositionsContext';
+import { cn } from '@/utils/cn';
 
-import { Coin } from "../Coin/Coin";
+import { Coin } from '../Coin/Coin';
 
 interface Props extends HTMLAttributes<HTMLDivElement> {
   bet?: number;
@@ -28,15 +28,15 @@ export function Bids({ className }: Props) {
 
     onResizeHandler();
 
-    document.addEventListener("resize", onResizeHandler);
+    document.addEventListener('resize', onResizeHandler);
 
-    return () => document.removeEventListener("resize", onResizeHandler);
+    return () => document.removeEventListener('resize', onResizeHandler);
   }, [changeBidsPosition]);
 
   return (
     <div
       className={cn(
-        "absolute left-[47%] top-[51%] z-30 -translate-x-1/2",
+        'absolute left-[47%] top-[51%] z-30 -translate-x-1/2',
         className,
       )}
       id="bids"

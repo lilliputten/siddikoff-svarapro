@@ -1,6 +1,6 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from 'react';
 
-import coinImage from "../../assets/game/coin.png";
+import coinImage from '../../assets/game/coin.png';
 
 interface FlyingChipProps {
   fromX: number;
@@ -72,8 +72,8 @@ const FlyingChip: React.FC<FlyingChipProps> = ({
       style={{
         left: `${position.x}px`,
         top: `${position.y}px`,
-        width: "22px",
-        height: "18px",
+        width: '22px',
+        height: '18px',
         zIndex: 1000,
       }}
     >

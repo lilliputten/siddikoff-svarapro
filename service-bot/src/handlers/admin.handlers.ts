@@ -1,9 +1,10 @@
-import { getMessage } from "../locales/index.js";
-import { AdminService } from "../services/admin.service.js";
-import { ApiService } from "../services/api.service.js";
-import { StatsService } from "../services/stats.service.js";
-import { UsersService } from "../services/users.service.js";
-import { ServiceBotContext } from "../types/index.js";
+/* eslint-disable no-console */
+import { getMessage } from '../locales/index.js';
+import { AdminService } from '../services/admin.service.js';
+import { ApiService } from '../services/api.service.js';
+import { StatsService } from '../services/stats.service.js';
+import { UsersService } from '../services/users.service.js';
+import { ServiceBotContext } from '../types/index.js';
 
 export class AdminHandlers {
   private apiService: ApiService;
@@ -21,11 +22,11 @@ export class AdminHandlers {
     const telegramId = ctx.from?.id.toString();
     if (!telegramId) return;
 
-    const locale = "ru";
+    const locale = 'ru';
 
     // Проверяем, есть ли пользователь в списке админов
     if (!this.adminService.isInAdminList(telegramId)) {
-      await ctx.reply(getMessage(locale, "admin.notInAdminList"));
+      await ctx.reply(getMessage(locale, 'admin.notInAdminList'));
       return;
     }
 
@@ -46,7 +47,7 @@ export class AdminHandlers {
         awaitingNewPassword: true,
       });
 
-      await ctx.reply(getMessage(locale, "admin.firstTimeAdmin"));
+      await ctx.reply(getMessage(locale, 'admin.firstTimeAdmin'));
     } else {
       // Есть пароль - вводим
       this.adminService.setLoginState(telegramId, {
@@ -55,7 +56,7 @@ export class AdminHandlers {
         awaitingNewPassword: false,
       });
 
-      await ctx.reply(getMessage(locale, "admin.enterPassword"));
+      await ctx.reply(getMessage(locale, 'admin.enterPassword'));
     }
   }
 
@@ -64,19 +65,19 @@ export class AdminHandlers {
     const telegramId = ctx.from?.id.toString();
     if (!telegramId) return;
 
-    const locale = "ru";
+    const locale = 'ru';
 
     // Проверяем, ожидается ли ввод для вывода средств из системного кошелька
     const withdrawSession = this.adminService.getWithdrawSession(telegramId);
     if (withdrawSession) {
-      if (!ctx.message || !("text" in ctx.message)) return;
+      if (!ctx.message || !('text' in ctx.message)) return;
       const text = ctx.message.text;
       if (!text) return;
 
       let amount: number | undefined;
 
       switch (withdrawSession.step) {
-        case "details": // We reuse 'details' sequence for number -> bank -> owner
+        case 'details': // We reuse 'details' sequence for number -> bank -> owner
           if (!withdrawSession.number) {
             await this.handleSystemWithdrawReceiverInput(ctx, text);
           } else if (!withdrawSession.bankname) {
@@ -85,10 +86,10 @@ export class AdminHandlers {
             await this.handleSystemWithdrawOwnerInput(ctx, text);
           }
           break;
-        case "amount":
+        case 'amount':
           amount = parseFloat(text);
           if (isNaN(amount)) {
-            await ctx.reply("⚠️ Пожалуйста, введите корректное число.");
+            await ctx.reply('⚠️ Пожалуйста, введите корректное число.');
             return;
           }
           await this.handleSystemWithdrawAmountInput(ctx, amount);
@@ -100,7 +101,7 @@ export class AdminHandlers {
     // Проверяем, ожидается ли ввод суммы для изменения баланса
     const balanceState = this.adminService.getBalanceState(telegramId);
     if (balanceState) {
-      if (!ctx.message || !("text" in ctx.message)) return;
+      if (!ctx.message || !('text' in ctx.message)) return;
       const amount = ctx.message.text;
       if (!amount) return;
 
@@ -110,7 +111,7 @@ export class AdminHandlers {
 
     // Проверяем, ожидается ли поиск
     if (this.adminService.isInSearchState(telegramId)) {
-      if (!ctx.message || !("text" in ctx.message)) return;
+      if (!ctx.message || !('text' in ctx.message)) return;
       const query = ctx.message.text;
       if (!query) return;
 
@@ -123,13 +124,13 @@ export class AdminHandlers {
     const loginState = this.adminService.getLoginState(telegramId);
     if (!loginState) return;
 
-    if (!ctx.message || !("text" in ctx.message)) return;
+    if (!ctx.message || !('text' in ctx.message)) return;
     const password = ctx.message.text;
     if (!password) return;
 
     // Проверяем формат пароля
     if (!this.adminService.validatePassword(password)) {
-      await ctx.reply(getMessage(locale, "errors.invalidPassword"));
+      await ctx.reply(getMessage(locale, 'errors.invalidPassword'));
       return;
     }
 
@@ -150,10 +151,10 @@ export class AdminHandlers {
         });
 
         this.adminService.clearLoginState(telegramId);
-        await ctx.reply(getMessage(locale, "success.passwordCreated"));
+        await ctx.reply(getMessage(locale, 'success.passwordCreated'));
         await this.showAdminMenu(ctx);
       } else {
-        await ctx.reply(getMessage(locale, "errors.serverError"));
+        await ctx.reply(getMessage(locale, 'errors.serverError'));
         this.adminService.clearLoginState(telegramId);
       }
     } else if (loginState.awaitingPassword) {
@@ -173,11 +174,11 @@ export class AdminHandlers {
         });
 
         this.adminService.clearLoginState(telegramId);
-        await ctx.reply(getMessage(locale, "success.loginSuccess"));
+        await ctx.reply(getMessage(locale, 'success.loginSuccess'));
         await this.showAdminMenu(ctx);
       } else {
         // Неверный пароль
-        await ctx.reply(getMessage(locale, "admin.wrongPassword"));
+        await ctx.reply(getMessage(locale, 'admin.wrongPassword'));
         this.adminService.clearLoginState(telegramId);
       }
     }
@@ -185,25 +186,25 @@ export class AdminHandlers {
 
   // Показать админ-меню
   async showAdminMenu(ctx: ServiceBotContext) {
-    const locale = "ru";
+    const locale = 'ru';
 
-    await ctx.reply(getMessage(locale, "admin.menu"), {
+    await ctx.reply(getMessage(locale, 'admin.menu'), {
       reply_markup: {
         inline_keyboard: [
           [
             {
-              text: getMessage(locale, "admin.users"),
-              callback_data: "admin_users_1",
+              text: getMessage(locale, 'admin.users'),
+              callback_data: 'admin_users_1',
             },
             {
-              text: getMessage(locale, "admin.stats"),
-              callback_data: "admin_stats",
+              text: getMessage(locale, 'admin.stats'),
+              callback_data: 'admin_stats',
             },
           ],
           [
             {
-              text: "🏦 Кошелек системы",
-              callback_data: "admin_system_wallet",
+              text: '🏦 Кошелек системы',
+              callback_data: 'admin_system_wallet',
             },
           ],
         ],
@@ -218,28 +219,28 @@ export class AdminHandlers {
       const message = `🏦 *Кошелек системы*\n\n💰 Баланс: *${balance.toFixed(2)} USDT*`;
 
       await ctx.reply(message, {
-        parse_mode: "Markdown",
+        parse_mode: 'Markdown',
         reply_markup: {
           inline_keyboard: [
             [
               {
-                text: "💸 Вывести средства",
-                callback_data: "admin_system_withdraw_start",
+                text: '💸 Вывести средства',
+                callback_data: 'admin_system_withdraw_start',
               },
             ],
             [
               {
-                text: "🔄 Обнулить баланс",
-                callback_data: "admin_system_wallet_reset",
+                text: '🔄 Обнулить баланс',
+                callback_data: 'admin_system_wallet_reset',
               },
             ],
-            [{ text: "⬅️ Назад", callback_data: "admin_menu" }],
+            [{ text: '⬅️ Назад', callback_data: 'admin_menu' }],
           ],
         },
       });
     } catch (error) {
-      console.error("Show system wallet error:", error);
-      await ctx.reply("❌ Ошибка получения баланса кошелька.");
+      console.error('Show system wallet error:', error);
+      await ctx.reply('❌ Ошибка получения баланса кошелька.');
     }
   }
 
@@ -250,22 +251,22 @@ export class AdminHandlers {
     this.adminService.clearWithdrawSession(telegramId);
 
     const currencies = {
-      RUB: "🇷🇺 Российский рубль (RUB)",
-      UZS: "🇺🇿 Узбекский сум (UZS)",
-      TJS: "🇹🇯 Таджикский сомони (TJS)",
-      KGS: "🇰🇬 Киргизский сом (KGS)",
+      RUB: '🇷🇺 Российский рубль (RUB)',
+      UZS: '🇺🇿 Узбекский сум (UZS)',
+      TJS: '🇹🇯 Таджикский сомони (TJS)',
+      KGS: '🇰🇬 Киргизский сом (KGS)',
     };
 
     const buttons = Object.entries(currencies).map(([code, name]) => [
       { text: name, callback_data: `admin_system_withdraw_currency_${code}` },
     ]);
 
-    buttons.push([{ text: "🚫 Отмена", callback_data: "admin_system_wallet" }]);
+    buttons.push([{ text: '🚫 Отмена', callback_data: 'admin_system_wallet' }]);
 
     await ctx.reply(
-      "💸 *Вывод средств из системного кошелька*\n\nВыберите валюту:",
+      '💸 *Вывод средств из системного кошелька*\n\nВыберите валюту:',
       {
-        parse_mode: "Markdown",
+        parse_mode: 'Markdown',
         reply_markup: {
           inline_keyboard: buttons,
         },
@@ -279,7 +280,7 @@ export class AdminHandlers {
 
     this.adminService.setWithdrawSession(telegramId, {
       currency,
-      step: "details",
+      step: 'details',
     });
 
     await ctx.reply(
@@ -289,7 +290,7 @@ export class AdminHandlers {
       {
         reply_markup: {
           inline_keyboard: [
-            [{ text: "🚫 Отмена", callback_data: "admin_system_wallet" }],
+            [{ text: '🚫 Отмена', callback_data: 'admin_system_wallet' }],
           ],
         },
       },
@@ -306,11 +307,11 @@ export class AdminHandlers {
     const session = this.adminService.getWithdrawSession(telegramId);
     if (!session) return;
 
-    session.number = number.replace(/\s/g, "");
+    session.number = number.replace(/\s/g, '');
     this.adminService.setWithdrawSession(telegramId, session);
 
     await ctx.reply(
-      "🏦 Введите название банка получателя (например: Сбербанк):",
+      '🏦 Введите название банка получателя (например: Сбербанк):',
     );
   }
 
@@ -327,7 +328,7 @@ export class AdminHandlers {
     session.bankname = bankname;
     this.adminService.setWithdrawSession(telegramId, session);
 
-    await ctx.reply("👤 Введите ФИО получателя полностью:");
+    await ctx.reply('👤 Введите ФИО получателя полностью:');
   }
 
   async handleSystemWithdrawOwnerInput(ctx: ServiceBotContext, owner: string) {
@@ -338,7 +339,7 @@ export class AdminHandlers {
     if (!session) return;
 
     session.owner = owner;
-    session.step = "amount";
+    session.step = 'amount';
     this.adminService.setWithdrawSession(telegramId, session);
 
     await ctx.reply(
@@ -357,12 +358,12 @@ export class AdminHandlers {
     if (!session) return;
 
     if (amount <= 0) {
-      await ctx.reply("⚠️ Сумма должна быть больше 0.");
+      await ctx.reply('⚠️ Сумма должна быть больше 0.');
       return;
     }
 
     session.amount = amount;
-    session.step = "confirm";
+    session.step = 'confirm';
     this.adminService.setWithdrawSession(telegramId, session);
 
     const message =
@@ -375,15 +376,15 @@ export class AdminHandlers {
       `Все верно?`;
 
     await ctx.reply(message, {
-      parse_mode: "Markdown",
+      parse_mode: 'Markdown',
       reply_markup: {
         inline_keyboard: [
           [
             {
-              text: "✅ Подтвердить",
-              callback_data: "admin_system_withdraw_confirm",
+              text: '✅ Подтвердить',
+              callback_data: 'admin_system_withdraw_confirm',
             },
-            { text: "🚫 Отмена", callback_data: "admin_system_wallet" },
+            { text: '🚫 Отмена', callback_data: 'admin_system_wallet' },
           ],
         ],
       },
@@ -403,12 +404,12 @@ export class AdminHandlers {
       !session.bankname ||
       !session.owner
     ) {
-      await ctx.reply("⚠️ Ошибка сессии. Начните заново.");
+      await ctx.reply('⚠️ Ошибка сессии. Начните заново.');
       return;
     }
 
     try {
-      await ctx.editMessageText("⏳ Создаём заявку на вывод...");
+      await ctx.editMessageText('⏳ Создаём заявку на вывод...');
       const result = await this.apiService.createSystemWalletWithdraw(
         telegramId,
         session.amount,
@@ -420,12 +421,12 @@ export class AdminHandlers {
 
       await ctx.editMessageText(
         `✅ *Заявка успешно создана!*\n\nID: \`${result.payoutId}\`\nСтатус: ${result.status}`,
-        { parse_mode: "Markdown" },
+        { parse_mode: 'Markdown' },
       );
       this.adminService.clearWithdrawSession(telegramId);
     } catch (error) {
-      console.error("System withdraw error:", error);
-      let msg = "Ошибка при создании заявки.";
+      console.error('System withdraw error:', error);
+      let msg = 'Ошибка при создании заявки.';
       if (error instanceof Error) msg = error.message;
       await ctx.editMessageText(`❌ ${msg}`);
       this.adminService.clearWithdrawSession(telegramId);
@@ -434,7 +435,7 @@ export class AdminHandlers {
 
   // Показать список пользователей
   async showUsers(ctx: ServiceBotContext, page: number = 1) {
-    const locale = "ru";
+    const locale = 'ru';
 
     try {
       const response = await this.usersService.getUsers(page, 10);
@@ -442,13 +443,13 @@ export class AdminHandlers {
       const currentPage = parseInt(response.page as any, 10);
 
       if (users.length === 0) {
-        await ctx.reply(getMessage(locale, "admin.noUsers"), {
+        await ctx.reply(getMessage(locale, 'admin.noUsers'), {
           reply_markup: {
             inline_keyboard: [
               [
                 {
-                  text: getMessage(locale, "admin.back"),
-                  callback_data: "admin_menu",
+                  text: getMessage(locale, 'admin.back'),
+                  callback_data: 'admin_menu',
                 },
               ],
             ],
@@ -464,7 +465,7 @@ export class AdminHandlers {
       for (const user of users) {
         let displayName = user.username || user.firstName || user.telegramId;
         // Убираем экранирование для отображения в кнопке
-        displayName = displayName.replace(/\\/g, "");
+        displayName = displayName.replace(/\\/g, '');
         keyboard.push([
           {
             text: `${displayName} (${user.balance} USDT)`,
@@ -477,13 +478,13 @@ export class AdminHandlers {
       const navRow = [];
       if (currentPage > 1) {
         navRow.push({
-          text: getMessage(locale, "admin.prev"),
+          text: getMessage(locale, 'admin.prev'),
           callback_data: `admin_users_${currentPage - 1}`,
         });
       }
       if (currentPage < totalPages) {
         navRow.push({
-          text: getMessage(locale, "admin.next"),
+          text: getMessage(locale, 'admin.next'),
           callback_data: `admin_users_${currentPage + 1}`,
         });
       }
@@ -494,31 +495,31 @@ export class AdminHandlers {
       // Кнопки поиска и назад
       keyboard.push([
         {
-          text: getMessage(locale, "admin.search"),
-          callback_data: "admin_search",
+          text: getMessage(locale, 'admin.search'),
+          callback_data: 'admin_search',
         },
-        { text: getMessage(locale, "admin.back"), callback_data: "admin_menu" },
+        { text: getMessage(locale, 'admin.back'), callback_data: 'admin_menu' },
       ]);
 
-      const message = `${getMessage(locale, "admin.totalUsers")} ${total}\n${getMessage(locale, "admin.showingUsers")} ${(currentPage - 1) * 10 + 1}-${Math.min(currentPage * 10, total)}`;
+      const message = `${getMessage(locale, 'admin.totalUsers')} ${total}\n${getMessage(locale, 'admin.showingUsers')} ${(currentPage - 1) * 10 + 1}-${Math.min(currentPage * 10, total)}`;
 
       await ctx.reply(message, {
         reply_markup: { inline_keyboard: keyboard },
       });
     } catch (error) {
-      console.error("Show users error:", error);
-      await ctx.reply(getMessage(locale, "errors.serverError"));
+      console.error('Show users error:', error);
+      await ctx.reply(getMessage(locale, 'errors.serverError'));
     }
   }
 
   // Функция для экранирования Markdown
   private escapeMarkdown(text: string): string {
-    return text.replace(/[_*[\]()~`>#+=|{}.!-]/g, "\\$&");
+    return text.replace(/[_*[\]()~`>#+=|{}.!-]/g, '\\$&');
   }
 
   // Показать информацию о пользователе
   async showUserInfo(ctx: ServiceBotContext, telegramId: string) {
-    const locale = "ru";
+    const locale = 'ru';
 
     try {
       const user = await this.usersService.getUserById(telegramId);
@@ -527,7 +528,7 @@ export class AdminHandlers {
         await ctx.reply(
           `❌ Пользователь с ID \`${telegramId}\` не найден в системе.`,
           {
-            parse_mode: "Markdown",
+            parse_mode: 'Markdown',
           },
         );
         return;
@@ -536,46 +537,46 @@ export class AdminHandlers {
       const message =
         `👤 **Информация о пользователе**\n\n` +
         `🆔 ID: \`${user.telegramId}\`\n` +
-        `👤 Имя: ${user.firstName || "Не указано"}\n` +
-        `📝 Username: ${user.username ? "@" + this.escapeMarkdown(user.username) : "Не указан"}\n` +
+        `👤 Имя: ${user.firstName || 'Не указано'}\n` +
+        `📝 Username: ${user.username ? '@' + this.escapeMarkdown(user.username) : 'Не указан'}\n` +
         `💰 Баланс: ${user.balance} USDT\n` +
         `🎁 Реферальный баланс: ${user.refBalance} USDT\n` +
         `📊 Реферальный бонус: ${user.refBonus}%\n` +
         `💳 Общие депозиты: ${user.totalDeposit} USDT\n` +
-        `🔗 Кошелек: ${user.walletAddress ? this.escapeMarkdown(user.walletAddress) : "Не указан"}`;
+        `🔗 Кошелек: ${user.walletAddress ? this.escapeMarkdown(user.walletAddress) : 'Не указан'}`;
 
       await ctx.reply(message, {
-        parse_mode: "Markdown",
+        parse_mode: 'Markdown',
         reply_markup: {
           inline_keyboard: [
             [
               {
-                text: getMessage(locale, "admin.addBalance"),
+                text: getMessage(locale, 'admin.addBalance'),
                 callback_data: `admin_add_balance_${telegramId}`,
               },
               {
-                text: getMessage(locale, "admin.removeBalance"),
+                text: getMessage(locale, 'admin.removeBalance'),
                 callback_data: `admin_remove_balance_${telegramId}`,
               },
             ],
             [
               {
-                text: getMessage(locale, "admin.back"),
-                callback_data: "admin_users_1",
+                text: getMessage(locale, 'admin.back'),
+                callback_data: 'admin_users_1',
               },
             ],
           ],
         },
       });
     } catch (error) {
-      console.error("Show user info error:", error);
-      await ctx.reply(getMessage(locale, "admin.userNotFound"), {
+      console.error('Show user info error:', error);
+      await ctx.reply(getMessage(locale, 'admin.userNotFound'), {
         reply_markup: {
           inline_keyboard: [
             [
               {
-                text: getMessage(locale, "admin.back"),
-                callback_data: "admin_users_1",
+                text: getMessage(locale, 'admin.back'),
+                callback_data: 'admin_users_1',
               },
             ],
           ],
@@ -587,9 +588,9 @@ export class AdminHandlers {
   // Показать статистику
   async showStats(
     ctx: ServiceBotContext,
-    filter: "all" | "crypto" | "fiat" = "all",
+    filter: 'all' | 'crypto' | 'fiat' = 'all',
   ) {
-    const locale = "ru";
+    const locale = 'ru';
 
     try {
       const stats = await this.statsService.getStats();
@@ -600,19 +601,19 @@ export class AdminHandlers {
         let result = `📅 **${periodName}**\n`;
 
         if (!periodStats) {
-          return result + "Нет данных\n";
+          return result + 'Нет данных\n';
         }
 
-        if (filter === "all") {
+        if (filter === 'all') {
           result += `💰 Вводы: ${(periodStats.deposits || 0).toFixed(2)} USDT\n`;
           result += `💸 Выводы: ${(periodStats.withdrawals || 0).toFixed(2)} USDT\n`;
           result += `  ├─ 🔷 Крипта: ${(periodStats.crypto?.deposits || 0).toFixed(2)} / ${(periodStats.crypto?.withdrawals || 0).toFixed(2)} USDT\n`;
           result += `  └─ 💵 Фиат: ${(periodStats.fiat?.deposits || 0).toFixed(2)} / ${(periodStats.fiat?.withdrawals || 0).toFixed(2)} USDT\n`;
-        } else if (filter === "crypto") {
+        } else if (filter === 'crypto') {
           result += `🔷 **Крипта**\n`;
           result += `💰 Вводы: ${(periodStats.crypto?.deposits || 0).toFixed(2)} USDT\n`;
           result += `💸 Выводы: ${(periodStats.crypto?.withdrawals || 0).toFixed(2)} USDT\n`;
-        } else if (filter === "fiat") {
+        } else if (filter === 'fiat') {
           result += `💵 **Фиат**\n`;
           result += `💰 Вводы: ${(periodStats.fiat?.deposits || 0).toFixed(2)} USDT\n`;
           result += `💸 Выводы: ${(periodStats.fiat?.withdrawals || 0).toFixed(2)} USDT\n`;
@@ -622,54 +623,54 @@ export class AdminHandlers {
       };
 
       message +=
-        formatPeriod(getMessage(locale, "admin.period.day"), stats.day) + "\n";
+        formatPeriod(getMessage(locale, 'admin.period.day'), stats.day) + '\n';
       message +=
-        formatPeriod(getMessage(locale, "admin.period.week"), stats.week) +
-        "\n";
+        formatPeriod(getMessage(locale, 'admin.period.week'), stats.week) +
+        '\n';
       message +=
-        formatPeriod(getMessage(locale, "admin.period.month"), stats.month) +
-        "\n";
+        formatPeriod(getMessage(locale, 'admin.period.month'), stats.month) +
+        '\n';
       message += formatPeriod(
-        getMessage(locale, "admin.period.total"),
+        getMessage(locale, 'admin.period.total'),
         stats.total,
       );
 
       await ctx.reply(message, {
-        parse_mode: "Markdown",
+        parse_mode: 'Markdown',
         reply_markup: {
           inline_keyboard: [
             [
               {
-                text: filter === "all" ? "✅ Всё" : "Всё",
-                callback_data: "admin_stats_all",
+                text: filter === 'all' ? '✅ Всё' : 'Всё',
+                callback_data: 'admin_stats_all',
               },
               {
-                text: filter === "crypto" ? "✅ Крипта" : "Крипта",
-                callback_data: "admin_stats_crypto",
+                text: filter === 'crypto' ? '✅ Крипта' : 'Крипта',
+                callback_data: 'admin_stats_crypto',
               },
               {
-                text: filter === "fiat" ? "✅ Фиат" : "Фиат",
-                callback_data: "admin_stats_fiat",
+                text: filter === 'fiat' ? '✅ Фиат' : 'Фиат',
+                callback_data: 'admin_stats_fiat',
               },
             ],
             [
               {
-                text: getMessage(locale, "admin.back"),
-                callback_data: "admin_menu",
+                text: getMessage(locale, 'admin.back'),
+                callback_data: 'admin_menu',
               },
             ],
           ],
         },
       });
     } catch (error) {
-      console.error("Show stats error:", error);
-      await ctx.reply(getMessage(locale, "errors.serverError"), {
+      console.error('Show stats error:', error);
+      await ctx.reply(getMessage(locale, 'errors.serverError'), {
         reply_markup: {
           inline_keyboard: [
             [
               {
-                text: getMessage(locale, "admin.back"),
-                callback_data: "admin_menu",
+                text: getMessage(locale, 'admin.back'),
+                callback_data: 'admin_menu',
               },
             ],
           ],
@@ -685,20 +686,20 @@ export class AdminHandlers {
 
   // Обработка добавления баланса
   async handleAddBalance(ctx: ServiceBotContext, telegramId: string) {
-    const locale = "ru";
+    const locale = 'ru';
 
     // Сохраняем состояние для ожидания ввода суммы
     this.adminService.setBalanceState(ctx.from!.id.toString(), {
-      action: "add",
+      action: 'add',
       telegramId: telegramId,
     });
 
-    await ctx.reply(getMessage(locale, "admin.enterAmount"), {
+    await ctx.reply(getMessage(locale, 'admin.enterAmount'), {
       reply_markup: {
         inline_keyboard: [
           [
             {
-              text: getMessage(locale, "admin.back"),
+              text: getMessage(locale, 'admin.back'),
               callback_data: `admin_user_${telegramId}`,
             },
           ],
@@ -709,20 +710,20 @@ export class AdminHandlers {
 
   // Обработка удаления баланса
   async handleRemoveBalance(ctx: ServiceBotContext, telegramId: string) {
-    const locale = "ru";
+    const locale = 'ru';
 
     // Сохраняем состояние для ожидания ввода суммы
     this.adminService.setBalanceState(ctx.from!.id.toString(), {
-      action: "remove",
+      action: 'remove',
       telegramId: telegramId,
     });
 
-    await ctx.reply(getMessage(locale, "admin.enterAmount"), {
+    await ctx.reply(getMessage(locale, 'admin.enterAmount'), {
       reply_markup: {
         inline_keyboard: [
           [
             {
-              text: getMessage(locale, "admin.back"),
+              text: getMessage(locale, 'admin.back'),
               callback_data: `admin_user_${telegramId}`,
             },
           ],
@@ -733,23 +734,23 @@ export class AdminHandlers {
 
   // Обработка ввода суммы для изменения баланса
   async handleBalanceAmountInput(ctx: ServiceBotContext, amount: string) {
-    const locale = "ru";
+    const locale = 'ru';
     const telegramId = ctx.from!.id.toString();
     const balanceState = this.adminService.getBalanceState(telegramId);
 
     if (!balanceState) {
-      await ctx.reply(getMessage(locale, "errors.invalidCommand"));
+      await ctx.reply(getMessage(locale, 'errors.invalidCommand'));
       return;
     }
 
     const numAmount = parseFloat(amount);
     if (isNaN(numAmount) || numAmount <= 0) {
-      await ctx.reply(getMessage(locale, "errors.invalidAmount"));
+      await ctx.reply(getMessage(locale, 'errors.invalidAmount'));
       return;
     }
 
     try {
-      const operation = balanceState.action === "remove" ? "remove" : "add";
+      const operation = balanceState.action === 'remove' ? 'remove' : 'add';
       await this.usersService.updateBalance(
         balanceState.telegramId,
         numAmount,
@@ -762,23 +763,23 @@ export class AdminHandlers {
         await ctx.reply(
           `❌ Пользователь с ID \`${balanceState.telegramId}\` не найден в системе.`,
           {
-            parse_mode: "Markdown",
+            parse_mode: 'Markdown',
           },
         );
         return;
       }
 
       const actionText =
-        balanceState.action === "add" ? "добавлено" : "списано";
+        balanceState.action === 'add' ? 'добавлено' : 'списано';
 
       await ctx.reply(
-        `${getMessage(locale, "admin.balanceUpdated")} ${actionText} ${numAmount} USDT\nНовый баланс: ${user.balance} USDT`,
+        `${getMessage(locale, 'admin.balanceUpdated')} ${actionText} ${numAmount} USDT\nНовый баланс: ${user.balance} USDT`,
         {
           reply_markup: {
             inline_keyboard: [
               [
                 {
-                  text: getMessage(locale, "admin.back"),
+                  text: getMessage(locale, 'admin.back'),
                   callback_data: `admin_user_${balanceState.telegramId}`,
                 },
               ],
@@ -790,27 +791,27 @@ export class AdminHandlers {
       // Очищаем состояние
       this.adminService.clearBalanceState(telegramId);
     } catch (error) {
-      console.error("Update balance error:", error);
-      await ctx.reply(getMessage(locale, "errors.serverError"));
+      console.error('Update balance error:', error);
+      await ctx.reply(getMessage(locale, 'errors.serverError'));
     }
   }
 
   // Показать поиск пользователей
   async showSearchPrompt(ctx: ServiceBotContext) {
-    const locale = "ru";
+    const locale = 'ru';
 
     // Устанавливаем состояние поиска
     this.adminService.setSearchState(ctx.from!.id.toString());
 
     await ctx.reply(
-      "🔍 Введите username, имя или ID пользователя для поиска:",
+      '🔍 Введите username, имя или ID пользователя для поиска:',
       {
         reply_markup: {
           inline_keyboard: [
             [
               {
-                text: getMessage(locale, "admin.back"),
-                callback_data: "admin_users_1",
+                text: getMessage(locale, 'admin.back'),
+                callback_data: 'admin_users_1',
               },
             ],
           ],
@@ -821,19 +822,19 @@ export class AdminHandlers {
 
   // Показать результаты поиска
   async showSearchResults(ctx: ServiceBotContext, query: string) {
-    const locale = "ru";
+    const locale = 'ru';
 
     try {
       const users = await this.usersService.searchUsers(query);
 
       if (users.length === 0) {
-        await ctx.reply("🔍 Пользователи не найдены", {
+        await ctx.reply('🔍 Пользователи не найдены', {
           reply_markup: {
             inline_keyboard: [
               [
                 {
-                  text: getMessage(locale, "admin.back"),
-                  callback_data: "admin_users_1",
+                  text: getMessage(locale, 'admin.back'),
+                  callback_data: 'admin_users_1',
                 },
               ],
             ],
@@ -847,7 +848,7 @@ export class AdminHandlers {
       // Кнопки найденных пользователей
       for (const user of users) {
         let displayName = user.username || user.firstName || user.telegramId;
-        displayName = displayName.replace(/\\/g, "");
+        displayName = displayName.replace(/\\/g, '');
         keyboard.push([
           {
             text: `${displayName} (${user.balance} USDT)`,
@@ -859,8 +860,8 @@ export class AdminHandlers {
       // Кнопка назад
       keyboard.push([
         {
-          text: getMessage(locale, "admin.back"),
-          callback_data: "admin_users_1",
+          text: getMessage(locale, 'admin.back'),
+          callback_data: 'admin_users_1',
         },
       ]);
 
@@ -868,14 +869,14 @@ export class AdminHandlers {
         reply_markup: { inline_keyboard: keyboard },
       });
     } catch (error) {
-      console.error("Search error:", error);
-      await ctx.reply(getMessage(locale, "errors.serverError"), {
+      console.error('Search error:', error);
+      await ctx.reply(getMessage(locale, 'errors.serverError'), {
         reply_markup: {
           inline_keyboard: [
             [
               {
-                text: getMessage(locale, "admin.back"),
-                callback_data: "admin_users_1",
+                text: getMessage(locale, 'admin.back'),
+                callback_data: 'admin_users_1',
               },
             ],
           ],
@@ -889,15 +890,15 @@ export class AdminHandlers {
     const message = `⚠️ *ВНИМАНИЕ* Вы собираетесь обнулить баланс системного кошелька. Это действие *необратимо*. Все средства будут списаны. Вы уверены?`;
 
     await ctx.reply(message, {
-      parse_mode: "Markdown",
+      parse_mode: 'Markdown',
       reply_markup: {
         inline_keyboard: [
           [
             {
-              text: "✅ Подтвердить",
-              callback_data: "admin_system_wallet_reset_confirm",
+              text: '✅ Подтвердить',
+              callback_data: 'admin_system_wallet_reset_confirm',
             },
-            { text: "❌ Отмена", callback_data: "admin_system_wallet" },
+            { text: '❌ Отмена', callback_data: 'admin_system_wallet' },
           ],
         ],
       },
@@ -907,17 +908,17 @@ export class AdminHandlers {
   async handleSystemWalletResetConfirm(ctx: ServiceBotContext) {
     try {
       await this.apiService.resetSystemWalletBalance();
-      await ctx.reply("✅ *Баланс системного кошелька успешно обнулен*", {
-        parse_mode: "Markdown",
+      await ctx.reply('✅ *Баланс системного кошелька успешно обнулен*', {
+        parse_mode: 'Markdown',
       });
       // Show updated wallet view
       await this.showSystemWallet(ctx);
     } catch (error) {
-      console.error("Error resetting system wallet:", error);
-      await ctx.reply("❌ Ошибка при обнулении баланса. Попробуйте позже.", {
+      console.error('Error resetting system wallet:', error);
+      await ctx.reply('❌ Ошибка при обнулении баланса. Попробуйте позже.', {
         reply_markup: {
           inline_keyboard: [
-            [{ text: "⬅️ Назад", callback_data: "admin_system_wallet" }],
+            [{ text: '⬅️ Назад', callback_data: 'admin_system_wallet' }],
           ],
         },
       });

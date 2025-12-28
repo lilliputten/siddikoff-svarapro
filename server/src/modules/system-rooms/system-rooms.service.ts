@@ -1,7 +1,8 @@
 import { Injectable, Logger } from '@nestjs/common';
+
 import { RedisService } from '../../services/redis.service';
-import { GameStateService } from '../game/services/game-state.service';
 import { Room } from '../../types/game';
+import { GameStateService } from '../game/services/game-state.service';
 
 @Injectable()
 export class SystemRoomsService {

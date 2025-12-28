@@ -1,21 +1,21 @@
-import { useState } from "react";
+import { useState } from 'react';
 
-import { StyledContainer } from "@/components/StyledContainer";
-import { ButtonProps } from "@/types/components";
+import { StyledContainer } from '@/components/StyledContainer';
+import { ButtonProps } from '@/types/components';
 
 export function Button({
   children,
   onClick,
-  variant = "secondary",
-  size = "md",
+  variant = 'secondary',
+  size = 'md',
   fullWidth = false,
   icon,
   typeLeftButton = false,
-  iconPosition = "left",
-  layout = "horizontal",
-  iconClassName = "w-6 h-6",
+  iconPosition = 'left',
+  layout = 'horizontal',
+  iconClassName = 'w-6 h-6',
   isActive = false,
-  justify = "center",
+  justify = 'center',
   rightIcon,
   rightText,
   rightContentClassName,
@@ -25,34 +25,34 @@ export function Button({
   const [isPressed, setIsPressed] = useState(false);
 
   const handleClick = (e: React.MouseEvent<HTMLButtonElement>) => {
-    console.log("🎯 Button click, isPressed:", isPressed);
+    // console.log('🎯 Button click, isPressed:', isPressed);
     setIsPressed(true);
     setTimeout(() => setIsPressed(false), 150);
     onClick?.(e);
   };
-  const baseClasses = "relative flex items-center font-semibold text-white";
+  const baseClasses = 'relative flex items-center font-semibold text-white';
 
   const sizeClasses = {
-    sm: "h-10 text-sm",
-    md: "h-12 text-base",
-    lg: "h-14 text-lg",
-    xl: "h-[55px] text-base",
+    sm: 'h-10 text-sm',
+    md: 'h-12 text-base',
+    lg: 'h-14 text-lg',
+    xl: 'h-[55px] text-base',
   };
   const finalSizeClasses = `${sizeClasses[size]}`;
 
-  const fullWidthClass = fullWidth ? "w-full" : "";
+  const fullWidthClass = fullWidth ? 'w-full' : '';
 
   const iconMargin =
-    layout === "vertical"
-      ? iconPosition === "left"
-        ? "-mb-1"
-        : "mt-0"
-      : iconPosition === "left"
-        ? "mr-2"
-        : "ml-2";
+    layout === 'vertical'
+      ? iconPosition === 'left'
+        ? '-mb-1'
+        : 'mt-0'
+      : iconPosition === 'left'
+        ? 'mr-2'
+        : 'ml-2';
 
   const renderIcon = (src: string, className: string, type: string) => {
-    return type == "left" ? (
+    return type == 'left' ? (
       <div className="mr-[7px] w-8">
         <img src={src} alt="" className={className} />
       </div>
@@ -63,15 +63,15 @@ export function Button({
   // const leftIconElement = icon ? renderIcon(icon, `${iconClassName} ${iconMargin}`) : null; - проверим
   const leftIconElement = icon
     ? typeLeftButton
-      ? renderIcon(icon, `${iconClassName} ${iconMargin}`, "left")
-      : renderIcon(icon, `${iconClassName} ${iconMargin}`, "center")
+      ? renderIcon(icon, `${iconClassName} ${iconMargin}`, 'left')
+      : renderIcon(icon, `${iconClassName} ${iconMargin}`, 'center')
     : null;
 
   const textElement = <span className="relative z-10">{children}</span>;
 
   let content;
-  if (layout === "vertical") {
-    if (iconPosition === "right") {
+  if (layout === 'vertical') {
+    if (iconPosition === 'right') {
       content = (
         <>
           {textElement}
@@ -95,14 +95,14 @@ export function Button({
     );
   }
 
-  const contentLayoutClass = layout === "vertical" ? "flex-col" : "flex-row";
+  const contentLayoutClass = layout === 'vertical' ? 'flex-col' : 'flex-row';
   const justifyClass = `justify-${justify}`;
 
-  if (variant === "secondary") {
+  if (variant === 'secondary') {
     return (
       <button
         onClick={handleClick}
-        className={`${baseClasses} ${finalSizeClasses} ${fullWidthClass} ${isPressed ? "button-press" : ""} ${rest.className || ""}`}
+        className={`${baseClasses} ${finalSizeClasses} ${fullWidthClass} ${isPressed ? 'button-press' : ''} ${rest.className || ''}`}
         {...rest}
       >
         <StyledContainer
@@ -120,7 +120,7 @@ export function Button({
                 renderIcon(
                   rightIcon,
                   `${rightIconClassName || iconClassName} ml-2`,
-                  "right",
+                  'right',
                 )}
             </div>
           )}
@@ -131,15 +131,15 @@ export function Button({
 
   const variantClasses = {
     primary:
-      "bg-gradient-to-b from-yellow-400 to-yellow-600 text-white rounded-lg",
-    tertiary: "bg-transparent text-white rounded-lg",
+      'bg-gradient-to-b from-yellow-400 to-yellow-600 text-white rounded-lg',
+    tertiary: 'bg-transparent text-white rounded-lg',
   };
-  const finalVariantClasses = variantClasses[variant] || "";
+  const finalVariantClasses = variantClasses[variant] || '';
 
   return (
     <button
       onClick={handleClick}
-      className={`${baseClasses} ${finalSizeClasses} ${fullWidthClass} ${finalVariantClasses} ${isPressed ? "button-press" : ""} ${rest.className || ""}`}
+      className={`${baseClasses} ${finalSizeClasses} ${fullWidthClass} ${finalVariantClasses} ${isPressed ? 'button-press' : ''} ${rest.className || ''}`}
       {...rest}
     >
       <div
@@ -155,7 +155,7 @@ export function Button({
               renderIcon(
                 rightIcon,
                 `${rightIconClassName || iconClassName} ml-2`,
-                "right",
+                'right',
               )}
           </div>
         )}

@@ -1,6 +1,6 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState } from 'react';
 
-import coinImage from "@/assets/game/coin.png";
+import coinImage from '@/assets/game/coin.png';
 
 interface ChipsStackProps {
   totalChips: number;
@@ -47,7 +47,7 @@ const ChipsStack: React.FC<ChipsStackProps> = ({
 
   // Логика для скрытия фишек после завершения раунда
   useEffect(() => {
-    if (pot === 0 || gameStatus === "finished") {
+    if (pot === 0 || gameStatus === 'finished') {
       // Задержка для анимации исчезновения
       const timer = setTimeout(() => {
         setShouldHide(true);
@@ -65,7 +65,7 @@ const ChipsStack: React.FC<ChipsStackProps> = ({
   return (
     <div
       className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 transform"
-      style={{ zIndex: 1, marginTop: "30px" }}
+      style={{ zIndex: 1, marginTop: '30px' }}
     >
       {chipPositions.map((position, index) => (
         <div
@@ -76,8 +76,8 @@ const ChipsStack: React.FC<ChipsStackProps> = ({
             top: `${position.y}px`,
             opacity: position.opacity,
             zIndex: position.zIndex,
-            width: "22px",
-            height: "18px",
+            width: '22px',
+            height: '18px',
           }}
         >
           <img

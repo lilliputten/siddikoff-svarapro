@@ -1,10 +1,11 @@
-import axios from "axios";
+/* eslint-disable no-console */
+import axios from 'axios';
 
 import {
   AdminLoginState,
   AdminSession,
   AdminWithdrawSession,
-} from "../types/index.js";
+} from '../types/index.js';
 
 export class AdminService {
   private sessions = new Map<string, AdminSession>();
@@ -22,7 +23,7 @@ export class AdminService {
   // Проверка, есть ли пользователь в списке админов из .env
   isInAdminList(telegramId: string): boolean {
     const adminIds =
-      process.env.ADMIN_IDS?.split(",").map((id) => id.trim()) || [];
+      process.env.ADMIN_IDS?.split(',').map((id) => id.trim()) || [];
     return adminIds.includes(telegramId);
   }
 
@@ -38,7 +39,7 @@ export class AdminService {
 
       return response.data.hasPassword;
     } catch (error) {
-      console.error("Check password error:", error);
+      console.error('Check password error:', error);
       return false;
     }
   }
@@ -59,7 +60,7 @@ export class AdminService {
 
       return response.status === 201;
     } catch (error) {
-      console.error("Create password error:", error);
+      console.error('Create password error:', error);
       return false;
     }
   }
@@ -80,7 +81,7 @@ export class AdminService {
 
       return response.data.isValid;
     } catch (error) {
-      console.error("Verify password error:", error);
+      console.error('Verify password error:', error);
       return false;
     }
   }
@@ -120,7 +121,7 @@ export class AdminService {
   // Управление состоянием изменения баланса
   private balanceStates = new Map<
     string,
-    { action: "add" | "remove"; telegramId: string }
+    { action: 'add' | 'remove'; telegramId: string }
   >();
 
   getBalanceState(telegramId: string) {
@@ -129,7 +130,7 @@ export class AdminService {
 
   setBalanceState(
     telegramId: string,
-    state: { action: "add" | "remove"; telegramId: string },
+    state: { action: 'add' | 'remove'; telegramId: string },
   ) {
     this.balanceStates.set(telegramId, state);
   }

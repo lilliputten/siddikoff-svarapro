@@ -1,11 +1,12 @@
 import {
-  Controller,
-  Post,
-  Get,
-  Body,
-  Param,
   BadRequestException,
+  Body,
+  Controller,
+  Get,
+  Param,
+  Post,
 } from '@nestjs/common';
+
 import { AdminsService } from './admins.service';
 
 @Controller('admins')

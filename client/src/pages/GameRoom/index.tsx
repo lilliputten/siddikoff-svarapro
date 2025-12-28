@@ -1,34 +1,41 @@
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import WebApp from "@twa-dev/sdk";
-import { useTranslation } from "react-i18next";
-import { Socket } from "socket.io-client";
+/* eslint-disable no-console */
+import React, {
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from 'react';
+import WebApp from '@twa-dev/sdk';
+import { useTranslation } from 'react-i18next';
+import { Socket } from 'socket.io-client';
 
-import { useAppBackButton } from "@/hooks/useAppBackButton";
-import { useAssetPreloader } from "@/hooks/useAssetPreloader";
-import { useGameState } from "@/hooks/useGameState";
-import { useHapticFeedback } from "@/hooks/useHapticFeedback";
-import { Notification } from "@/components/Notification";
-import { TURN_DURATION_SECONDS } from "@/constants";
-import { NotificationType } from "@/types/components";
-import { PageData, UserData } from "@/types/entities";
-import { GameRoomProps, GameState, Player } from "@/types/game";
-import { Page } from "@/types/page";
+import { useAppBackButton } from '@/hooks/useAppBackButton';
+import { useAssetPreloader } from '@/hooks/useAssetPreloader';
+import { useGameState } from '@/hooks/useGameState';
+import { useHapticFeedback } from '@/hooks/useHapticFeedback';
+import { Notification } from '@/components/Notification';
+import { TURN_DURATION_SECONDS } from '@/constants';
+import { NotificationType } from '@/types/components';
+import { PageData, UserData } from '@/types/entities';
+import { GameRoomProps, GameState, Player } from '@/types/game';
+import { Page } from '@/types/page';
 
-import backgroundImage from "../../assets/game/background.jpg";
-import chatButton from "../../assets/game/chatButton.png";
-import menuIcon from "../../assets/game/menu.svg";
-import { ActionButtons } from "../../components/GameProcess/ActionButton";
-import { BetSlider } from "../../components/GameProcess/BetSlider";
-import { ChatMenu } from "../../components/GameProcess/ChatMenu";
-import FlyingChip from "../../components/GameProcess/FlyingChip";
-import { GameMenu } from "../../components/GameProcess/GameMenu";
-import GameTable from "../../components/GameProcess/GameTable";
-import { PlayerSpot } from "../../components/GameProcess/PlayerSpot";
-import { SeatButton } from "../../components/GameProcess/SeatButton";
-import { SvaraAnimation } from "../../components/GameProcess/SvaraAnimation";
-import { SvaraJoinPopup } from "../../components/GameProcess/SvaraJoinPopup";
-import { LoadingPage } from "../../components/LoadingPage";
-import { NoConnect } from "../../components/NoConnect";
+import backgroundImage from '../../assets/game/background.jpg';
+import chatButton from '../../assets/game/chatButton.png';
+import menuIcon from '../../assets/game/menu.svg';
+import { ActionButtons } from '../../components/GameProcess/ActionButton';
+import { BetSlider } from '../../components/GameProcess/BetSlider';
+import { ChatMenu } from '../../components/GameProcess/ChatMenu';
+import FlyingChip from '../../components/GameProcess/FlyingChip';
+import { GameMenu } from '../../components/GameProcess/GameMenu';
+import GameTable from '../../components/GameProcess/GameTable';
+import { PlayerSpot } from '../../components/GameProcess/PlayerSpot';
+import { SeatButton } from '../../components/GameProcess/SeatButton';
+import { SvaraAnimation } from '../../components/GameProcess/SvaraAnimation';
+import { SvaraJoinPopup } from '../../components/GameProcess/SvaraJoinPopup';
+import { LoadingPage } from '../../components/LoadingPage';
+import { NoConnect } from '../../components/NoConnect';
 
 interface ChipAnimation {
   id: string;
@@ -57,8 +64,8 @@ interface GameRoomPropsExtended extends GameRoomProps {
 
 const useWindowSize = () => {
   const [size, setSize] = useState([
-    typeof window !== "undefined" ? window.innerWidth : 0,
-    typeof window !== "undefined" ? window.innerHeight : 0,
+    typeof window !== 'undefined' ? window.innerWidth : 0,
+    typeof window !== 'undefined' ? window.innerHeight : 0,
   ]);
   useEffect(() => {
     function updateSize() {
@@ -74,8 +81,8 @@ const useWindowSize = () => {
       setSize([width, height]);
     }
 
-    window.addEventListener("resize", updateSize);
-    window.addEventListener("orientationchange", updateSize);
+    window.addEventListener('resize', updateSize);
+    window.addEventListener('orientationchange', updateSize);
 
     // Initial size
     updateSize();
@@ -88,8 +95,8 @@ const useWindowSize = () => {
     const timer4 = setTimeout(updateSize, 2000); // Дополнительная задержка
 
     return () => {
-      window.removeEventListener("resize", updateSize);
-      window.removeEventListener("orientationchange", updateSize);
+      window.removeEventListener('resize', updateSize);
+      window.removeEventListener('orientationchange', updateSize);
       clearTimeout(timer1);
       clearTimeout(timer2);
       clearTimeout(timer3);
@@ -114,23 +121,23 @@ const useTablePositioning = (gameStateLoaded: boolean) => {
     position: number,
     isShowdown: boolean,
   ): string => {
-    const zIndex = isShowdown ? "z-40" : "z-30";
+    const zIndex = isShowdown ? 'z-40' : 'z-30';
     const baseClasses = `absolute ${zIndex} transition-all duration-300 ease-in-out hover:scale-105 hover:z-40 w-20 h-24 flex items-center justify-center`;
     const positionClasses = {
-      1: "-top-7 left-1/2",
-      2: "top-1/4 -right-7",
-      3: "bottom-1/4 -right-7",
-      4: "-bottom-12 left-1/2",
-      5: "bottom-1/4 -left-7",
-      6: "top-1/4 -left-7",
+      1: '-top-7 left-1/2',
+      2: 'top-1/4 -right-7',
+      3: 'bottom-1/4 -right-7',
+      4: '-bottom-12 left-1/2',
+      5: 'bottom-1/4 -left-7',
+      6: 'top-1/4 -left-7',
     };
-    return `${baseClasses} ${positionClasses[position as keyof typeof positionClasses] || ""}`;
+    return `${baseClasses} ${positionClasses[position as keyof typeof positionClasses] || ''}`;
   };
 
   const getPositionStyle = (position: number): React.CSSProperties => {
     let transform = `scale(${scale})`;
     if (position === 1 || position === 4) {
-      transform += " translateX(-50%)";
+      transform += ' translateX(-50%)';
     }
     return { transform };
   };
@@ -146,7 +153,7 @@ export function GameRoom({
   userData,
   pageData,
 }: GameRoomPropsExtended) {
-  const { t } = useTranslation("common");
+  const { t } = useTranslation('common');
   const {
     gameState,
     loading,
@@ -170,15 +177,15 @@ export function GameRoom({
   const { getPositionStyle, getPositionClasses, scale } =
     useTablePositioning(!!gameState);
   const [turnTimer, setTurnTimer] = useState(TURN_DURATION_SECONDS);
-  const [svaraStep, setSvaraStep] = useState<"none" | "animating" | "joining">(
-    "none",
+  const [svaraStep, setSvaraStep] = useState<'none' | 'animating' | 'joining'>(
+    'none',
   );
   const { triggerImpact } = useHapticFeedback();
   const currentUserId =
-    window.Telegram?.WebApp?.initDataUnsafe?.user?.id?.toString() || "";
+    window.Telegram?.WebApp?.initDataUnsafe?.user?.id?.toString() || '';
   const [winSequenceStep, setWinSequenceStep] = useState<
-    "none" | "showdown" | "winner" | "chips"
-  >("none");
+    'none' | 'showdown' | 'winner' | 'chips'
+  >('none');
   const [isSittingDown, setIsSittingDown] = useState(false);
   const [isMenuButtonPressed, setIsMenuButtonPressed] = useState(false);
 
@@ -229,7 +236,7 @@ export function GameRoom({
         return;
       }
 
-      actions.playSound("chip");
+      actions.playSound('chip');
 
       const absolutePosition = player.position;
       const isCurrentPlayer = player.id === currentUserId;
@@ -391,7 +398,7 @@ export function GameRoom({
       const chipX = playerX;
       const chipY = playerY;
 
-      actions.playSound("chip");
+      actions.playSound('chip');
       const cardId = `deal-${i}-${Date.now()}`;
       setChipAnimations((prev) => [
         ...prev,
@@ -466,7 +473,7 @@ export function GameRoom({
         winnerY = centerY - tableHeight * 0.25;
         break;
     }
-    actions.playSound("chip");
+    actions.playSound('chip');
     // Подсчитываем количество фишек в банке
     const chipCount = 10;
     setChipAnimations([]);
@@ -546,15 +553,15 @@ export function GameRoom({
 
   useEffect(() => {
     if (
-      gameState?.status === "svara_pending" &&
-      svaraStep === "none" &&
-      winSequenceStep === "none"
+      gameState?.status === 'svara_pending' &&
+      svaraStep === 'none' &&
+      winSequenceStep === 'none'
     ) {
       // Показываем SvaraAnimation только после завершения winSequenceStep
-      console.log("🎯 Starting SvaraAnimation");
-      setSvaraStep("animating");
-    } else if (gameState?.status !== "svara_pending") {
-      setSvaraStep("none");
+      console.log('🎯 Starting SvaraAnimation');
+      setSvaraStep('animating');
+    } else if (gameState?.status !== 'svara_pending') {
+      setSvaraStep('none');
     }
   }, [gameState?.status, svaraStep, winSequenceStep]);
 
@@ -564,7 +571,7 @@ export function GameRoom({
     if (actions) {
       actions.leaveRoom();
     }
-    setCurrentPage("dashboard");
+    setCurrentPage('dashboard');
   }, [actions, setCurrentPage]);
 
   useAppBackButton(true, handleLeaveRoom);
@@ -572,7 +579,7 @@ export function GameRoom({
   useEffect(() => {
     if (
       gameState &&
-      gameState.status === "svara_pending" &&
+      gameState.status === 'svara_pending' &&
       (gameState.svaraParticipants?.includes(currentUserId) ?? false)
     ) {
       actions.joinSvara();
@@ -593,10 +600,10 @@ export function GameRoom({
     const currentStatus = gameState.status;
 
     if (previousStatus !== currentStatus) {
-      if (currentStatus === "showdown") {
+      if (currentStatus === 'showdown') {
         // Сразу показываем showdown когда сервер переходит в этот статус
         console.log(
-          "🎯 Starting showdown - winners:",
+          '🎯 Starting showdown - winners:',
           gameState?.winners?.map((w) => ({
             id: w.id,
             username: w.username,
@@ -604,33 +611,33 @@ export function GameRoom({
           })),
         );
 
-        setWinSequenceStep("showdown");
-      } else if (currentStatus === "finished") {
+        setWinSequenceStep('showdown');
+      } else if (currentStatus === 'finished') {
         // Переходим к winner после showdown
-        console.log("🎯 Moving to winner step");
-        setWinSequenceStep("winner");
+        console.log('🎯 Moving to winner step');
+        setWinSequenceStep('winner');
         const t2 = setTimeout(() => {
-          setWinSequenceStep("chips");
+          setWinSequenceStep('chips');
           handleChipsToWinner();
         }, 1);
         const t3 = setTimeout(() => {
-          setWinSequenceStep("none");
+          setWinSequenceStep('none');
         }, 4000);
 
         return () => {
           clearTimeout(t2);
           clearTimeout(t3);
         };
-      } else if (currentStatus === "svara_pending") {
+      } else if (currentStatus === 'svara_pending') {
         // Сбрасываем winSequenceStep для свары
-        setWinSequenceStep("none");
-      } else if (currentStatus === "ante") {
+        setWinSequenceStep('none');
+      } else if (currentStatus === 'ante') {
         // Сбрасываем winSequenceStep когда начинается новая игра
-        setWinSequenceStep("none");
+        setWinSequenceStep('none');
         // Показываем ChipStack для новой игры
         handleChipsAnte();
         setShowChipStack(true);
-      } else if (currentStatus === "waiting") {
+      } else if (currentStatus === 'waiting') {
         // Показываем ChipStack когда комната ждет игроков
         setShowChipStack(true);
       }
@@ -641,7 +648,7 @@ export function GameRoom({
 
   // Эффективное состояние игры, управляемое новой машиной состояний
   const effectiveGameStatus =
-    winSequenceStep !== "none" ? "finished" : gameState?.status || "waiting";
+    winSequenceStep !== 'none' ? 'finished' : gameState?.status || 'waiting';
 
   // Chat message handling
   useEffect(() => {
@@ -670,10 +677,10 @@ export function GameRoom({
       });
     };
 
-    socket.on("new_chat_message", handleNewChatMessage);
+    socket.on('new_chat_message', handleNewChatMessage);
 
     return () => {
-      socket.off("new_chat_message", handleNewChatMessage);
+      socket.off('new_chat_message', handleNewChatMessage);
       setActiveChats((prev) => {
         Object.values(prev).forEach((chat) => clearTimeout(chat.timerId));
         return {};
@@ -683,13 +690,13 @@ export function GameRoom({
 
   const handleSelectPhrase = (phrase: string) => {
     if (socket) {
-      socket.emit("chat_message", { roomId, phrase });
+      socket.emit('chat_message', { roomId, phrase });
       setShowChatMenu(false); // Close chat menu after sending
     }
   };
 
-  const activeGamePhases: GameState["status"][] = useMemo(
-    () => ["blind_betting", "betting"],
+  const activeGamePhases: GameState['status'][] = useMemo(
+    () => ['blind_betting', 'betting'],
     [],
   );
   const isCurrentUserTurn = !!(
@@ -733,8 +740,8 @@ export function GameRoom({
 
   useEffect(() => {
     if (isCurrentUserTurn) {
-      triggerImpact("medium");
-      actions.playSound("turn");
+      triggerImpact('medium');
+      actions.playSound('turn');
     }
   }, [isCurrentUserTurn, triggerImpact, actions]);
 
@@ -745,14 +752,14 @@ export function GameRoom({
     // Простая проверка: смотрим на последнее действие
     const lastAction = gameState.log[gameState.log.length - 1];
 
-    if (lastAction && lastAction.type === "fold") {
+    if (lastAction && lastAction.type === 'fold') {
       // actions.playSound('fold');
     }
   }, [gameState?.log, actions]);
 
   // Track other player actions for animations (only when log length changes)
   const prevLogLengthRef = useRef(0);
-  const lastProcessedActionRef = useRef<string>("");
+  const lastProcessedActionRef = useRef<string>('');
 
   useEffect(() => {
     if (!gameState?.log) return;
@@ -768,7 +775,7 @@ export function GameRoom({
       if (
         lastAction &&
         lastAction.telegramId !== currentUserId &&
-        ["blind_bet", "call", "raise", "ante"].includes(lastAction.type) &&
+        ['blind_bet', 'call', 'raise', 'ante'].includes(lastAction.type) &&
         actionKey !== lastProcessedActionRef.current
       ) {
         lastProcessedActionRef.current = actionKey;
@@ -776,18 +783,18 @@ export function GameRoom({
       }
 
       // Анимация сброса карт при fold
-      if (lastAction && lastAction.type === "fold") {
+      if (lastAction && lastAction.type === 'fold') {
         handleFoldCards(lastAction.telegramId);
       }
 
       console.error(
-        "анимация не запустилась. Код 1",
+        'анимация не запустилась. Код 1',
         lastAction,
         lastAction.type,
       );
       // Анимация фишек для ante действий
-      if (lastAction && lastAction.type == "ante") {
-        console.error("анимация не запустилась. Код 0");
+      if (lastAction && lastAction.type == 'ante') {
+        console.error('анимация не запустилась. Код 0');
         handlePlayerBet(lastAction.telegramId);
       }
     }
@@ -809,15 +816,15 @@ export function GameRoom({
   // Функция для сброса карт при fold
   // Play win sound for current user if they won
   useEffect(() => {
-    if (winSequenceStep === "winner") {
+    if (winSequenceStep === 'winner') {
       const currentUserWon = gameState?.winners?.some(
         (winner) => winner.id === currentUserId,
       );
       if (currentUserWon && !winSoundPlayed) {
-        actions.playSound("win");
+        actions.playSound('win');
         setWinSoundPlayed(true);
       }
-    } else if (winSequenceStep === "none") {
+    } else if (winSequenceStep === 'none') {
       setWinSoundPlayed(false); // Reset for next round
     }
   }, [
@@ -834,10 +841,10 @@ export function GameRoom({
 
       // Скрываем ChipStack только если завершились анимации фишек к победителю
       const remainingWinnerChips = newAnimations.filter((chip) =>
-        chip.id.startsWith("winner-chip-"),
+        chip.id.startsWith('winner-chip-'),
       );
       const hasWinnerChips = prev.some((chip) =>
-        chip.id.startsWith("winner-chip-"),
+        chip.id.startsWith('winner-chip-'),
       );
 
       if (hasWinnerChips && remainingWinnerChips.length === 0) {
@@ -869,7 +876,7 @@ export function GameRoom({
     return (
       <div className="flex min-h-screen flex-col items-center justify-center bg-primary">
         <div className="mb-4 text-xl text-red-500">
-          {t("error_colon")} {error}
+          {t('error_colon')} {error}
         </div>
         <button
           onClick={() => window.location.reload()}
@@ -885,7 +892,7 @@ export function GameRoom({
     return (
       <div className="flex min-h-screen flex-col items-center justify-center bg-primary">
         <div className="text-xl text-red-500">
-          {t("error_loading_game_state")}
+          {t('error_loading_game_state')}
         </div>
       </div>
     );
@@ -930,13 +937,13 @@ export function GameRoom({
 
   const canPerformBettingActions = !!(
     isCurrentUserTurn &&
-    effectiveGameStatus === "betting" &&
+    effectiveGameStatus === 'betting' &&
     !isAnimating &&
     !postLookActions
   );
   const canPerformBlindActions = !!(
     isCurrentUserTurn &&
-    effectiveGameStatus === "blind_betting" &&
+    effectiveGameStatus === 'blind_betting' &&
     !isAnimating &&
     !postLookActions
   );
@@ -971,9 +978,9 @@ export function GameRoom({
   }
   const isBlindBetDisabled = !!((currentPlayer?.balance || 0) < blindBetAmount);
 
-  const blindButtonsDisabled = !!(effectiveGameStatus !== "blind_betting");
+  const blindButtonsDisabled = !!(effectiveGameStatus !== 'blind_betting');
   // Карты показываются только после затемнения экрана
-  const showCards = winSequenceStep === "showdown";
+  const showCards = winSequenceStep === 'showdown';
 
   const handleRaiseClick = () => setShowBetSlider(true);
   const handleBlindBetClick = () => {
@@ -1011,7 +1018,7 @@ export function GameRoom({
   const handleInvite = () => {
     const referrerId = currentUserId;
     if (!referrerId) {
-      console.error("Could not get referrerId");
+      console.error('Could not get referrerId');
       return;
     }
     // Формируем ссылку по образцу реферальной: https://t.me/Svaraprobot?start=TELEGRAM_ID
@@ -1020,13 +1027,13 @@ export function GameRoom({
     WebApp.openTelegramLink(
       `https://t.me/share/url?url=${encodeURIComponent(
         inviteLink,
-      )}&text=${encodeURIComponent("Привет! Жду тебя в игре, присоединяйся!")}`,
+      )}&text=${encodeURIComponent('Привет! Жду тебя в игре, присоединяйся!')}`,
     );
   };
 
   const handleSitDown = (position: number) => {
     if (parseFloat(balance) < gameState.minBet * 10) {
-      setNotification("insufficientBalance");
+      setNotification('insufficientBalance');
       return;
     }
     actions.sitDown(position, userData);
@@ -1036,26 +1043,26 @@ export function GameRoom({
     <div
       style={{
         backgroundImage: `url(${backgroundImage})`,
-        backgroundSize: "cover",
-        backgroundPosition: "center",
-        height: "100vh",
-        position: "fixed",
-        top: "0",
-        left: "0",
-        width: "100%",
+        backgroundSize: 'cover',
+        backgroundPosition: 'center',
+        height: '100vh',
+        position: 'fixed',
+        top: '0',
+        left: '0',
+        width: '100%',
       }}
       className="game-container relative flex flex-col"
     >
       {/* Затемняющий оверлей для фазы вскрытия карт */}
-      {winSequenceStep === "showdown" && (
+      {winSequenceStep === 'showdown' && (
         <div className="fixed inset-0 z-20 bg-black bg-opacity-60 transition-opacity duration-500" />
       )}
 
-      {svaraStep === "animating" && winSequenceStep === "none" && (
-        <SvaraAnimation onAnimationComplete={() => setSvaraStep("joining")} />
+      {svaraStep === 'animating' && winSequenceStep === 'none' && (
+        <SvaraAnimation onAnimationComplete={() => setSvaraStep('joining')} />
       )}
 
-      {svaraStep === "joining" &&
+      {svaraStep === 'joining' &&
         !(gameState.svaraParticipants?.includes(currentUserId) ?? false) && (
           <SvaraJoinPopup
             gameState={gameState}
@@ -1066,15 +1073,15 @@ export function GameRoom({
 
       <div className="relative z-30 flex items-center justify-between p-4 text-white">
         <h2 className="text-xs font-semibold">
-          {t("room_number_colon")}
+          {t('room_number_colon')}
           {roomId.slice(0, 8)}
         </h2>
         <div className="flex items-center space-x-3">
           <button
             onClick={handleMenuButtonPress}
-            className={`transition-all duration-200 ease-in-out hover:opacity-75 ${isMenuButtonPressed ? "button-press" : ""}`}
+            className={`transition-all duration-200 ease-in-out hover:opacity-75 ${isMenuButtonPressed ? 'button-press' : ''}`}
           >
-            <img src={menuIcon} alt={t("menu")} className="h-5 w-5" />
+            <img src={menuIcon} alt={t('menu')} className="h-5 w-5" />
           </button>
         </div>
       </div>
@@ -1110,30 +1117,30 @@ export function GameRoom({
               );
 
               let cardSide =
-                screenPosition === 2 || screenPosition === 3 ? "left" : "right";
+                screenPosition === 2 || screenPosition === 3 ? 'left' : 'right';
 
               if (screenPosition == 4) {
-                cardSide = "bottom";
+                cardSide = 'bottom';
               } else if (screenPosition == 1) {
-                cardSide = "top";
+                cardSide = 'top';
               }
 
               const getOpenCardsPosition = (position: number) => {
                 switch (position) {
                   case 1:
-                    return "bottom";
+                    return 'bottom';
                   case 2:
-                    return "left";
+                    return 'left';
                   case 3:
-                    return "left";
+                    return 'left';
                   case 4:
-                    return "top";
+                    return 'top';
                   case 5:
-                    return "right";
+                    return 'right';
                   case 6:
-                    return "right";
+                    return 'right';
                   default:
-                    return "top";
+                    return 'top';
                 }
               };
 
@@ -1171,35 +1178,35 @@ export function GameRoom({
                         ? player.lastWinAmount || 0
                         : 0;
                       const showWinIndicator =
-                        winSequenceStep === "winner" && isWinner;
+                        winSequenceStep === 'winner' && isWinner;
 
                       let notificationType:
-                        | "blind"
-                        | "paid"
-                        | "pass"
-                        | "rais"
-                        | "win"
-                        | "look"
+                        | 'blind'
+                        | 'paid'
+                        | 'pass'
+                        | 'rais'
+                        | 'win'
+                        | 'look'
                         | null = null;
                       if (!isCurrentUser) {
                         if (showWinIndicator) {
-                          notificationType = "win";
+                          notificationType = 'win';
                         } else if (player.lastAction) {
                           switch (player.lastAction) {
-                            case "blind":
-                              notificationType = "blind";
+                            case 'blind':
+                              notificationType = 'blind';
                               break;
-                            case "call":
-                              notificationType = "paid";
+                            case 'call':
+                              notificationType = 'paid';
                               break;
-                            case "fold":
-                              notificationType = "pass";
+                            case 'fold':
+                              notificationType = 'pass';
                               break;
-                            case "raise":
-                              notificationType = "rais";
+                            case 'raise':
+                              notificationType = 'rais';
                               break;
-                            case "look":
-                              notificationType = "look";
+                            case 'look':
+                              notificationType = 'look';
                               break;
                           }
                         }
@@ -1254,7 +1261,7 @@ export function GameRoom({
                     })()
                   ) : (
                     <SeatButton
-                      type={isSeated ? "invite" : "sitdown"}
+                      type={isSeated ? 'invite' : 'sitdown'}
                       position={absolutePosition}
                       onSitDown={handleSitDown}
                       onInvite={handleInvite}
@@ -1272,10 +1279,10 @@ export function GameRoom({
         <div className="-mt-2 px-4 pb-4">
           <div className="flex flex-col items-center space-y-4">
             <div>
-              {effectiveGameStatus === "waiting" ? (
+              {effectiveGameStatus === 'waiting' ? (
                 <div className="flex h-full items-center justify-center p-4">
                   <p className="text-center text-[10px] font-bold leading-[150%] tracking-[-0.011em] text-white">
-                    {t("waiting_for_players")}
+                    {t('waiting_for_players')}
                   </p>
                 </div>
               ) : isCurrentUserTurn ? (
@@ -1299,15 +1306,15 @@ export function GameRoom({
                   isRaiseDisabled={isRaiseDisabled || isProcessing}
                   isBlindBetDisabled={isBlindBetDisabled || isProcessing}
                   minBet={
-                    effectiveGameStatus === "blind_betting"
+                    effectiveGameStatus === 'blind_betting'
                       ? blindBetAmount
                       : minRaiseAmount
                   }
                 />
-              ) : gameState?.status === "waiting" ? (
+              ) : gameState?.status === 'waiting' ? (
                 <div className="flex h-full items-center justify-center p-4">
                   <p className="text-center text-[10px] font-bold leading-[150%] tracking-[-0.011em] text-white">
-                    {t("waiting_for_next_round")}
+                    {t('waiting_for_next_round')}
                   </p>
                 </div>
               ) : null}
@@ -1356,10 +1363,10 @@ export function GameRoom({
           onClick={() => setShowChatMenu(true)}
           className="fixed z-40"
           style={{
-            width: "40px",
-            height: "40px",
-            bottom: "25%",
-            left: "18px",
+            width: '40px',
+            height: '40px',
+            bottom: '25%',
+            left: '18px',
           }}
         >
           <img src={chatButton} alt="Chat" className="h-full w-full" />

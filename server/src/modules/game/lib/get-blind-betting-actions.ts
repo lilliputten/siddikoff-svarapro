@@ -1,5 +1,5 @@
 import { GameState } from '../../../types/game';
-import { getAmountToCall, getMinRaise, getMaxRaise } from './betting-utils';
+import { getAmountToCall, getMaxRaise, getMinRaise } from './betting-utils';
 
 export const getBlindBettingActions = (
   gameState: GameState,

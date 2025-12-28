@@ -1,19 +1,19 @@
-import { useMemo, useState } from "react";
-import { retrieveLaunchParams, type User } from "@telegram-apps/sdk-react";
+import { useMemo, useState } from 'react';
+import { retrieveLaunchParams, type User } from '@telegram-apps/sdk-react';
 
-import { AddWalletWindow } from "@/components/AddWalletWindow";
-import { ButtonGroup } from "@/components/Dashboard/ButtonGroup";
-import { Filter } from "@/components/Dashboard/Filter";
-import { Header } from "@/components/Dashboard/Header";
-import { RoomsList } from "@/components/Dashboard/RoomsList";
-import { ConnectRoom } from "@/components/EnterGame/ConnectRoom";
-import { CreatePrivate } from "@/components/EnterGame/CreatePrivate";
-import { CreatePublic } from "@/components/EnterGame/CreatePublic";
-import EnterGameMenu from "@/components/EnterGame/EnterGameMenu";
-import { Footer } from "@/components/Footer";
-import { LoadingPage } from "@/components/LoadingPage";
-import { Notification } from "@/components/Notification";
-import { DashboardProps, NotificationType } from "@/types/components";
+import { AddWalletWindow } from '@/components/AddWalletWindow';
+import { ButtonGroup } from '@/components/Dashboard/ButtonGroup';
+import { Filter } from '@/components/Dashboard/Filter';
+import { Header } from '@/components/Dashboard/Header';
+import { RoomsList } from '@/components/Dashboard/RoomsList';
+import { ConnectRoom } from '@/components/EnterGame/ConnectRoom';
+import { CreatePrivate } from '@/components/EnterGame/CreatePrivate';
+import { CreatePublic } from '@/components/EnterGame/CreatePublic';
+import EnterGameMenu from '@/components/EnterGame/EnterGameMenu';
+import { Footer } from '@/components/Footer';
+import { LoadingPage } from '@/components/LoadingPage';
+import { Notification } from '@/components/Notification';
+import { DashboardProps, NotificationType } from '@/types/components';
 
 export function Dashboard({
   onMoreClick,
@@ -27,7 +27,7 @@ export function Dashboard({
     return (params.tgWebAppData as { user?: User })?.user;
   }, []);
 
-  const [searchId, setSearchId] = useState("");
+  const [searchId, setSearchId] = useState('');
   const [isAvailableFilter, setIsAvailableFilter] = useState(false);
   const [stakeRange, setStakeRange] = useState<[number, number]>([0, 1000000]);
   const [isAddWalletVisible, setIsAddWalletVisible] = useState(false);
@@ -36,48 +36,48 @@ export function Dashboard({
   );
   const [isEnterGameMenuVisible, setIsEnterGameMenuVisible] = useState(false);
   const [activeModal, setActiveModal] = useState<
-    "createPublic" | "createPrivate" | "connectRoom" | null
+    'createPublic' | 'createPrivate' | 'connectRoom' | null
   >(null);
 
-  // Отладочные логи
-  console.log(
-    "Dashboard render - isEnterGameMenuVisible:",
-    isEnterGameMenuVisible,
-  );
-  console.log("Dashboard render - activeModal:", activeModal);
+  // // Отладочные логи
+  // console.log(
+  //   'Dashboard render - isEnterGameMenuVisible:',
+  //   isEnterGameMenuVisible,
+  // );
+  // console.log('Dashboard render - activeModal:', activeModal);
   const [isCreatingRoom, setIsCreatingRoom] = useState(false);
 
   const handleWithdrawClick = () => {
     if (walletAddress) {
-      setCurrentPage("withdraw");
+      setCurrentPage('withdraw');
     } else {
       setIsAddWalletVisible(true);
     }
   };
 
   const handleComingSoon = () => {
-    setNotification("comingSoon");
+    setNotification('comingSoon');
   };
 
   const handleCreateRoomClick = () => {
-    console.log("handleCreateRoomClick called");
+    // console.log('handleCreateRoomClick called');
     setIsEnterGameMenuVisible(true);
   };
 
   const handleCloseEnterGameMenu = () => {
-    console.log("handleCloseEnterGameMenu called");
+    // console.log('handleCloseEnterGameMenu called');
     setIsEnterGameMenuVisible(false);
   };
 
   const openModal = (
-    modal: "createPublic" | "createPrivate" | "connectRoom",
+    modal: 'createPublic' | 'createPrivate' | 'connectRoom',
   ) => {
     setActiveModal(modal);
     setIsEnterGameMenuVisible(false);
   };
 
   const openEnterGameMenu = () => {
-    console.log("openEnterGameMenu called");
+    // console.log('openEnterGameMenu called');
     setActiveModal(null);
     setIsEnterGameMenuVisible(true);
   };
@@ -125,7 +125,7 @@ export function Dashboard({
           <AddWalletWindow
             onClose={() => setIsAddWalletVisible(false)}
             onAdd={() => {
-              setCurrentPage("addWallet");
+              setCurrentPage('addWallet');
               setIsAddWalletVisible(false);
             }}
           />
@@ -136,7 +136,7 @@ export function Dashboard({
         onClose={handleCloseEnterGameMenu}
         openModal={openModal}
       />
-      {activeModal === "createPublic" && (
+      {activeModal === 'createPublic' && (
         <CreatePublic
           onClose={closeModal}
           openModal={openEnterGameMenu}
@@ -146,7 +146,7 @@ export function Dashboard({
           setIsCreatingRoom={setIsCreatingRoom}
         />
       )}
-      {activeModal === "createPrivate" && (
+      {activeModal === 'createPrivate' && (
         <CreatePrivate
           onClose={closeModal}
           openModal={openEnterGameMenu}
@@ -156,7 +156,7 @@ export function Dashboard({
           setIsCreatingRoom={setIsCreatingRoom}
         />
       )}
-      {activeModal === "connectRoom" && (
+      {activeModal === 'connectRoom' && (
         <ConnectRoom
           onClose={closeModal}
           openModal={openEnterGameMenu}

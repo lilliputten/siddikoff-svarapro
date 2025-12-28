@@ -1,16 +1,17 @@
 import {
+  Body,
   Controller,
   Get,
-  Post,
-  Body,
   Param,
-  UseGuards,
+  Post,
   Request,
   UnauthorizedException,
+  UseGuards,
 } from '@nestjs/common';
+
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
-import { UsersService } from './users.service';
 import { WalletAddressDto } from './dto/wallet-address.dto';
+import { UsersService } from './users.service';
 
 interface AuthenticatedRequest extends Request {
   user: {

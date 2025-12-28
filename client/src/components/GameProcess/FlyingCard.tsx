@@ -1,6 +1,6 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from 'react';
 
-import cardBackImage from "../../assets/game/back.png";
+import cardBackImage from '../../assets/game/back.png';
 
 interface FlyingCardProps {
   fromX: number;
@@ -72,8 +72,8 @@ const FlyingCard: React.FC<FlyingCardProps> = ({
       style={{
         left: `${position.x}px`,
         top: `${position.y}px`,
-        width: "32px",
-        height: "44px",
+        width: '32px',
+        height: '44px',
         zIndex: 1000,
       }}
     >

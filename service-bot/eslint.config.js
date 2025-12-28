@@ -1,7 +1,7 @@
-import pluginJs from "@eslint/js";
-import pluginPrettierRecommended from "eslint-plugin-prettier/recommended";
-import globals from "globals";
-import tseslint from "typescript-eslint";
+import pluginJs from '@eslint/js';
+import pluginPrettierRecommended from 'eslint-plugin-prettier/recommended';
+import globals from 'globals';
+import tseslint from 'typescript-eslint';
 
 export default [
   {
@@ -12,25 +12,27 @@ export default [
   pluginPrettierRecommended,
   {
     rules: {
-      "no-undef": "error",
-      "no-unreachable": "warn",
-      "no-unused-vars": ["warn", { argsIgnorePattern: "^_" }],
-      "prefer-const": "warn",
-      "@typescript-eslint/no-unused-vars": [
-        "warn",
+      // "no-undef": "error",
+      // "no-unreachable": "warn",
+      // "no-unused-vars": ["warn", { argsIgnorePattern: "^_" }],
+      'prefer-const': 'warn',
+      'no-console': 'warn',
+      'no-debugger': 'warn',
+      '@typescript-eslint/no-unused-vars': [
+        'warn',
         {
-          argsIgnorePattern: "^_",
-          varsIgnorePattern: "^_",
-          caughtErrorsIgnorePattern: "^_",
+          argsIgnorePattern: '^_',
+          varsIgnorePattern: '^_',
+          caughtErrorsIgnorePattern: '^_',
         },
       ],
-      "prettier/prettier": "warn",
+      'prettier/prettier': 'warn',
       // Temporarily disabled (due to a waste amount of these errors in the code)
-      "@typescript-eslint/no-explicit-any": "off",
-      "@typescript-eslint/ban-ts-comment": "off",
+      '@typescript-eslint/no-explicit-any': 'off',
+      '@typescript-eslint/ban-ts-comment': 'off',
     },
   },
   {
-    ignores: ["dist/**/*", "node_modules/**/*"],
+    ignores: ['dist/**/*', 'node_modules/**/*'],
   },
 ];

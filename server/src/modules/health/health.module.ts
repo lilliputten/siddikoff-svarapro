@@ -1,7 +1,8 @@
 import { Module } from '@nestjs/common';
+
+import { RedisService } from '../../services/redis.service';
 import { HealthController } from './health.controller';
 import { HealthService } from './health.service';
-import { RedisService } from '../../services/redis.service';
 
 @Module({
   controllers: [HealthController],

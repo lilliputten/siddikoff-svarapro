@@ -1,11 +1,11 @@
-import React, { useState } from "react";
-import { useTranslation } from "react-i18next";
+import React, { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 
-import completeIcon from "@/assets/completeSmallGreen.png";
-import incompleteIcon from "@/assets/completeSmallGrey.png";
-import dollarIcon from "@/assets/dollar.png";
-import { apiService } from "@/services/api/api";
-import { CreatePublicProps } from "@/types/components";
+import completeIcon from '@/assets/completeSmallGreen.png';
+import incompleteIcon from '@/assets/completeSmallGrey.png';
+import dollarIcon from '@/assets/dollar.png';
+import { apiService } from '@/services/api/api';
+import { CreatePublicProps } from '@/types/components';
 
 export const CreatePublic: React.FC<CreatePublicProps> = ({
   onClose,
@@ -15,8 +15,8 @@ export const CreatePublic: React.FC<CreatePublicProps> = ({
   setNotification,
   setIsCreatingRoom,
 }) => {
-  const { t } = useTranslation("common");
-  const [inputValue, setInputValue] = useState("");
+  const { t } = useTranslation('common');
+  const [inputValue, setInputValue] = useState('');
   const [isValid, setIsValid] = useState(false);
   const [isProcessing, setIsProcessing] = useState(false);
 
@@ -36,7 +36,7 @@ export const CreatePublic: React.FC<CreatePublicProps> = ({
     const userBalance = parseFloat(balance);
 
     if (userBalance < stake * 10) {
-      setNotification("insufficientBalance");
+      setNotification('insufficientBalance');
       return;
     }
 
@@ -48,7 +48,7 @@ export const CreatePublic: React.FC<CreatePublicProps> = ({
 
     const startTime = Date.now();
     try {
-      const room = await apiService.createRoom(stake, "public");
+      const room = await apiService.createRoom(stake, 'public');
 
       const elapsedTime = Date.now() - startTime;
       const remainingTime = 3000 - elapsedTime;
@@ -57,11 +57,12 @@ export const CreatePublic: React.FC<CreatePublicProps> = ({
         await new Promise((resolve) => setTimeout(resolve, remainingTime));
       }
 
-      setCurrentPage("gameRoom", { roomId: room.roomId, autoSit: true });
+      setCurrentPage('gameRoom', { roomId: room.roomId, autoSit: true });
     } catch (error) {
-      console.error("Failed to create room:", error);
+      // eslint-disable-next-line no-console
+      console.error('Failed to create room:', error);
       setIsCreatingRoom(false); // Hide loading on error
-      setNotification("gameJoinError"); // Show a generic error
+      setNotification('gameJoinError'); // Show a generic error
     }
   };
 
@@ -74,7 +75,7 @@ export const CreatePublic: React.FC<CreatePublicProps> = ({
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50 backdrop-blur-sm">
       <div className="relative flex h-[172px] w-[316px] flex-col items-center rounded-lg bg-[#47444C] px-4 py-4">
         <h2 className="mb-4 text-lg font-semibold text-white">
-          {t("create_room")}
+          {t('create_room')}
         </h2>
         <div className="relative mb-4 w-full">
           <img
@@ -87,7 +88,7 @@ export const CreatePublic: React.FC<CreatePublicProps> = ({
             inputMode="decimal"
             value={inputValue}
             onChange={handleInputChange}
-            placeholder={t("min_stake")}
+            placeholder={t('min_stake')}
             className="h-12 w-full rounded-lg bg-[#13121780] pl-10 pr-10 text-center text-base font-normal text-white"
           />
           <img
@@ -102,14 +103,14 @@ export const CreatePublic: React.FC<CreatePublicProps> = ({
             onClick={handleCreate}
             disabled={isProcessing || !isValid}
           >
-            {t("create")}
+            {t('create')}
           </button>
           <button
             className="h-[49px] w-[164px] border-t border-white border-opacity-10 text-[#5F8BE7]"
             onClick={handleCancel}
             disabled={isProcessing}
           >
-            {t("cancel")}
+            {t('cancel')}
           </button>
         </div>
       </div>

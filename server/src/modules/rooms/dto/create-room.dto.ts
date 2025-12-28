@@ -1,12 +1,12 @@
 import {
-  IsString,
-  IsNumber,
   IsIn,
+  IsNumber,
   IsOptional,
-  MinLength,
-  MaxLength,
+  IsString,
   Matches,
+  MaxLength,
   Min,
+  MinLength,
 } from 'class-validator';
 
 export class CreateRoomDto {

@@ -1,7 +1,8 @@
-import { Telegraf, Context } from 'telegraf';
-import rateLimit from 'telegraf-ratelimit';
+/* eslint-disable no-console */
 import path from 'path';
 import { fileURLToPath } from 'url';
+import { Context, Telegraf } from 'telegraf';
+import rateLimit from 'telegraf-ratelimit';
 
 // Расширяем тип Context для startPayload
 interface MyContext extends Context {
@@ -22,7 +23,7 @@ bot.use(
     window: 3000,
     limit: 1,
     onLimitExceeded: (ctx) => ctx.reply('Too many requests'),
-  })
+  }),
 );
 
 bot.start(async (ctx) => {
@@ -39,7 +40,7 @@ bot.start(async (ctx) => {
         first_name: user.first_name,
         username: user.username,
         language_code: user.language_code,
-      })
+      }),
     );
     initData.append('hash', 'mock_signature_for_development');
 
@@ -90,7 +91,7 @@ bot.start(async (ctx) => {
             ],
           ],
         },
-      }
+      },
     );
   } catch (error) {
     console.error('Start command error:', error);

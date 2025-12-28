@@ -1,6 +1,6 @@
-import { GameState, Player } from '../../../types/game';
 import { Player as PlayerEntity } from '../../../entities/player.entity';
-import { generateDeck, shuffleDeck, dealCards } from './deck'; // I assume deck logic is fine.
+import { GameState, Player } from '../../../types/game';
+import { dealCards, generateDeck, shuffleDeck } from './deck'; // I assume deck logic is fine.
 
 export const getNewGame = (
   roomId: string,

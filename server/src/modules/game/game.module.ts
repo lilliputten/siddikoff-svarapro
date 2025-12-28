@@ -1,14 +1,14 @@
 import { Module } from '@nestjs/common';
-import { GameService } from './services/game.service';
-import { CardService } from './services/card.service';
-import { PlayerService } from './services/player.service';
-import { BettingService } from './services/betting.service';
-import { GameStateService } from './services/game-state.service';
-import { GameGateway } from './game.gateway';
-import { RedisService } from '../../services/redis.service';
-import { UsersModule } from '../users/users.module';
 
+import { RedisService } from '../../services/redis.service';
 import { FinancesModule } from '../finances/finances.module';
+import { UsersModule } from '../users/users.module';
+import { GameGateway } from './game.gateway';
+import { BettingService } from './services/betting.service';
+import { CardService } from './services/card.service';
+import { GameStateService } from './services/game-state.service';
+import { GameService } from './services/game.service';
+import { PlayerService } from './services/player.service';
 
 @Module({
   imports: [UsersModule, FinancesModule],

@@ -1,22 +1,23 @@
+import { BullModule } from '@nestjs/bull';
 import { Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
-import { TypeOrmModule } from '@nestjs/typeorm';
-import { ThrottlerModule } from '@nestjs/throttler';
 import { APP_GUARD } from '@nestjs/core';
-import { AuthModule } from './modules/auth/auth.module';
-import { UsersModule } from './modules/users/users.module';
-import { FinancesModule } from './modules/finances/finances.module';
-import { GameModule } from './modules/game/game.module';
-import { RoomsModule } from './modules/rooms/rooms.module';
-import { SystemRoomsModule } from './modules/system-rooms/system-rooms.module';
-import { AdminsModule } from './modules/admins/admins.module';
-import { AdminModule } from './modules/admin/admin.module';
-import { HealthModule } from './modules/health/health.module';
-import { BullModule } from '@nestjs/bull';
+import { ThrottlerModule } from '@nestjs/throttler';
+import { TypeOrmModule } from '@nestjs/typeorm';
+import * as Joi from 'joi';
+
 import { CustomThrottlerGuard } from './guards/throttler.guard';
 import { AuditInterceptor } from './interceptors/audit.interceptor';
+import { AdminModule } from './modules/admin/admin.module';
+import { AdminsModule } from './modules/admins/admins.module';
+import { AuthModule } from './modules/auth/auth.module';
+import { FinancesModule } from './modules/finances/finances.module';
+import { GameModule } from './modules/game/game.module';
+import { HealthModule } from './modules/health/health.module';
+import { RoomsModule } from './modules/rooms/rooms.module';
+import { SystemRoomsModule } from './modules/system-rooms/system-rooms.module';
+import { UsersModule } from './modules/users/users.module';
 import { MigrationService } from './services/migration.service';
-import * as Joi from 'joi';
 
 @Module({
   imports: [

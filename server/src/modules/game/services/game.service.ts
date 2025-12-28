@@ -1,19 +1,20 @@
 import { Injectable } from '@nestjs/common';
+
+import { TURN_DURATION_SECONDS } from '../../../constants/game.constants';
 import { RedisService } from '../../../services/redis.service';
 import {
-  GameState,
   GameAction,
   GameActionResult,
+  GameState,
   Room,
 } from '../../../types/game';
-import { CardService } from './card.service';
-import { PlayerService } from './player.service';
-import { BettingService } from './betting.service';
-// import { PotManager } from '../lib/pot-manager';
-import { GameStateService } from './game-state.service';
 import { UsersService } from '../../users/users.service';
 import { UserDataDto } from '../dto/user-data.dto';
-import { TURN_DURATION_SECONDS } from '../../../constants/game.constants';
+import { BettingService } from './betting.service';
+import { CardService } from './card.service';
+// import { PotManager } from '../lib/pot-manager';
+import { GameStateService } from './game-state.service';
+import { PlayerService } from './player.service';
 
 @Injectable()
 export class GameService {

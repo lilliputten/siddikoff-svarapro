@@ -1,10 +1,10 @@
-import axios, { AxiosInstance } from "axios";
+import axios, { AxiosInstance } from 'axios';
 
 // RUB payment method types (matching server-side enum)
 export enum RubPaymentMethod {
-  CLASSIC = "CLASSIC", // 5000-100000 RUB, fee 15%
-  SMALL = "1_5K", // 1000-4999 RUB, fee 16%
-  ALFA = "ALFA", // 1000-100000 RUB, fee 12%, Alfa-Alfa internal
+  CLASSIC = 'CLASSIC', // 5000-100000 RUB, fee 15%
+  SMALL = '1_5K', // 1000-4999 RUB, fee 16%
+  ALFA = 'ALFA', // 1000-100000 RUB, fee 12%, Alfa-Alfa internal
 }
 
 export interface NorosFiatTransactionResponse {
@@ -28,7 +28,7 @@ export interface UserProfile {
 }
 
 export interface FiatTransactionHistoryItem {
-  type: "deposit" | "withdraw";
+  type: 'deposit' | 'withdraw';
   currency: string;
   fiat_amount: number;
   amount: number; // USDT amount
@@ -49,12 +49,12 @@ export class ApiService {
 
   constructor() {
     const apiBaseUrl =
-      process.env.API_BASE_URL || "https://svarapro.com/api/v1";
+      process.env.API_BASE_URL || 'https://svarapro.com/api/v1';
     this.api = axios.create({
       baseURL: apiBaseUrl,
       timeout: 30000,
       headers: {
-        "Content-Type": "application/json",
+        'Content-Type': 'application/json',
       },
     });
   }
@@ -73,14 +73,14 @@ export class ApiService {
         params.method = method;
       }
 
-      const response = await this.api.get<NorosBank[]>("/finances/fiat/banks", {
+      const response = await this.api.get<NorosBank[]>('/finances/fiat/banks', {
         params,
       });
       return response.data;
     } catch (error) {
       if (axios.isAxiosError(error)) {
         const message =
-          error.response?.data?.message || error.message || "Unknown error";
+          error.response?.data?.message || error.message || 'Unknown error';
         throw new Error(`API error: ${message}`);
       }
       throw error;
@@ -110,14 +110,14 @@ export class ApiService {
       }
 
       const response = await this.api.post<NorosFiatTransactionResponse>(
-        "/finances/fiat/transaction",
+        '/finances/fiat/transaction',
         requestBody,
       );
       return response.data;
     } catch (error) {
       if (axios.isAxiosError(error)) {
         const message =
-          error.response?.data?.message || error.message || "Unknown error";
+          error.response?.data?.message || error.message || 'Unknown error';
         throw new Error(`API error: ${message}`);
       }
       throw error;
@@ -155,12 +155,12 @@ export class ApiService {
         payoutId: number;
         clientID: string;
         status: string;
-      }>("/finances/fiat/withdraw", requestBody);
+      }>('/finances/fiat/withdraw', requestBody);
       return response.data;
     } catch (error) {
       if (axios.isAxiosError(error)) {
         const message =
-          error.response?.data?.message || error.message || "Unknown error";
+          error.response?.data?.message || error.message || 'Unknown error';
         throw new Error(`API error: ${message}`);
       }
       throw error;
@@ -176,14 +176,14 @@ export class ApiService {
     },
   ): Promise<void> {
     try {
-      await this.api.post("/users/ensure", {
+      await this.api.post('/users/ensure', {
         telegramId,
         ...userData,
       });
     } catch (error) {
       if (axios.isAxiosError(error)) {
         const message =
-          error.response?.data?.message || error.message || "Unknown error";
+          error.response?.data?.message || error.message || 'Unknown error';
         throw new Error(`API error: ${message}`);
       }
       throw error;
@@ -199,7 +199,7 @@ export class ApiService {
     } catch (error) {
       if (axios.isAxiosError(error)) {
         const message =
-          error.response?.data?.message || error.message || "Unknown error";
+          error.response?.data?.message || error.message || 'Unknown error';
         throw new Error(`API error: ${message}`);
       }
       throw error;
@@ -217,7 +217,7 @@ export class ApiService {
     } catch (error) {
       if (axios.isAxiosError(error)) {
         const message =
-          error.response?.data?.message || error.message || "Unknown error";
+          error.response?.data?.message || error.message || 'Unknown error';
         throw new Error(`API error: ${message}`);
       }
       throw error;
@@ -227,13 +227,13 @@ export class ApiService {
   async getFiatRates(): Promise<{ currency: string; rate: number }[]> {
     try {
       const response = await this.api.get<{ currency: string; rate: number }[]>(
-        "/finances/fiat/rates",
+        '/finances/fiat/rates',
       );
       return response.data;
     } catch (error) {
       if (axios.isAxiosError(error)) {
         const message =
-          error.response?.data?.message || error.message || "Unknown error";
+          error.response?.data?.message || error.message || 'Unknown error';
         throw new Error(`API error: ${message}`);
       }
       throw error;
@@ -246,7 +246,7 @@ export class ApiService {
     } catch (error) {
       if (axios.isAxiosError(error)) {
         const message =
-          error.response?.data?.message || error.message || "Unknown error";
+          error.response?.data?.message || error.message || 'Unknown error';
         throw new Error(`API error: ${message}`);
       }
       throw error;
@@ -255,13 +255,13 @@ export class ApiService {
   async getSystemWalletBalance(): Promise<{ balance: number }> {
     try {
       const response = await this.api.get<{ balance: number }>(
-        "/finances/system-wallet",
+        '/finances/system-wallet',
       );
       return response.data;
     } catch (error) {
       if (axios.isAxiosError(error)) {
         const message =
-          error.response?.data?.message || error.message || "Unknown error";
+          error.response?.data?.message || error.message || 'Unknown error';
         throw new Error(`API error: ${message}`);
       }
       throw error;
@@ -299,12 +299,12 @@ export class ApiService {
         payoutId: number;
         clientID: string;
         status: string;
-      }>("/finances/system-wallet/withdraw", requestBody);
+      }>('/finances/system-wallet/withdraw', requestBody);
       return response.data;
     } catch (error) {
       if (axios.isAxiosError(error)) {
         const message =
-          error.response?.data?.message || error.message || "Unknown error";
+          error.response?.data?.message || error.message || 'Unknown error';
         throw new Error(`API error: ${message}`);
       }
       throw error;
@@ -317,13 +317,13 @@ export class ApiService {
   }> {
     try {
       const response = await this.api.post<{ status: string; message: string }>(
-        "/finances/system-wallet/reset",
+        '/finances/system-wallet/reset',
       );
       return response.data;
     } catch (error) {
       if (axios.isAxiosError(error)) {
         const message =
-          error.response?.data?.message || error.message || "Unknown error";
+          error.response?.data?.message || error.message || 'Unknown error';
         throw new Error(`API error: ${message}`);
       }
       throw error;

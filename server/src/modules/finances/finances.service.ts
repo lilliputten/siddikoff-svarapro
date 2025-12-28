@@ -1,19 +1,20 @@
-import { Injectable, Logger, BadRequestException } from '@nestjs/common';
+import { InjectQueue } from '@nestjs/bull';
+import { BadRequestException, Injectable, Logger } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
+import { Queue } from 'bull';
+import * as cron from 'node-cron';
 import { Repository } from 'typeorm';
+import { v4 as uuidv4 } from 'uuid';
+
+import { SystemWallet } from '../../entities/system-wallet.entity';
 import { Transaction } from '../../entities/transactions.entity';
 import { User } from '../../entities/user.entity';
-import { SystemWallet } from '../../entities/system-wallet.entity';
 import { ApiService } from '../../services/api.service';
 import { NorosService, RubPaymentMethod } from '../../services/noros.service';
-import { TransactionGateway } from './transactions.gateway';
-import { v4 as uuidv4 } from 'uuid';
-import { InjectQueue } from '@nestjs/bull';
-import { Queue } from 'bull';
-import { TransactionStatusDto } from './dto/transaction-status.dto';
 import { TelegramService } from '../../services/telegram.service';
 import { CallbackDto } from './dto/callback.dto';
-import * as cron from 'node-cron';
+import { TransactionStatusDto } from './dto/transaction-status.dto';
+import { TransactionGateway } from './transactions.gateway';
 
 @Injectable()
 export class FinancesService {

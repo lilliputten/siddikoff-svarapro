@@ -9,7 +9,7 @@
     "preview": "vite preview",
     "test": "jest",
     "lint": "eslint . --ext .ts,.tsx",
-    "format": "prettier --write .",
+    "format": "prettier --write --cache .",
     "format-quick": "pretty-quick --write --cache .",
     "type-check": "tsc --pretty --noEmit",
     "check-all": "npm-run-all format-quick lint type-check"

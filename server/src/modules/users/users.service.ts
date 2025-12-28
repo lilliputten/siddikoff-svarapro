@@ -1,14 +1,15 @@
 import {
+  BadRequestException,
+  ConflictException,
   Injectable,
   NotFoundException,
-  ConflictException,
-  BadRequestException,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository, In } from 'typeorm';
+import { Address } from 'ton-core';
+import { In, Repository } from 'typeorm';
+
 import { User } from '../../entities/user.entity';
 import { ProfileDto } from './dto/profile.dto';
-import { Address } from 'ton-core';
 
 @Injectable()
 export class UsersService {

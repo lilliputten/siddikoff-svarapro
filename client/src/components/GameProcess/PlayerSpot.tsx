@@ -1,25 +1,25 @@
-import { useContext, useEffect, useRef, useState } from "react";
+import { useContext, useEffect, useRef, useState } from 'react';
 
-import cardBack from "@/assets/game/back.png";
-import chatButtonBg from "@/assets/game/chat.png";
-import defaultAvatar from "@/assets/main_logo.png";
-import { TURN_DURATION_SECONDS } from "@/constants";
-import { PositionElement, PositionsContext } from "@/context/PositionsContext";
-import { GameStatuses, Player } from "@/types/game";
+import cardBack from '@/assets/game/back.png';
+import chatButtonBg from '@/assets/game/chat.png';
+import defaultAvatar from '@/assets/main_logo.png';
+import { TURN_DURATION_SECONDS } from '@/constants';
+import { PositionElement, PositionsContext } from '@/context/PositionsContext';
+import { GameStatuses, Player } from '@/types/game';
 // import { PlayerBetAnimation } from "./PlayerBetAnimation";
-import { WithNull } from "@/types/mainTypes";
-import { cn } from "@/utils/cn";
+import { WithNull } from '@/types/mainTypes';
+import { cn } from '@/utils/cn';
 
-import { ActionNotification } from "./ActionNotification";
-import { CardComponent } from "./CardComponent";
+import { ActionNotification } from './ActionNotification';
+import { CardComponent } from './CardComponent';
 
 const formatAmount = (amount: number): string => {
   const num = Number(amount);
   const fixed = num.toFixed(2);
-  if (fixed.endsWith(".00")) {
+  if (fixed.endsWith('.00')) {
     return String(Math.round(num));
   }
-  if (fixed.endsWith("0")) {
+  if (fixed.endsWith('0')) {
     return fixed.slice(0, -1);
   }
   return fixed;
@@ -29,7 +29,7 @@ const formatUsername = (username: string): string => {
   if (username.length <= 11) {
     return username;
   }
-  return username.slice(0, 8) + "...";
+  return username.slice(0, 8) + '...';
 };
 
 interface PlayerSpotProps {
@@ -38,7 +38,7 @@ interface PlayerSpotProps {
   showCards: boolean;
   scale?: number;
   cardSide?: string;
-  openCardsPosition?: "top" | "bottom" | "left" | "right";
+  openCardsPosition?: 'top' | 'bottom' | 'left' | 'right';
   isTurn?: boolean;
   turnTimer?: number;
   winAmount?: number;
@@ -56,7 +56,7 @@ interface PlayerSpotProps {
     lastActionAmount?: number;
     currentBet?: number;
   };
-  notificationType: "blind" | "paid" | "pass" | "rais" | "win" | "look" | null;
+  notificationType: 'blind' | 'paid' | 'pass' | 'rais' | 'win' | 'look' | null;
   showWinIndicator: boolean;
 }
 
@@ -65,8 +65,8 @@ export function PlayerSpot({
   isCurrentUser,
   showCards,
   scale = 1,
-  cardSide = "right",
-  openCardsPosition = "top",
+  cardSide = 'right',
+  openCardsPosition = 'top',
   isTurn = false,
   turnTimer = TURN_DURATION_SECONDS,
   winAmount = 0,
@@ -91,10 +91,10 @@ export function PlayerSpot({
   const [newShowWinIndicator, setNewShowWinIndicator] = useState(false);
 
   useEffect(() => {
-    console.log(
-      "shoWinIndicator!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!>>",
-      showWinIndicator,
-    );
+    // console.log(
+    //   'shoWinIndicator!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!>>',
+    //   showWinIndicator,
+    // );
     if (showWinIndicator) {
       setNewShowWinIndicator(true);
       setTimeout(() => {
@@ -105,10 +105,10 @@ export function PlayerSpot({
 
   const buttonTextStyle: React.CSSProperties = {
     fontWeight: 700,
-    fontSize: "9px",
-    lineHeight: "100%",
-    textAlign: "center",
-    color: "black",
+    fontSize: '9px',
+    lineHeight: '100%',
+    textAlign: 'center',
+    color: 'black',
   };
 
   // Функция для вычисления суммы последнего действия игрока
@@ -177,13 +177,13 @@ export function PlayerSpot({
 
   const spotClasses = `
     relative rounded-lg p-3 flex items-center
-    ${hasFolded ? "opacity-60" : ""}
-    ${!player.isActive && !player.hasFolded ? "opacity-70" : ""}
+    ${hasFolded ? 'opacity-60' : ''}
+    ${!player.isActive && !player.hasFolded ? 'opacity-70' : ''}
   `;
 
   const containerStyle: React.CSSProperties = {
     transform: `scale(${scale})`,
-    transformOrigin: "center center",
+    transformOrigin: 'center center',
   };
 
   useEffect(() => {
@@ -205,19 +205,19 @@ export function PlayerSpot({
     };
 
     onResizeHandler();
-    window.addEventListener("resize", onResizeHandler);
+    window.addEventListener('resize', onResizeHandler);
 
-    return () => window.removeEventListener("resize", onResizeHandler);
+    return () => window.removeEventListener('resize', onResizeHandler);
   }, [addPlayerPosition, cardSide, openCardsPosition]);
 
   const TotalBetComponent = player.totalBet > 0 && !showCards && (
     <div
       className="flex items-center justify-center px-2 text-xs font-semibold leading-4 text-white"
       style={{
-        minWidth: "32px",
-        height: "19px",
-        borderRadius: "8px",
-        backgroundColor: "rgba(35, 34, 40, 0.61)",
+        minWidth: '32px',
+        height: '19px',
+        borderRadius: '8px',
+        backgroundColor: 'rgba(35, 34, 40, 0.61)',
       }}
     >
       {`$${formatAmount(player.totalBet)}`}
@@ -231,20 +231,20 @@ export function PlayerSpot({
   );
 
   const CardDeckComponent = (type: string) => {
-    if (type == "right") {
+    if (type == 'right') {
       return (
         <div className="flex flex-col items-center space-y-1">
-          <div className="relative" style={{ width: "42px", height: "42px" }}>
+          <div className="relative" style={{ width: '42px', height: '42px' }}>
             <img
               src={cardBack}
               alt="card back"
               className="absolute rounded-sm"
               style={{
-                width: "32px",
-                height: "44px",
+                width: '32px',
+                height: '44px',
                 zIndex: 3,
-                top: "0",
-                left: "0",
+                top: '0',
+                left: '0',
               }}
             />
             <img
@@ -252,11 +252,11 @@ export function PlayerSpot({
               alt="card back"
               className="absolute rounded-sm"
               style={{
-                width: "32px",
-                height: "44px",
+                width: '32px',
+                height: '44px',
                 zIndex: 2,
-                top: "0",
-                left: "4px",
+                top: '0',
+                left: '4px',
               }}
             />
             <img
@@ -264,30 +264,30 @@ export function PlayerSpot({
               alt="card back"
               className="absolute rounded-sm"
               style={{
-                width: "32px",
-                height: "44px",
+                width: '32px',
+                height: '44px',
                 zIndex: 1,
-                top: "0",
-                left: "8px",
+                top: '0',
+                left: '8px',
               }}
             />
           </div>
         </div>
       );
-    } else if (type == "left") {
+    } else if (type == 'left') {
       return (
         <div className="flex flex-col items-center space-y-1">
-          <div className="relative" style={{ width: "42px", height: "42px" }}>
+          <div className="relative" style={{ width: '42px', height: '42px' }}>
             <img
               src={cardBack}
               alt="card back"
               className="absolute rounded-sm"
               style={{
-                width: "30px",
-                height: "42px",
+                width: '30px',
+                height: '42px',
                 zIndex: 3,
-                top: "0",
-                left: "0",
+                top: '0',
+                left: '0',
               }}
             />
             <img
@@ -295,11 +295,11 @@ export function PlayerSpot({
               alt="card back"
               className="absolute rounded-sm"
               style={{
-                width: "30px",
-                height: "42px",
+                width: '30px',
+                height: '42px',
                 zIndex: 2,
-                top: "0",
-                left: "-4px",
+                top: '0',
+                left: '-4px',
               }}
             />
             <img
@@ -307,11 +307,11 @@ export function PlayerSpot({
               alt="card back"
               className="absolute rounded-sm"
               style={{
-                width: "30px",
-                height: "42px",
+                width: '30px',
+                height: '42px',
                 zIndex: 1,
-                top: "0",
-                left: "-8px",
+                top: '0',
+                left: '-8px',
               }}
             />
           </div>
@@ -320,17 +320,17 @@ export function PlayerSpot({
     } else {
       return (
         <div className="flex flex-col items-center space-y-1">
-          <div className="relative" style={{ width: "42px", height: "42px" }}>
+          <div className="relative" style={{ width: '42px', height: '42px' }}>
             <img
               src={cardBack}
               alt="card back"
               className="absolute rounded-sm"
               style={{
-                width: "30px",
-                height: "42px",
+                width: '30px',
+                height: '42px',
                 zIndex: 3,
-                top: "0",
-                left: "0",
+                top: '0',
+                left: '0',
               }}
             />
             <img
@@ -338,11 +338,11 @@ export function PlayerSpot({
               alt="card back"
               className="absolute rounded-sm"
               style={{
-                width: "30px",
-                height: "42px",
+                width: '30px',
+                height: '42px',
                 zIndex: 2,
-                top: "0",
-                left: "4px",
+                top: '0',
+                left: '4px',
               }}
             />
             <img
@@ -350,11 +350,11 @@ export function PlayerSpot({
               alt="card back"
               className="absolute rounded-sm"
               style={{
-                width: "30px",
-                height: "42px",
+                width: '30px',
+                height: '42px',
                 zIndex: 1,
-                top: "0",
-                left: "8px",
+                top: '0',
+                left: '8px',
               }}
             />
           </div>
@@ -366,7 +366,7 @@ export function PlayerSpot({
   useEffect(() => {
     if (!playerPosition || !gameState?.status) return;
 
-    const bettingStatuses: GameStatuses[] = ["blind_betting", "betting"];
+    const bettingStatuses: GameStatuses[] = ['blind_betting', 'betting'];
 
     // Если игрок делает ставку
     if (
@@ -379,7 +379,7 @@ export function PlayerSpot({
     }
 
     // Если игрок выиграл и нужно вернуть фишки
-    if (gameState.status === "finished" && winAmount > 0) {
+    if (gameState.status === 'finished' && winAmount > 0) {
       setShowBetAnimation(true);
       const timeout = setTimeout(() => setShowBetAnimation(false), 2500);
       return () => clearTimeout(timeout);
@@ -428,7 +428,7 @@ export function PlayerSpot({
                 style={{
                   width: `${avatarSize}px`,
                   height: `${avatarSize}px`,
-                  backgroundColor: "#555456",
+                  backgroundColor: '#555456',
                 }}
               ></div>
               <div
@@ -436,7 +436,7 @@ export function PlayerSpot({
                 style={{
                   width: `${avatarSize - 6 * scale}px`,
                   height: `${avatarSize - 6 * scale}px`,
-                  backgroundColor: "#ECEBF5",
+                  backgroundColor: '#ECEBF5',
                 }}
               ></div>
               <div
@@ -463,7 +463,7 @@ export function PlayerSpot({
             </div>
             <div
               className="absolute left-1/2 z-20 -translate-x-1/2 transform"
-              style={{ bottom: "-4px" }}
+              style={{ bottom: '-4px' }}
             >
               <div className="flex flex-col items-center">
                 <div
@@ -475,7 +475,7 @@ export function PlayerSpot({
                     style={{
                       borderRadius: `${8 * scale}px`,
                       background:
-                        "linear-gradient(180deg, #48454D 0%, rgba(255, 255, 255, 0.3) 50%, #2D2B31 100%)",
+                        'linear-gradient(180deg, #48454D 0%, rgba(255, 255, 255, 0.3) 50%, #2D2B31 100%)',
                     }}
                   ></div>
                   <div
@@ -486,13 +486,13 @@ export function PlayerSpot({
                       right: `${1 * scale}px`,
                       bottom: `${1 * scale}px`,
                       borderRadius: `${7 * scale}px`,
-                      background: "linear-gradient(to top, #000000, #36333B)",
+                      background: 'linear-gradient(to top, #000000, #36333B)',
                     }}
                   >
                     <div
                       className="font-bold"
                       style={{
-                        color: "rgba(255, 255, 255, 0.8)",
+                        color: 'rgba(255, 255, 255, 0.8)',
                         fontSize: `${10 * scale}px`,
                         borderBottom: `${1 * scale}px solid rgba(255, 255, 255, 0.07)`,
                       }}
@@ -501,7 +501,7 @@ export function PlayerSpot({
                     </div>
                     <div
                       className="font-bold"
-                      style={{ color: "#D2A21B", fontSize: `${10 * scale}px` }}
+                      style={{ color: '#D2A21B', fontSize: `${10 * scale}px` }}
                     >
                       {`$${formatAmount(balance)}`}
                     </div>
@@ -525,13 +525,13 @@ export function PlayerSpot({
         <div
           className="absolute left-1/2 z-50 flex -translate-x-1/2 items-center justify-center p-1"
           style={{
-            width: "75px",
-            height: "38px",
-            bottom: "80%", // Positioned above the avatar
-            paddingBottom: "13px",
+            width: '75px',
+            height: '38px',
+            bottom: '80%', // Positioned above the avatar
+            paddingBottom: '13px',
             backgroundImage: `url(${chatButtonBg})`,
-            backgroundSize: "cover",
-            backgroundPosition: "center",
+            backgroundSize: 'cover',
+            backgroundPosition: 'center',
             ...buttonTextStyle,
           }}
         >
@@ -541,7 +541,7 @@ export function PlayerSpot({
       <ActionNotification
         action={notificationType}
         visible={
-          !!notificationType && (notificationType === "pass" || !hasFolded)
+          !!notificationType && (notificationType === 'pass' || !hasFolded)
         }
       />
       <div className="relative">
@@ -561,12 +561,12 @@ export function PlayerSpot({
               <div
                 className="absolute left-1/2 mb-2 flex -translate-x-1/2 -translate-y-full transform items-center justify-center transition-opacity duration-500"
                 style={{
-                  top: "18px",
+                  top: '18px',
                   width: `${75 * scale}px`,
                   height: `${21 * scale}px`,
                   borderRadius: `${12 * scale}px`,
-                  background: "#212027",
-                  boxShadow: "0px 0px 4px 2px #EC8800",
+                  background: '#212027',
+                  boxShadow: '0px 0px 4px 2px #EC8800',
                   zIndex: 50,
                   marginBottom: `${8 * scale}px`,
                 }}
@@ -574,13 +574,13 @@ export function PlayerSpot({
                 <span
                   style={{
                     fontWeight: 600,
-                    fontStyle: "normal",
+                    fontStyle: 'normal',
                     fontSize: `${15 * scale}px`,
-                    lineHeight: "100%",
-                    letterSpacing: "0%",
-                    textAlign: "center",
-                    verticalAlign: "middle",
-                    color: "#D2A21B",
+                    lineHeight: '100%',
+                    letterSpacing: '0%',
+                    textAlign: 'center',
+                    verticalAlign: 'middle',
+                    color: '#D2A21B',
                   }}
                 >
                   {`+$${formatAmount(winAmount)}`}
@@ -594,12 +594,12 @@ export function PlayerSpot({
               style={{
                 width: `${avatarSize}px`,
                 height: `${avatarSize}px`,
-                backgroundColor: "#555456",
+                backgroundColor: '#555456',
                 boxShadow: newShowWinIndicator
-                  ? "0px 0px 4px 2px #EC8800"
+                  ? '0px 0px 4px 2px #EC8800'
                   : isTurn
-                    ? "0px 0px 8px 4px #56BF00"
-                    : "none",
+                    ? '0px 0px 8px 4px #56BF00'
+                    : 'none',
               }}
             ></div>
             <div
@@ -607,7 +607,7 @@ export function PlayerSpot({
               style={{
                 width: `${avatarSize - 6 * scale}px`,
                 height: `${avatarSize - 6 * scale}px`,
-                backgroundColor: "#ECEBF5",
+                backgroundColor: '#ECEBF5',
               }}
             ></div>
             <div
@@ -647,7 +647,7 @@ export function PlayerSpot({
           </div>
           <div
             className="absolute left-1/2 z-20 -translate-x-1/2 transform"
-            style={{ bottom: "-4px" }}
+            style={{ bottom: '-4px' }}
           >
             <div className="flex flex-col items-center">
               <div
@@ -659,7 +659,7 @@ export function PlayerSpot({
                   style={{
                     borderRadius: `${8 * scale}px`,
                     background:
-                      "linear-gradient(180deg, #48454D 0%, rgba(255, 255, 255, 0.3) 50%, #2D2B31 100%)",
+                      'linear-gradient(180deg, #48454D 0%, rgba(255, 255, 255, 0.3) 50%, #2D2B31 100%)',
                   }}
                 ></div>
                 <div
@@ -670,13 +670,13 @@ export function PlayerSpot({
                     right: `${1 * scale}px`,
                     bottom: `${1 * scale}px`,
                     borderRadius: `${7 * scale}px`,
-                    background: "linear-gradient(to top, #000000, #36333B)",
+                    background: 'linear-gradient(to top, #000000, #36333B)',
                   }}
                 >
                   <div
                     className="font-bold"
                     style={{
-                      color: "rgba(255, 255, 255, 0.8)",
+                      color: 'rgba(255, 255, 255, 0.8)',
                       fontSize: `${10 * scale}px`,
                       borderBottom: `${1 * scale}px solid rgba(255, 255, 255, 0.07)`,
                     }}
@@ -685,7 +685,7 @@ export function PlayerSpot({
                   </div>
                   <div
                     className="font-bold"
-                    style={{ color: "#D2A21B", fontSize: `${10 * scale}px` }}
+                    style={{ color: '#D2A21B', fontSize: `${10 * scale}px` }}
                   >
                     {`$${formatAmount(balance)}`}
                   </div>
@@ -696,9 +696,9 @@ export function PlayerSpot({
                   <div
                     className="absolute"
                     style={{
-                      top: "50%",
-                      transform: "translateY(-50%)",
-                      [cardSide === "left" ? "left" : "right"]:
+                      top: '50%',
+                      transform: 'translateY(-50%)',
+                      [cardSide === 'left' ? 'left' : 'right']:
                         `${-20 * scale}px`,
                       zIndex: 25,
                     }}
@@ -711,24 +711,24 @@ export function PlayerSpot({
                 <div
                   className="absolute"
                   style={{
-                    bottom: "-10px",
-                    left: "50%",
-                    transform: "translateX(-50%)",
-                    width: "68px",
-                    height: "5px",
-                    backgroundColor: "rgba(0, 0, 0, 0.2)",
-                    borderRadius: "3px",
-                    overflow: "hidden",
+                    bottom: '-10px',
+                    left: '50%',
+                    transform: 'translateX(-50%)',
+                    width: '68px',
+                    height: '5px',
+                    backgroundColor: 'rgba(0, 0, 0, 0.2)',
+                    borderRadius: '3px',
+                    overflow: 'hidden',
                   }}
                 >
                   <div
                     style={{
                       width: `${progress}%`,
-                      height: "100%",
+                      height: '100%',
                       backgroundColor: progressBarColor,
-                      borderRadius: "3px",
+                      borderRadius: '3px',
                       transition:
-                        "width 0.1s linear, background-color 0.1s linear",
+                        'width 0.1s linear, background-color 0.1s linear',
                     }}
                   />
                 </div>
@@ -740,32 +740,32 @@ export function PlayerSpot({
           (showCards ||
             (isCurrentUser &&
               hasLooked &&
-              (gameState?.status === "blind_betting" ||
-                gameState?.status === "betting"))) && (
+              (gameState?.status === 'blind_betting' ||
+                gameState?.status === 'betting'))) && (
             <div
               className="absolute z-50"
               style={{
                 width: `${cardWidth}px`,
                 height: `${cardHeight}px`,
-                ...(openCardsPosition === "top" && {
-                  left: "50%",
-                  transform: "translateX(-50%)",
+                ...(openCardsPosition === 'top' && {
+                  left: '50%',
+                  transform: 'translateX(-50%)',
                   top: `${-10 * scale}px`,
                 }),
-                ...(openCardsPosition === "bottom" && {
-                  left: "50%",
-                  transform: "translateX(-50%)",
+                ...(openCardsPosition === 'bottom' && {
+                  left: '50%',
+                  transform: 'translateX(-50%)',
                   top: `${40 * scale}px`,
                 }),
-                ...(openCardsPosition === "left" && {
+                ...(openCardsPosition === 'left' && {
                   right: `${95 * scale}px`,
-                  top: "40%",
-                  transform: "translateY(-50%)",
+                  top: '40%',
+                  transform: 'translateY(-50%)',
                 }),
-                ...(openCardsPosition === "right" && {
+                ...(openCardsPosition === 'right' && {
                   left: `${95 * scale}px`,
-                  top: "40%",
-                  transform: "translateY(-50%)",
+                  top: '40%',
+                  transform: 'translateY(-50%)',
                 }),
               }}
             >
@@ -803,27 +803,27 @@ export function PlayerSpot({
         {!hasFolded && (
           <div
             className={cn(
-              "absolute top-8 z-30 flex -translate-y-1/2 items-center space-x-2",
+              'absolute top-8 z-30 flex -translate-y-1/2 items-center space-x-2',
               {
-                "-right-[22px]": cardSide === "right",
-                "-left-[13px]": cardSide === "left",
-                "left-[53%] -translate-x-[25%]":
-                  openCardsPosition === "bottom" || openCardsPosition === "top",
+                '-right-[22px]': cardSide === 'right',
+                '-left-[13px]': cardSide === 'left',
+                'left-[53%] -translate-x-[25%]':
+                  openCardsPosition === 'bottom' || openCardsPosition === 'top',
 
-                "left-[53px]":
-                  openCardsPosition === "top" || openCardsPosition === "bottom",
+                'left-[53px]':
+                  openCardsPosition === 'top' || openCardsPosition === 'bottom',
               },
             )}
           >
             <div
               className={`delay-3400 transition ${
                 !(isCurrentUser && hasLooked) &&
-                gameState?.status !== "finished" &&
-                gameState?.status !== "waiting" &&
-                gameState?.status !== "ante" &&
-                gameState?.status !== "showdown"
-                  ? "opacity-100"
-                  : "opacity-0"
+                gameState?.status !== 'finished' &&
+                gameState?.status !== 'waiting' &&
+                gameState?.status !== 'ante' &&
+                gameState?.status !== 'showdown'
+                  ? 'opacity-100'
+                  : 'opacity-0'
               }`}
             >
               {CardDeckComponent(cardSide)}
@@ -831,23 +831,23 @@ export function PlayerSpot({
           </div>
         )}
         <div className="absolute -left-[0] top-[0] h-full w-full">
-          {cardSide === "left" && !isCurrentUser && (
+          {cardSide === 'left' && !isCurrentUser && (
             <div className="absolute left-[-55px] top-[23px]">
               {TotalBetComponent}
             </div>
           )}
 
-          {cardSide === "right" && !isCurrentUser && (
+          {cardSide === 'right' && !isCurrentUser && (
             <div className="absolute right-[-52px] top-[23px]">
               {TotalBetComponent}
             </div>
           )}
-          {cardSide === "top" && !isCurrentUser && (
+          {cardSide === 'top' && !isCurrentUser && (
             <div className="absolute bottom-[-40px] left-1/2 -translate-x-1/2 transform">
               {TotalBetComponent}
             </div>
           )}
-          {cardSide === "bottom" && !isCurrentUser && (
+          {cardSide === 'bottom' && !isCurrentUser && (
             <div className="absolute left-[16px] top-[-56px]">
               {TotalBetComponent}
             </div>
@@ -870,30 +870,30 @@ export function PlayerSpot({
         })()} */}
         {score !== undefined &&
           !hasFolded &&
-          (gameState?.status === "showdown" ||
-            (gameState?.status !== "finished" && isCurrentUser && hasLooked) ||
-            (gameState?.status === "finished" && showCards)) && (
+          (gameState?.status === 'showdown' ||
+            (gameState?.status !== 'finished' && isCurrentUser && hasLooked) ||
+            (gameState?.status === 'finished' && showCards)) && (
             <div
               className="absolute z-50 flex items-center justify-center"
               style={{
                 width: `${22 * scale}px`,
                 height: `${22 * scale}px`,
-                backgroundColor: "#FF443A",
-                borderRadius: "50%",
-                ...(openCardsPosition === "bottom" && {
-                  left: "50%",
+                backgroundColor: '#FF443A',
+                borderRadius: '50%',
+                ...(openCardsPosition === 'bottom' && {
+                  left: '50%',
                   bottom: `${-20 * scale}px`,
-                  transform: "translateX(-50%)",
+                  transform: 'translateX(-50%)',
                 }),
-                ...(openCardsPosition === "top" && {
+                ...(openCardsPosition === 'top' && {
                   left: `${-45 * scale}px`,
                   top: `${40 * scale}px`,
                 }),
-                ...(openCardsPosition === "left" && {
+                ...(openCardsPosition === 'left' && {
                   right: `${70 * scale}px`,
                   top: `${-10 * scale}px`,
                 }),
-                ...(openCardsPosition === "right" && {
+                ...(openCardsPosition === 'right' && {
                   left: `${70 * scale}px`,
                   top: `${-10 * scale}px`,
                 }),
@@ -902,13 +902,13 @@ export function PlayerSpot({
               <span
                 style={{
                   fontWeight: 500,
-                  fontStyle: "normal",
+                  fontStyle: 'normal',
                   fontSize: `${14 * scale}px`,
-                  lineHeight: "100%",
-                  letterSpacing: "0%",
-                  textAlign: "center",
-                  verticalAlign: "middle",
-                  color: "#FFFFFF",
+                  lineHeight: '100%',
+                  letterSpacing: '0%',
+                  textAlign: 'center',
+                  verticalAlign: 'middle',
+                  color: '#FFFFFF',
                 }}
               >
                 {score}

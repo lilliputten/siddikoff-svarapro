@@ -1,7 +1,7 @@
-import globals from 'globals';
 import pluginJs from '@eslint/js';
-import tseslint from 'typescript-eslint';
 import pluginPrettierRecommended from 'eslint-plugin-prettier/recommended';
+import globals from 'globals';
+import tseslint from 'typescript-eslint';
 
 export default [
   {
@@ -12,6 +12,9 @@ export default [
   pluginPrettierRecommended,
   {
     rules: {
+      'no-console': 'warn',
+      'no-debugger': 'warn',
+      'prefer-const': 'warn',
       '@typescript-eslint/no-unused-vars': [
         'warn',
         {

@@ -1,4 +1,5 @@
-import axios from "axios";
+/* eslint-disable no-console */
+import axios from 'axios';
 
 export interface User {
   id: string;
@@ -33,7 +34,7 @@ export class UsersService {
 
       return response.data;
     } catch (error) {
-      console.error("Get users error:", error);
+      console.error('Get users error:', error);
       throw error;
     }
   }
@@ -50,7 +51,7 @@ export class UsersService {
 
       return response.data.users;
     } catch (error) {
-      console.error("Search users error:", error);
+      console.error('Search users error:', error);
       throw error;
     }
   }
@@ -66,7 +67,7 @@ export class UsersService {
 
       return response.data;
     } catch (error: unknown) {
-      if (error && typeof error === "object" && "response" in error) {
+      if (error && typeof error === 'object' && 'response' in error) {
         const axiosError = error as { response?: { status?: number } };
         if (
           axiosError.response?.status === 400 ||
@@ -76,7 +77,7 @@ export class UsersService {
           return null;
         }
       }
-      console.error("Get user error:", error);
+      console.error('Get user error:', error);
       throw error;
     }
   }
@@ -84,7 +85,7 @@ export class UsersService {
   async updateBalance(
     telegramId: string,
     amount: number,
-    operation: "add" | "remove",
+    operation: 'add' | 'remove',
   ): Promise<User> {
     try {
       const response = await axios.post(
@@ -100,7 +101,7 @@ export class UsersService {
 
       return response.data;
     } catch (error) {
-      console.error("Update balance error:", error);
+      console.error('Update balance error:', error);
       throw error;
     }
   }

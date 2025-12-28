@@ -1,9 +1,9 @@
-import react from "@vitejs/plugin-react";
-import path, { dirname, resolve } from "path";
-import { fileURLToPath } from "url";
-import { defineConfig } from "vite";
-import { VitePWA } from "vite-plugin-pwa";
-import svgr from "vite-plugin-svgr";
+import react from '@vitejs/plugin-react';
+import path, { dirname } from 'path';
+import { fileURLToPath } from 'url';
+import { defineConfig } from 'vite';
+import { VitePWA } from 'vite-plugin-pwa';
+import svgr from 'vite-plugin-svgr';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
@@ -13,7 +13,7 @@ export default defineConfig({
     react(),
     svgr(),
     VitePWA({
-      registerType: "autoUpdate",
+      registerType: 'autoUpdate',
       workbox: {
         // Принудительно обновляем кэш при каждом деплое
         skipWaiting: true,
@@ -24,9 +24,9 @@ export default defineConfig({
         runtimeCaching: [
           {
             urlPattern: /\.(js|css)$/,
-            handler: "NetworkFirst",
+            handler: 'NetworkFirst',
             options: {
-              cacheName: "static-resources",
+              cacheName: 'static-resources',
               expiration: {
                 maxEntries: 100,
                 maxAgeSeconds: 60 * 60 * 24, // 24 часа
@@ -39,16 +39,16 @@ export default defineConfig({
         ],
       },
       manifest: {
-        name: "Telegram Mini App",
-        short_name: "MiniApp",
-        theme_color: "#17212b",
-        background_color: "#17212b",
-        display: "standalone",
+        name: 'Telegram Mini App',
+        short_name: 'MiniApp',
+        theme_color: '#17212b',
+        background_color: '#17212b',
+        display: 'standalone',
         icons: [
           {
-            src: "/logo.png",
-            sizes: "192x192",
-            type: "image/png",
+            src: '/logo.png',
+            sizes: '192x192',
+            type: 'image/png',
           },
         ],
       },
@@ -56,22 +56,22 @@ export default defineConfig({
   ],
   resolve: {
     alias: {
-      "@": path.resolve(__dirname, "./src"),
+      '@': path.resolve(__dirname, './src'),
     },
   },
   server: {
-    host: "localhost",
+    host: 'localhost',
     port: 5173,
     open: true,
     proxy: {
-      "/api": {
-        target: "http://localhost:3000",
+      '/api': {
+        target: 'http://localhost:3000',
         changeOrigin: true,
-        rewrite: (path) => path.replace(/^\/api/, ""),
+        rewrite: (path) => path.replace(/^\/api/, ''),
       },
     },
   },
   optimizeDeps: {
-    exclude: ["@telegram-apps/sdk-react"],
+    exclude: ['@telegram-apps/sdk-react'],
   },
 });

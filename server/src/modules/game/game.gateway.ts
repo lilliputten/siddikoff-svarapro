@@ -1,14 +1,15 @@
 import {
-  WebSocketGateway,
-  SubscribeMessage,
-  WebSocketServer,
   OnGatewayDisconnect,
   OnGatewayInit,
+  SubscribeMessage,
+  WebSocketGateway,
+  WebSocketServer,
 } from '@nestjs/websockets';
 import { Server, Socket } from 'socket.io';
-import { GameService } from './services/game.service';
+
 import { RedisService } from '../../services/redis.service';
 import { UserDataDto } from './dto/user-data.dto';
+import { GameService } from './services/game.service';
 
 @WebSocketGateway({
   cors: {

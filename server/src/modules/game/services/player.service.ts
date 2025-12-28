@@ -1,5 +1,6 @@
 import { Injectable } from '@nestjs/common';
-import { Player, GameAction, Card } from '../../../types/game';
+
+import { Card, GameAction, Player } from '../../../types/game';
 import { UserDataDto } from '../dto/user-data.dto';
 
 @Injectable()

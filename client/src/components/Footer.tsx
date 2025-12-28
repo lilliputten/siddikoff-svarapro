@@ -1,31 +1,31 @@
-import { useTranslation } from "react-i18next";
+import { useTranslation } from 'react-i18next';
 
 export function Footer() {
-  const { t } = useTranslation("common");
+  const { t } = useTranslation('common');
   return (
     <div
       className="font-inter"
       style={{
-        boxSizing: "border-box",
-        width: "300px",
-        height: "21px",
-        margin: "50px auto 16px", // 50px сверху, 16px снизу, центрирование
-        fontStyle: "normal",
+        boxSizing: 'border-box',
+        width: '300px',
+        height: '21px',
+        margin: '50px auto 16px', // 50px сверху, 16px снизу, центрирование
+        fontStyle: 'normal',
         fontWeight: 600, // Как в ButtonGroup
-        fontSize: "14px", // Фиксированный размер
-        lineHeight: "150%", // 21px
-        textAlign: "center",
-        letterSpacing: "-0.011em", // Как в ButtonGroup
-        color: "rgba(201, 198, 206, 0.7)",
-        display: "flex",
-        justifyContent: "center",
-        alignItems: "center",
-        position: "relative",
-        whiteSpace: "nowrap", // Убираем перенос текста
+        fontSize: '14px', // Фиксированный размер
+        lineHeight: '150%', // 21px
+        textAlign: 'center',
+        letterSpacing: '-0.011em', // Как в ButtonGroup
+        color: 'rgba(201, 198, 206, 0.7)',
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
+        position: 'relative',
+        whiteSpace: 'nowrap', // Убираем перенос текста
       }}
     >
-      <span style={{ fontSize: "14px" }}>
-        © 2024 | {t("all_rights_reserved")}
+      <span style={{ fontSize: '14px' }}>
+        © 2024 | {t('all_rights_reserved')}
       </span>
       <svg
         width="22"
@@ -33,7 +33,7 @@ export function Footer() {
         viewBox="0 0 22 22"
         fill="none"
         xmlns="http://www.w3.org/2000/svg"
-        style={{ marginLeft: "8px" }} // Отступ справа от текста
+        style={{ marginLeft: '8px' }} // Отступ справа от текста
       >
         <mask
           id="mask0_76_552"
@@ -42,7 +42,7 @@ export function Footer() {
           y="0"
           width="22"
           height="22"
-          style={{ maskType: "luminance" }} // Используем объект стилей
+          style={{ maskType: 'luminance' }} // Используем объект стилей
         >
           <path d="M0 0H22V22H0V0Z" fill="white" />
         </mask>
@@ -60,9 +60,9 @@ export function Footer() {
           dy=".3em"
           fill="#C9C6CE"
           style={{
-            fontStyle: "normal",
+            fontStyle: 'normal',
             fontWeight: 600, // Как в ButtonGroup
-            fontSize: "10px", // Фиксированный размер
+            fontSize: '10px', // Фиксированный размер
           }}
         >
           18+

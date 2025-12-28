@@ -1,9 +1,9 @@
-import { CSSProperties, useEffect, useState } from "react";
+import { CSSProperties, useEffect, useState } from 'react';
 
-import "./LoadingPage.css";
+import './LoadingPage.css';
 
 // Добавляем импорт логотипа (если используете vite)
-import mainLogo from "@/assets/main_logo.png"; // или правильный путь к вашему изображению
+import mainLogo from '@/assets/main_logo.png'; // или правильный путь к вашему изображению
 
 export function LoadingPage({ isLoading }: { isLoading: boolean }) {
   const [isVisible, setIsVisible] = useState(false);
@@ -17,7 +17,7 @@ export function LoadingPage({ isLoading }: { isLoading: boolean }) {
 
   const containerStyle: CSSProperties = {
     opacity: isVisible && isLoading ? 1 : 0,
-    transition: "opacity 300ms ease-in-out",
+    transition: 'opacity 300ms ease-in-out',
   };
 
   return (

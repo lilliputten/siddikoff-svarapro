@@ -1,4 +1,4 @@
-import axios from "axios";
+import axios from 'axios';
 
 export interface PaymentTypeStats {
   deposits: number;
@@ -31,7 +31,8 @@ export class StatsService {
 
       return response.data;
     } catch (error) {
-      console.error("Get stats error:", error);
+      // eslint-disable-next-line no-console
+      console.error('Get stats error:', error);
       throw error;
     }
   }

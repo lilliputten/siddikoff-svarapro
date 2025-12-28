@@ -1,12 +1,12 @@
-import { HTMLAttributes, useContext, useEffect, useRef, useState } from "react";
-import { createPortal } from "react-dom";
+import { HTMLAttributes, useContext, useEffect, useRef, useState } from 'react';
+import { createPortal } from 'react-dom';
 
-import { PositionsContext } from "@/context/PositionsContext";
-import { useSoundContext } from "@/context/SoundContext";
-import { GameStatuses } from "@/types/game";
-import { cn } from "@/utils/cn";
+import { PositionsContext } from '@/context/PositionsContext';
+import { useSoundContext } from '@/context/SoundContext';
+import { GameStatuses } from '@/types/game';
+import { cn } from '@/utils/cn';
 
-import { BackCard } from "../BackCard/BackCard";
+import { BackCard } from '../BackCard/BackCard';
 
 interface AnimatedCard {
   id: number;
@@ -40,12 +40,12 @@ export function CardsDeck({ className, gameStatus }: Props) {
       changeDeckPosition({ x: rect.x, y: rect.y });
     };
     onResizeHandler();
-    window.addEventListener("resize", onResizeHandler);
-    return () => window.removeEventListener("resize", onResizeHandler);
+    window.addEventListener('resize', onResizeHandler);
+    return () => window.removeEventListener('resize', onResizeHandler);
   }, [changeDeckPosition]);
 
   useEffect(() => {
-    if (gameStatus === "ante" && !distributionTriggered.current) {
+    if (gameStatus === 'ante' && !distributionTriggered.current) {
       setTimeout(() => {
         setIsDeckVisible(true);
         setIsStartDistribution(true);
@@ -76,7 +76,7 @@ export function CardsDeck({ className, gameStatus }: Props) {
 
         cards.push({
           id: counter,
-          x: pos.cardSide === "left" ? targetXLeft : targetXRight,
+          x: pos.cardSide === 'left' ? targetXLeft : targetXRight,
           y: targetY,
           delay: counter * 300,
           animate: false,
@@ -109,7 +109,7 @@ export function CardsDeck({ className, gameStatus }: Props) {
   return (
     <div
       className={cn(
-        "absolute bottom-40 left-1/2 z-30 -translate-x-1/2",
+        'absolute bottom-40 left-1/2 z-30 -translate-x-1/2',
         className,
       )}
       ref={ref}
@@ -119,7 +119,7 @@ export function CardsDeck({ className, gameStatus }: Props) {
         {cardsDeckArray.map((_, index) => (
           <BackCard
             className="absolute h-full w-full"
-            style={{ bottom: index + "px" }}
+            style={{ bottom: index + 'px' }}
           />
         ))}
 
@@ -132,14 +132,14 @@ export function CardsDeck({ className, gameStatus }: Props) {
                 data-name="animate-card"
                 style={{
                   zIndex: 30,
-                  left: deckPosition.x + "px",
-                  top: deckPosition.y - 6 + "px",
+                  left: deckPosition.x + 'px',
+                  top: deckPosition.y - 6 + 'px',
                   transform: card.animate
                     ? `translate(${card.x - (deckPosition?.x || 0)}px, ${
                         card.y - (deckPosition?.y || 0)
                       }px)`
-                    : "translate(0, 0)",
-                  transition: "transform 0.5s ease",
+                    : 'translate(0, 0)',
+                  transition: 'transform 0.5s ease',
                   transitionDelay: `${card.delay}ms`,
                 }}
               />,

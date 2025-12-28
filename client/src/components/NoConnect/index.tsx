@@ -1,8 +1,8 @@
-import { useState } from "react";
-import { useTranslation } from "react-i18next";
+import { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 
-import noconnectIcon from "../../assets/noconnect.png";
-import { Slider } from "../Slider";
+import noconnectIcon from '../../assets/noconnect.png';
+import { Slider } from '../Slider';
 
 interface NoConnectProps {
   isVisible: boolean;
@@ -10,7 +10,7 @@ interface NoConnectProps {
 }
 
 export function NoConnect({ isVisible, onRetry }: NoConnectProps) {
-  const { t } = useTranslation("common");
+  const { t } = useTranslation('common');
   const [imgError, setImgError] = useState(false);
 
   return (
@@ -19,34 +19,34 @@ export function NoConnect({ isVisible, onRetry }: NoConnectProps) {
         {/* Иконка */}
         <div
           style={{
-            width: "69px",
-            height: "69px",
-            marginBottom: "16px",
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
+            width: '69px',
+            height: '69px',
+            marginBottom: '16px',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
           }}
         >
           {!imgError ? (
             <img
               src={noconnectIcon}
               alt="No connection"
-              style={{ width: "69px", height: "69px" }}
+              style={{ width: '69px', height: '69px' }}
               onError={() => setImgError(true)}
             />
           ) : (
             <div
               style={{
-                width: "69px",
-                height: "69px",
-                backgroundColor: "#FF443A",
-                borderRadius: "50%",
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-                fontSize: "24px",
-                color: "white",
-                fontWeight: "bold",
+                width: '69px',
+                height: '69px',
+                backgroundColor: '#FF443A',
+                borderRadius: '50%',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                fontSize: '24px',
+                color: 'white',
+                fontWeight: 'bold',
               }}
             >
               !
@@ -59,15 +59,15 @@ export function NoConnect({ isVisible, onRetry }: NoConnectProps) {
           className="mb-2 text-white"
           style={{
             fontWeight: 700,
-            fontStyle: "normal",
-            fontSize: "16px",
-            lineHeight: "150%",
-            letterSpacing: "-1.1%",
-            textAlign: "center",
-            verticalAlign: "middle",
+            fontStyle: 'normal',
+            fontSize: '16px',
+            lineHeight: '150%',
+            letterSpacing: '-1.1%',
+            textAlign: 'center',
+            verticalAlign: 'middle',
           }}
         >
-          {t("no_internet_connection")}
+          {t('no_internet_connection')}
         </h3>
 
         {/* Описание */}
@@ -75,15 +75,15 @@ export function NoConnect({ isVisible, onRetry }: NoConnectProps) {
           className="text-white"
           style={{
             fontWeight: 600,
-            fontStyle: "normal",
-            fontSize: "13px",
-            lineHeight: "150%",
-            letterSpacing: "-1.1%",
-            textAlign: "center",
-            verticalAlign: "middle",
+            fontStyle: 'normal',
+            fontSize: '13px',
+            lineHeight: '150%',
+            letterSpacing: '-1.1%',
+            textAlign: 'center',
+            verticalAlign: 'middle',
           }}
         >
-          {t("check_internet_connection")}
+          {t('check_internet_connection')}
         </p>
       </div>
     </Slider>

@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState } from 'react';
 
 export const useAppUpdate = () => {
   const [updateAvailable, setUpdateAvailable] = useState(false);
@@ -6,9 +6,9 @@ export const useAppUpdate = () => {
 
   useEffect(() => {
     // Проверяем, поддерживает ли браузер Service Worker
-    if ("serviceWorker" in navigator) {
+    if ('serviceWorker' in navigator) {
       // Слушаем события обновления
-      navigator.serviceWorker.addEventListener("controllerchange", () => {
+      navigator.serviceWorker.addEventListener('controllerchange', () => {
         setUpdateAvailable(true);
       });
 
@@ -17,7 +17,7 @@ export const useAppUpdate = () => {
         () => {
           if (navigator.serviceWorker.controller) {
             navigator.serviceWorker.controller.postMessage({
-              type: "SKIP_WAITING",
+              type: 'SKIP_WAITING',
             });
           }
         },

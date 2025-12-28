@@ -1,8 +1,9 @@
-import { NestFactory } from '@nestjs/core';
-import { AppModule } from './app.module';
 import { ValidationPipe } from '@nestjs/common';
-import { json, urlencoded, Request, Response } from 'express';
+import { NestFactory } from '@nestjs/core';
+import { json, Request, Response, urlencoded } from 'express';
 import helmet from 'helmet';
+
+import { AppModule } from './app.module';
 
 // Генерируем уникальный ID процесса
 const processId = Math.random().toString(36).substring(2, 15);

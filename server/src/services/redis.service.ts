@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { Redis } from 'ioredis';
-import { Room, GameState, GameAction } from '../types/game';
+
+import { GameAction, GameState, Room } from '../types/game';
 
 @Injectable()
 export class RedisService {

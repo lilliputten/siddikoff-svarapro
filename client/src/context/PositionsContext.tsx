@@ -1,6 +1,6 @@
-import { createContext, ReactNode, useState } from "react";
+import { createContext, ReactNode, useState } from 'react';
 
-import { WithNull } from "@/types/mainTypes";
+import { WithNull } from '@/types/mainTypes';
 
 export interface PositionElement {
   x: number;
@@ -9,7 +9,7 @@ export interface PositionElement {
 
 export interface PlayerPosition extends PositionElement {
   cardSide?: string;
-  openCardsPosition?: "top" | "bottom" | "left" | "right";
+  openCardsPosition?: 'top' | 'bottom' | 'left' | 'right';
 }
 
 interface PositionsContextState {

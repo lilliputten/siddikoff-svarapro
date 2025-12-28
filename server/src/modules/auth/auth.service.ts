@@ -1,10 +1,11 @@
 import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { InjectRepository } from '@nestjs/typeorm';
+import * as crypto from 'crypto';
 import { Repository } from 'typeorm';
+
 import { User } from '../../entities/user.entity';
 import { TelegramUser } from '../../types/telegram';
-import * as crypto from 'crypto';
 import { LoginDto } from './dto/login.dto';
 
 @Injectable()

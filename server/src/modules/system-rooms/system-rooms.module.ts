@@ -1,7 +1,8 @@
 import { Module, OnModuleInit } from '@nestjs/common';
-import { SystemRoomsService } from './system-rooms.service';
+
 import { RedisService } from '../../services/redis.service';
 import { GameModule } from '../game/game.module';
+import { SystemRoomsService } from './system-rooms.service';
 
 @Module({
   imports: [GameModule],

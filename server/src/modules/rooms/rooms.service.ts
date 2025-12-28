@@ -1,12 +1,13 @@
 import { Injectable } from '@nestjs/common';
-import { RedisService } from '../../services/redis.service';
-import { Room } from '../../types/game';
-import { CreateRoomDto } from './dto/create-room.dto';
-import { GameStateService } from '../game/services/game-state.service';
+
 import { User } from '../../entities/user.entity';
-import { UsersService } from '../users/users.service';
+import { RedisService } from '../../services/redis.service';
 import { TelegramService } from '../../services/telegram.service';
+import { Room } from '../../types/game';
+import { GameStateService } from '../game/services/game-state.service';
 import { SystemRoomsService } from '../system-rooms/system-rooms.service';
+import { UsersService } from '../users/users.service';
+import { CreateRoomDto } from './dto/create-room.dto';
 
 @Injectable()
 export class RoomsService {

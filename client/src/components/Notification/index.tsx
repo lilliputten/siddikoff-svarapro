@@ -1,40 +1,40 @@
-import { useState } from "react";
-import { useTranslation } from "react-i18next";
+import { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 
-import completeIcon from "@/assets/complete.png";
-import cupIcon from "@/assets/cup.png";
-import errorIcon from "@/assets/error.png";
-import { NotificationProps } from "@/types/components";
+import completeIcon from '@/assets/complete.png';
+import cupIcon from '@/assets/cup.png';
+import errorIcon from '@/assets/error.png';
+import { NotificationProps } from '@/types/components';
 
 const notificationContent = {
   invalidAddress: {
     icon: errorIcon,
-    textKey: "invalid_address",
+    textKey: 'invalid_address',
   },
   addressAlreadyUsed: {
     icon: errorIcon,
-    textKey: "address_already_used",
+    textKey: 'address_already_used',
   },
   addressAdded: {
     icon: completeIcon,
-    textKey: "address_added",
+    textKey: 'address_added',
   },
   comingSoon: {
     icon: cupIcon,
-    textKey: "coming_soon",
+    textKey: 'coming_soon',
   },
   insufficientBalance: {
     icon: errorIcon,
-    textKey: "insufficient_balance_x3_error",
+    textKey: 'insufficient_balance_x3_error',
   },
   gameJoinError: {
     icon: errorIcon,
-    textKey: "game_join_error",
+    textKey: 'game_join_error',
   },
 };
 
 export function Notification({ type, onClose }: NotificationProps) {
-  const { t } = useTranslation("common");
+  const { t } = useTranslation('common');
   const [isPressed, setIsPressed] = useState(false);
 
   if (!type) {
@@ -43,7 +43,7 @@ export function Notification({ type, onClose }: NotificationProps) {
 
   const { icon, textKey } = notificationContent[type];
 
-  const background = isPressed ? "#bebebe" : "transparent";
+  const background = isPressed ? '#bebebe' : 'transparent';
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50 backdrop-blur-sm">
@@ -58,16 +58,16 @@ export function Notification({ type, onClose }: NotificationProps) {
           className="absolute bottom-0 left-0 flex h-[39px] w-full items-center justify-center text-[17px] font-semibold text-white"
           style={{
             background: background,
-            transition: "background 0.2s",
-            borderBottomLeftRadius: "8px",
-            borderBottomRightRadius: "8px",
+            transition: 'background 0.2s',
+            borderBottomLeftRadius: '8px',
+            borderBottomRightRadius: '8px',
           }}
           onMouseDown={() => setIsPressed(true)}
           onMouseUp={() => setIsPressed(false)}
           onTouchStart={() => setIsPressed(true)}
           onTouchEnd={() => setIsPressed(false)}
         >
-          {t("ok")}
+          {t('ok')}
         </button>
       </div>
     </div>

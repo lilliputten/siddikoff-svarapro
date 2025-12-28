@@ -1,18 +1,19 @@
 import {
+  Body,
   Controller,
   Get,
-  Post,
-  Body,
-  Param,
   NotFoundException,
-  UseGuards,
+  Param,
+  Post,
   Req,
+  UseGuards,
 } from '@nestjs/common';
-import { RoomsService } from './rooms.service';
-import { CreateRoomDto } from './dto/create-room.dto';
-import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 import { Request } from 'express';
+
 import { User } from '../../entities/user.entity';
+import { JwtAuthGuard } from '../auth/jwt-auth.guard';
+import { CreateRoomDto } from './dto/create-room.dto';
+import { RoomsService } from './rooms.service';
 
 interface AuthenticatedRequest extends Request {
   user: User;

@@ -1,8 +1,9 @@
-import { Processor, Process } from '@nestjs/bull';
-import { Job } from 'bull';
-import { FinancesService } from './finances.service';
+import { Process, Processor } from '@nestjs/bull';
 import { Logger } from '@nestjs/common';
+import { Job } from 'bull';
+
 import { CallbackDto } from './dto/callback.dto';
+import { FinancesService } from './finances.service';
 
 @Processor('callback-queue')
 export class CallbackProcessor {

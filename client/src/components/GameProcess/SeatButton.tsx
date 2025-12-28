@@ -1,10 +1,10 @@
-import { useTranslation } from "react-i18next";
+import { useTranslation } from 'react-i18next';
 
-import inviteImage from "@/assets/game/invite.png";
-import sitdownArrowImage from "@/assets/game/sitdown_arrow.png";
+import inviteImage from '@/assets/game/invite.png';
+import sitdownArrowImage from '@/assets/game/sitdown_arrow.png';
 
 interface SeatButtonProps {
-  type: "sitdown" | "invite";
+  type: 'sitdown' | 'invite';
   position: number;
   onSitDown: (position: number) => void;
   onInvite?: (position: number) => void;
@@ -20,22 +20,22 @@ export function SeatButton({
   disabled,
   scale = 1,
 }: SeatButtonProps) {
-  const { t } = useTranslation("common");
+  const { t } = useTranslation('common');
   const handleClick = () => {
     if (disabled) return;
-    if (type === "sitdown") {
+    if (type === 'sitdown') {
       onSitDown(position);
     } else if (onInvite) {
       onInvite(position);
     }
   };
 
-  const baseWidth = type === "sitdown" ? 71 : 71;
-  const baseHeight = type === "sitdown" ? 90 : 71;
+  const baseWidth = type === 'sitdown' ? 71 : 71;
+  const baseHeight = type === 'sitdown' ? 90 : 71;
 
   const buttonClasses = `
     relative transition-all duration-200 ease-in-out
-    ${disabled ? "opacity-50 cursor-not-allowed" : "opacity-100 cursor-pointer hover:opacity-80"}
+    ${disabled ? 'opacity-50 cursor-not-allowed' : 'opacity-100 cursor-pointer hover:opacity-80'}
     flex items-center justify-center
   `;
 
@@ -47,22 +47,22 @@ export function SeatButton({
   const sitDownTextStyle: React.CSSProperties = {
     fontWeight: 600,
     fontSize: `${13 * scale}px`,
-    lineHeight: "100%",
-    textAlign: "center",
-    color: "#FFFFFFCC",
+    lineHeight: '100%',
+    textAlign: 'center',
+    color: '#FFFFFFCC',
   };
 
   const inviteTextStyle: React.CSSProperties = {
-    fontFamily: "Inter, sans-serif",
+    fontFamily: 'Inter, sans-serif',
     fontWeight: 700,
     fontSize: `${8 * scale}px`,
-    lineHeight: "100%",
-    textAlign: "center",
-    color: "white",
+    lineHeight: '100%',
+    textAlign: 'center',
+    color: 'white',
     marginTop: `${15 * scale}px`, // Position below center
   };
 
-  return type === "sitdown" ? (
+  return type === 'sitdown' ? (
     <button
       onClick={handleClick}
       className={buttonClasses}
@@ -76,7 +76,7 @@ export function SeatButton({
         alt=""
       />
       <div className="absolute" style={sitDownTextStyle}>
-        {t("sit_down")}
+        {t('sit_down')}
       </div>
     </button>
   ) : (
@@ -88,11 +88,11 @@ export function SeatButton({
     >
       <img
         src={inviteImage}
-        alt={t("invite")}
+        alt={t('invite')}
         className="absolute inset-0 h-full w-full object-contain"
       />
       <div className="absolute" style={inviteTextStyle}>
-        {t("invite")}
+        {t('invite')}
       </div>
     </button>
   );

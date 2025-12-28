@@ -1,6 +1,6 @@
-import { createContext, ReactNode, useContext } from "react";
+import { createContext, ReactNode, useContext } from 'react';
 
-import { SoundType, useSound } from "@/hooks/useSound";
+import { SoundType, useSound } from '@/hooks/useSound';
 
 interface SoundContextType {
   isSoundEnabled: boolean;
@@ -12,16 +12,23 @@ const SoundContext = createContext<SoundContextType | undefined>(undefined);
 
 export const SoundProvider = ({ children }: { children: ReactNode }) => {
   const sound = useSound();
-
   return (
     <SoundContext.Provider value={sound}>{children}</SoundContext.Provider>
   );
+  /*
+  const { isSoundEnabled, toggleSound, playSound } = useSound();
+  return (
+    <SoundContext.Provider value={{ isSoundEnabled, toggleSound, playSound }}>
+      {children}
+    </SoundContext.Provider>
+  );
+*/
 };
 
 export const useSoundContext = () => {
   const context = useContext(SoundContext);
   if (context === undefined) {
-    throw new Error("useSoundContext must be used within a SoundProvider");
+    throw new Error('useSoundContext must be used within a SoundProvider');
   }
   return context;
 };

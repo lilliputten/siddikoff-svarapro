@@ -1,6 +1,6 @@
-import React from "react";
+import React from 'react';
 
-import turn_the_phone_over from "@/assets/turn_the_phone_over.gif";
+import turn_the_phone_over from '@/assets/turn_the_phone_over.gif';
 
 export function TurnPhoneOver() {
   return (

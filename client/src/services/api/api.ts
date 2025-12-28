@@ -1,9 +1,9 @@
-import axios from "axios";
+import axios from 'axios';
 
-import { Room } from "../../types/game";
+import { Room } from '../../types/game';
 
 const api = axios.create({
-  baseURL: "https://svarapro.com/api/v1",
+  baseURL: 'https://svarapro.com/api/v1',
   withCredentials: true,
 });
 
@@ -12,14 +12,15 @@ export const apiService = {
     initData: string,
     startPayload?: string,
   ): Promise<{ accessToken: string; roomId?: string }> {
+    // eslint-disable-next-line no-console
     console.log(
-      "Sending to server - initData:",
+      'Sending to server - initData:',
       initData,
-      "startPayload:",
+      'startPayload:',
       startPayload,
     );
-    const response = await api.post("/auth/login", { initData, startPayload });
-    localStorage.setItem("token", response.data.accessToken);
+    const response = await api.post('/auth/login', { initData, startPayload });
+    localStorage.setItem('token', response.data.accessToken);
     return response.data;
   },
 
@@ -31,18 +32,18 @@ export const apiService = {
     balance: string;
     walletAddress: string | null;
   }> {
-    const token = localStorage.getItem("token");
-    if (!token) throw new Error("No token available");
-    const response = await api.get("/users/profile", {
+    const token = localStorage.getItem('token');
+    if (!token) throw new Error('No token available');
+    const response = await api.get('/users/profile', {
       headers: { Authorization: `Bearer ${token}` },
     });
     return response.data;
   },
 
   async getReferralLink(): Promise<unknown> {
-    const token = localStorage.getItem("token");
-    if (!token) throw new Error("No token available");
-    const response = await api.get("/users/referral-link", {
+    const token = localStorage.getItem('token');
+    if (!token) throw new Error('No token available');
+    const response = await api.get('/users/referral-link', {
       headers: { Authorization: `Bearer ${token}` },
     });
     return response.data;
@@ -51,15 +52,15 @@ export const apiService = {
   async initiateDeposit(
     currency: string,
   ): Promise<{ address: string; trackerId: string }> {
-    const token = localStorage.getItem("token");
-    if (!token) throw new Error("No token available");
+    const token = localStorage.getItem('token');
+    if (!token) throw new Error('No token available');
 
     const profile = await this.getProfile();
     const telegramId = profile.telegramId;
 
     const response = await api.post(
-      "/finances/transaction",
-      { telegramId, currency, type: "deposit" },
+      '/finances/transaction',
+      { telegramId, currency, type: 'deposit' },
       { headers: { Authorization: `Bearer ${token}` } },
     );
     return response.data;
@@ -70,18 +71,18 @@ export const apiService = {
     amount: number,
     walletAddress: string,
   ): Promise<{ address: string; trackerId: string }> {
-    const token = localStorage.getItem("token");
-    if (!token) throw new Error("No token available");
+    const token = localStorage.getItem('token');
+    if (!token) throw new Error('No token available');
 
     const profile = await this.getProfile();
     const telegramId = profile.telegramId;
 
     const response = await api.post(
-      "/finances/transaction",
+      '/finances/transaction',
       {
         telegramId,
         currency,
-        type: "withdraw",
+        type: 'withdraw',
         amount,
         receiver: walletAddress,
       },
@@ -92,16 +93,16 @@ export const apiService = {
 
   async getTransactionHistory(userId: string): Promise<
     {
-      type: "deposit" | "withdraw";
+      type: 'deposit' | 'withdraw';
       currency: string;
       amount: number;
-      status: "pending" | "canceled" | "confirmed";
+      status: 'pending' | 'canceled' | 'confirmed';
       tracker_id: string;
       createdAt: string;
     }[]
   > {
-    const token = localStorage.getItem("token");
-    if (!token) throw new Error("No token available");
+    const token = localStorage.getItem('token');
+    if (!token) throw new Error('No token available');
     const response = await api.get(`/finances/history/all/${userId}`, {
       headers: { Authorization: `Bearer ${token}` },
     });
@@ -109,11 +110,11 @@ export const apiService = {
   },
 
   async addWalletAddress(walletAddress: string): Promise<void> {
-    const token = localStorage.getItem("token");
-    if (!token) throw new Error("No token available");
+    const token = localStorage.getItem('token');
+    if (!token) throw new Error('No token available');
 
     await api.post(
-      "/users/wallet-address",
+      '/users/wallet-address',
       { walletAddress },
       {
         headers: { Authorization: `Bearer ${token}` },
@@ -123,13 +124,13 @@ export const apiService = {
 
   async createRoom(
     minBet: number,
-    type: "public" | "private",
+    type: 'public' | 'private',
     password?: string,
   ): Promise<Room> {
-    const token = localStorage.getItem("token");
-    if (!token) throw new Error("No token available");
+    const token = localStorage.getItem('token');
+    if (!token) throw new Error('No token available');
     const response = await api.post(
-      "/rooms",
+      '/rooms',
       { minBet, type, password },
       {
         headers: { Authorization: `Bearer ${token}` },
@@ -139,13 +140,13 @@ export const apiService = {
   },
 
   async getRooms(): Promise<Room[]> {
-    const response = await api.get("/rooms");
+    const response = await api.get('/rooms');
     return response.data;
   },
 
   async getRoom(roomId: string): Promise<Room> {
-    const token = localStorage.getItem("token");
-    if (!token) throw new Error("No token available");
+    const token = localStorage.getItem('token');
+    if (!token) throw new Error('No token available');
     const response = await api.get(`/rooms/${roomId}`, {
       headers: { Authorization: `Bearer ${token}` },
     });
@@ -153,8 +154,8 @@ export const apiService = {
   },
 
   async joinRoom(roomId: string): Promise<Room> {
-    const token = localStorage.getItem("token");
-    if (!token) throw new Error("No token available");
+    const token = localStorage.getItem('token');
+    if (!token) throw new Error('No token available');
     const response = await api.post(
       `/rooms/${roomId}/join`,
       {},
@@ -167,12 +168,12 @@ export const apiService = {
 
   async getMerchantBalance(): Promise<{ balanceUsd: string; equal: string }> {
     const response = await axios.get(
-      "https://pay.alfabit.org/api/v1/integration/merchant",
+      'https://pay.alfabit.org/api/v1/integration/merchant',
       {
         headers: {
-          "x-api-key":
-            "7d7c249e4290d90ed4617c44a098c29c7d11e5820fab2ab0a755c4675c8f4779",
-          Accept: "*/*",
+          'x-api-key':
+            '7d7c249e4290d90ed4617c44a098c29c7d11e5820fab2ab0a755c4675c8f4779',
+          Accept: '*/*',
         },
       },
     );

@@ -1,6 +1,6 @@
-import { useState } from "react";
+import { useState } from 'react';
 
-import { ButtonProps } from "@/types/components";
+import { ButtonProps } from '@/types/components';
 
 export function RedButton({ children, onClick, ...rest }: ButtonProps) {
   const [isPressed, setIsPressed] = useState(false);
@@ -12,12 +12,12 @@ export function RedButton({ children, onClick, ...rest }: ButtonProps) {
   };
   return (
     <button
-      className={`flex h-[28px] w-[85px] items-center justify-center rounded-[6px] text-white ${isPressed ? "button-press" : ""}`}
+      className={`flex h-[28px] w-[85px] items-center justify-center rounded-[6px] text-white ${isPressed ? 'button-press' : ''}`}
       style={{
         ...rest.style,
-        backgroundColor: "rgb(255 68 58)",
+        backgroundColor: 'rgb(255 68 58)',
         textShadow:
-          "0px 1px 2px rgba(0, 0, 0, 0.3), 0px 1px 3px rgba(0, 0, 0, 0.15)",
+          '0px 1px 2px rgba(0, 0, 0, 0.3), 0px 1px 3px rgba(0, 0, 0, 0.15)',
       }}
       onClick={handleClick}
     >

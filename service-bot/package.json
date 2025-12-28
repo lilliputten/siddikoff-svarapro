@@ -8,7 +8,7 @@
     "dev": "tsx src/index.ts",
     "build": "tsc",
     "lint": "eslint . --ext .ts",
-    "format": "prettier --write .",
+    "format": "prettier --write --cache .",
     "format-quick": "pretty-quick --write --cache .",
     "type-check": "tsc --pretty --noEmit",
     "check-all": "npm-run-all format-quick lint type-check"

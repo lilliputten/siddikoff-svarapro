@@ -1,14 +1,14 @@
-import { Context } from "telegraf";
+import { Context } from 'telegraf';
 
 export type Match = RegExpExecArray | string[];
 
 export interface ServiceBotContext extends Context {
   isAdmin?: boolean;
-  locale?: "ru" | "en";
+  locale?: 'ru' | 'en';
   match?: Match;
 }
 
-export type Locale = "ru" | "en";
+export type Locale = 'ru' | 'en';
 
 export interface AdminSession {
   telegramId: string;
@@ -31,5 +31,5 @@ export interface AdminWithdrawSession {
   number?: string;
   bankname?: string;
   owner?: string;
-  step: "currency" | "bank" | "amount" | "details" | "confirm";
+  step: 'currency' | 'bank' | 'amount' | 'details' | 'confirm';
 }

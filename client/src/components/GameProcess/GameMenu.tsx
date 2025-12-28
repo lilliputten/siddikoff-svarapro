@@ -1,21 +1,21 @@
-import { useEffect, useState } from "react";
-import { useTranslation } from "react-i18next";
+import { useEffect, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 
-import { useLanguage } from "@/hooks/useLanguage";
-import exitIcon from "@/assets/game/exit.svg";
-import volumeIcon from "@/assets/game/volume.svg";
-import languageIcon from "@/assets/language.png";
-import slideDownIcon from "@/assets/slideDown.png";
-import { useSoundContext } from "@/context/SoundContext";
-import { GameMenuProps } from "@/types/components";
+import { useLanguage } from '@/hooks/useLanguage';
+import exitIcon from '@/assets/game/exit.svg';
+import volumeIcon from '@/assets/game/volume.svg';
+import languageIcon from '@/assets/language.png';
+import slideDownIcon from '@/assets/slideDown.png';
+import { useSoundContext } from '@/context/SoundContext';
+import { GameMenuProps } from '@/types/components';
 
-import LanguageSelector from "../Language";
-import { StyledContainer } from "../StyledContainer";
-import { ExitMenu } from "./ExitMenu";
+import LanguageSelector from '../Language';
+import { StyledContainer } from '../StyledContainer';
+import { ExitMenu } from './ExitMenu';
 
 const languageKeyMap: { [key: string]: string } = {
-  ru: "russian",
-  en: "english",
+  ru: 'russian',
+  en: 'english',
 };
 
 export function GameMenu({ isOpen, onClose, onExit }: GameMenuProps) {
@@ -23,7 +23,7 @@ export function GameMenu({ isOpen, onClose, onExit }: GameMenuProps) {
   const [showLanguageSelector, setShowLanguageSelector] = useState(false);
   const { isSoundEnabled, toggleSound } = useSoundContext();
   const { currentLanguage } = useLanguage();
-  const { t } = useTranslation("common");
+  const { t } = useTranslation('common');
 
   useEffect(() => {
     if (!isOpen) {
@@ -59,24 +59,24 @@ export function GameMenu({ isOpen, onClose, onExit }: GameMenuProps) {
         >
           <div
             className="flex h-8 w-[225px] items-center justify-between rounded-lg px-3 transition-all duration-200 ease-in-out"
-            style={{ backgroundColor: "rgba(19, 18, 23, 0.7)" }}
+            style={{ backgroundColor: 'rgba(19, 18, 23, 0.7)' }}
             onClick={() => setShowLanguageSelector(true)}
           >
             <div className="flex items-center space-x-2">
               <img src={languageIcon} alt="Language" className="h-4 w-4" />
               <span
                 className="text-white"
-                style={{ fontWeight: 500, fontSize: "12px" }}
+                style={{ fontWeight: 500, fontSize: '12px' }}
               >
-                {t("current_language")}
+                {t('current_language')}
               </span>
             </div>
             <div className="flex items-center space-x-2">
               <span
                 className="text-white"
-                style={{ fontWeight: 500, fontSize: "12px" }}
+                style={{ fontWeight: 500, fontSize: '12px' }}
               >
-                {t(languageKeyMap[currentLanguage] || "russian")}
+                {t(languageKeyMap[currentLanguage] || 'russian')}
               </span>
               <img
                 src={slideDownIcon}
@@ -88,28 +88,28 @@ export function GameMenu({ isOpen, onClose, onExit }: GameMenuProps) {
           {/* Sound Toggle */}
           <div
             className="flex h-8 w-[225px] items-center justify-between rounded-lg px-3 transition-all duration-200 ease-in-out"
-            style={{ backgroundColor: "rgba(19, 18, 23, 0.7)" }}
+            style={{ backgroundColor: 'rgba(19, 18, 23, 0.7)' }}
           >
             <div className="flex items-center space-x-2">
               <img src={volumeIcon} alt="Звук" className="h-4 w-4" />
               <span
                 className="text-white"
-                style={{ fontWeight: 500, fontSize: "12px" }}
+                style={{ fontWeight: 500, fontSize: '12px' }}
               >
-                {t("sound")}
+                {t('sound')}
               </span>
             </div>
             <div
               className="relative flex h-[20px] w-[40px] cursor-pointer items-center rounded-full p-0.5 transition-colors duration-300"
-              style={{ background: isSoundEnabled ? "#31EA3D" : "#2F2E35" }}
+              style={{ background: isSoundEnabled ? '#31EA3D' : '#2F2E35' }}
               onClick={toggleSound}
             >
               <div
                 className="h-[16px] w-[16px] rounded-full bg-white transition-all duration-300"
                 style={{
                   transform: isSoundEnabled
-                    ? "translateX(20px)"
-                    : "translateX(0)",
+                    ? 'translateX(20px)'
+                    : 'translateX(0)',
                 }}
               ></div>
             </div>
@@ -119,14 +119,14 @@ export function GameMenu({ isOpen, onClose, onExit }: GameMenuProps) {
           <button
             onClick={handleExitClick}
             className="flex h-8 w-[225px] items-center justify-start space-x-2 rounded-lg px-3 transition-all duration-200 ease-in-out hover:opacity-80"
-            style={{ backgroundColor: "rgba(19, 18, 23, 0.7)" }}
+            style={{ backgroundColor: 'rgba(19, 18, 23, 0.7)' }}
           >
             <img src={exitIcon} alt="Выйти" className="h-4 w-4" />
             <span
               className="text-white"
-              style={{ fontWeight: 500, fontSize: "12px" }}
+              style={{ fontWeight: 500, fontSize: '12px' }}
             >
-              {t("exit")}
+              {t('exit')}
             </span>
           </button>
         </StyledContainer>

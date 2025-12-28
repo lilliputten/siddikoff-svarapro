@@ -1,10 +1,10 @@
-import React, { useEffect, useState } from "react";
-import { useTranslation } from "react-i18next";
+import React, { useEffect, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 
-import { TURN_DURATION_SECONDS } from "@/constants";
+import { TURN_DURATION_SECONDS } from '@/constants';
 
-import { Slider } from "../Slider";
-import { StyledContainer } from "../StyledContainer";
+import { Slider } from '../Slider';
+import { StyledContainer } from '../StyledContainer';
 
 interface BetSliderProps {
   minBet: number;
@@ -31,7 +31,7 @@ export function BetSlider({
   turnTimer = TURN_DURATION_SECONDS,
   isProcessing = false,
 }: BetSliderProps) {
-  const { t } = useTranslation("common");
+  const { t } = useTranslation('common');
   const [value, setValue] = useState(initialBet || minBet);
   const [percentage, setPercentage] = useState(0);
 
@@ -46,11 +46,11 @@ export function BetSlider({
   }, [isOpen, initialBet, minBet, maxBet]);
 
   // Предустановленные множители ставок
-  const multipliers: { label: string; value: number | "max" }[] = [
-    { label: "2x", value: 2 },
-    { label: "5x", value: 5 },
-    { label: "10x", value: 10 },
-    { label: "Max", value: "max" },
+  const multipliers: { label: string; value: number | 'max' }[] = [
+    { label: '2x', value: 2 },
+    { label: '5x', value: 5 },
+    { label: '10x', value: 10 },
+    { label: 'Max', value: 'max' },
   ];
 
   // Обновляем процент заполнения слайдера
@@ -76,9 +76,9 @@ export function BetSlider({
   };
 
   // Обработчик нажатия на множитель
-  const handleMultiplier = (multiplier: number | "max") => {
+  const handleMultiplier = (multiplier: number | 'max') => {
     let newValue;
-    if (multiplier === "max") {
+    if (multiplier === 'max') {
       newValue = maxBet;
     } else {
       newValue = Math.min(maxBet, minBet * multiplier);
@@ -109,7 +109,7 @@ export function BetSlider({
                 style={{
                   width: `${(turnTimer / TURN_DURATION_SECONDS) * 100}%`,
                   backgroundColor: `hsl(${(turnTimer / TURN_DURATION_SECONDS) * 120}, 100%, 50%)`,
-                  transition: "width 0.1s linear, background-color 0.1s linear",
+                  transition: 'width 0.1s linear, background-color 0.1s linear',
                 }}
               />
             </div>
@@ -120,10 +120,10 @@ export function BetSlider({
           <div
             className="flex items-center justify-center text-[18px] font-bold leading-none text-white"
             style={{
-              width: "79px",
-              height: "33px",
-              backgroundColor: "rgba(19, 18, 23, 0.5)",
-              borderRadius: "6px",
+              width: '79px',
+              height: '33px',
+              backgroundColor: 'rgba(19, 18, 23, 0.5)',
+              borderRadius: '6px',
             }}
           >
             ${Number(value).toFixed(2)}
@@ -138,18 +138,18 @@ export function BetSlider({
             }}
             className={`flex h-[29px] w-1/4 cursor-pointer items-center justify-center rounded-md text-xs font-bold text-white transition ${
               value > maxBet || isProcessing
-                ? "cursor-not-allowed opacity-50"
-                : ""
+                ? 'cursor-not-allowed opacity-50'
+                : ''
             }`}
             style={{
               backgroundColor:
-                value > maxBet || isProcessing ? "#666" : "#56BF00",
-              WebkitTapHighlightColor: "transparent",
-              touchAction: "manipulation",
+                value > maxBet || isProcessing ? '#666' : '#56BF00',
+              WebkitTapHighlightColor: 'transparent',
+              touchAction: 'manipulation',
             }}
             disabled={value > maxBet || isProcessing}
           >
-            {t("raise")}
+            {t('raise')}
           </button>
         </div>
 
@@ -158,7 +158,7 @@ export function BetSlider({
           {multipliers.map((mult, index) => {
             // Проверяем, не превышает ли множитель баланс
             const multiplierValue =
-              mult.value === "max" ? maxBet : minBet * (mult.value as number);
+              mult.value === 'max' ? maxBet : minBet * mult.value;
             const isDisabled = multiplierValue > maxBet || isProcessing;
 
             return (
@@ -173,18 +173,18 @@ export function BetSlider({
                   }
                 }}
                 className={`flex cursor-pointer items-center justify-center text-xs font-medium leading-none transition ${
-                  isDisabled ? "cursor-not-allowed opacity-50" : ""
+                  isDisabled ? 'cursor-not-allowed opacity-50' : ''
                 }`}
                 style={{
-                  width: "27px",
-                  height: "19px",
-                  borderRadius: "4px",
+                  width: '27px',
+                  height: '19px',
+                  borderRadius: '4px',
                   backgroundColor: isDisabled
-                    ? "rgba(255, 255, 255, 0.03)"
-                    : "rgba(255, 255, 255, 0.06)",
-                  color: isDisabled ? "#666" : "#C9C6CE",
-                  WebkitTapHighlightColor: "transparent",
-                  touchAction: "manipulation",
+                    ? 'rgba(255, 255, 255, 0.03)'
+                    : 'rgba(255, 255, 255, 0.06)',
+                  color: isDisabled ? '#666' : '#C9C6CE',
+                  WebkitTapHighlightColor: 'transparent',
+                  touchAction: 'manipulation',
                 }}
                 disabled={isDisabled}
               >
@@ -219,9 +219,9 @@ export function BetSlider({
                 onTouchEnd={(e) => e.stopPropagation()}
                 className="absolute h-full w-full cursor-pointer appearance-none bg-transparent"
                 style={{
-                  WebkitAppearance: "none",
-                  WebkitTapHighlightColor: "transparent",
-                  touchAction: "pan-x",
+                  WebkitAppearance: 'none',
+                  WebkitTapHighlightColor: 'transparent',
+                  touchAction: 'pan-x',
                 }}
               />
               {/* Thumb */}

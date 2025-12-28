@@ -1,14 +1,15 @@
-import dotenv from "dotenv";
-import { Telegraf } from "telegraf";
-import rateLimit from "telegraf-ratelimit";
+/* eslint-disable no-console */
+import dotenv from 'dotenv';
+import { Telegraf } from 'telegraf';
+import rateLimit from 'telegraf-ratelimit';
 
-import { AdminHandlers } from "./handlers/admin.handlers.js";
-import { UserHandlers } from "./handlers/user.handlers.js";
-import { getMessage } from "./locales/index.js";
-import { AdminService } from "./services/admin.service.js";
-import { StatsService } from "./services/stats.service.js";
-import { UsersService } from "./services/users.service.js";
-import { ServiceBotContext } from "./types/index.js";
+import { AdminHandlers } from './handlers/admin.handlers.js';
+import { UserHandlers } from './handlers/user.handlers.js';
+import { getMessage } from './locales/index.js';
+import { AdminService } from './services/admin.service.js';
+import { StatsService } from './services/stats.service.js';
+import { UsersService } from './services/users.service.js';
+import { ServiceBotContext } from './types/index.js';
 
 // Загружаем переменные окружения
 dotenv.config();
@@ -17,9 +18,8 @@ dotenv.config();
 const BOT_TOKEN = process.env.BOT_TOKEN;
 
 if (!BOT_TOKEN) {
-  const error = new Error("BOT_TOKEN is required");
-  // eslint-disable-next-line no-console
-  console.error("[index]", error);
+  const error = new Error('BOT_TOKEN is required');
+  console.error('[index]', error);
   debugger; // eslint-disable-line no-debugger
   throw error;
 }
@@ -43,7 +43,7 @@ bot.use(
     window: 500,
     limit: 1,
     onLimitExceeded: (ctx: ServiceBotContext) =>
-      ctx.reply(getMessage("ru", "errors.tooManyRequests")),
+      ctx.reply(getMessage('ru', 'errors.tooManyRequests')),
   }),
 );
 
@@ -52,7 +52,7 @@ bot.use(async (ctx, next) => {
   const user = ctx.from;
   if (user) {
     // Всегда используем русский язык
-    ctx.locale = "ru";
+    ctx.locale = 'ru';
 
     // Проверяем авторизацию админа
     const telegramId = user.id.toString();
@@ -68,7 +68,7 @@ bot.start(async (ctx) => {
 
   // Создаём пользователя если его нет и получаем баланс
   const apiService = new (
-    await import("./services/api.service.js")
+    await import('./services/api.service.js')
   ).ApiService();
   let balance = 0;
 
@@ -105,35 +105,35 @@ bot.start(async (ctx) => {
 
 Выберите действие:`;
 
-  const { Markup } = await import("telegraf");
+  const { Markup } = await import('telegraf');
 
   // Основное меню с постоянной клавиатурой
   const mainMenu = Markup.keyboard([
-    ["💰 Пополнить", "💸 Средства"],
-    ["📜 История", "📊 Курс"],
-    ["🧑‍💻 Связь с поддержкой"],
+    ['💰 Пополнить', '💸 Средства'],
+    ['📜 История', '📊 Курс'],
+    ['🧑‍💻 Связь с поддержкой'],
   ]).resize();
 
   await ctx.reply(welcomeMessage, {
-    parse_mode: "Markdown",
+    parse_mode: 'Markdown',
     ...mainMenu,
   });
 });
 
 bot.help(async (ctx) => {
   const helpText =
-    getMessage("ru", "help.title") + getMessage("ru", "help.common").join("\n");
+    getMessage('ru', 'help.title') + getMessage('ru', 'help.common').join('\n');
 
   await ctx.reply(helpText);
 });
 
 // Админ команды
-bot.command("admin_menu", (ctx) => adminHandlers.handleAdminMenuCommand(ctx));
+bot.command('admin_menu', (ctx) => adminHandlers.handleAdminMenuCommand(ctx));
 
 // Пользовательские команды
-bot.command("deposit", (ctx) => userHandlers.handleDepositCommand(ctx));
-bot.command("withdraw", (ctx) => userHandlers.handleWithdrawCommand(ctx));
-bot.command("balance", (ctx) => userHandlers.handleBalanceCommand(ctx));
+bot.command('deposit', (ctx) => userHandlers.handleDepositCommand(ctx));
+bot.command('withdraw', (ctx) => userHandlers.handleWithdrawCommand(ctx));
+bot.command('balance', (ctx) => userHandlers.handleBalanceCommand(ctx));
 // bot.command("cancel", (ctx) => userHandlers.handleCancelCommand(ctx));
 
 // Обработка callback'ов
@@ -160,19 +160,19 @@ bot.action(/deposit_currency_.+/, (ctx) =>
 bot.action(/deposit_rub_amount_.+/, (ctx) =>
   userHandlers.handleRubAmountSelection(ctx),
 );
-bot.action("deposit_rub_custom_amount", (ctx) =>
+bot.action('deposit_rub_custom_amount', (ctx) =>
   userHandlers.handleRubCustomAmount(ctx),
 );
 bot.action(/deposit_bank_.+/, (ctx) => userHandlers.handleBankSelection(ctx));
 bot.action(/deposit_amount_.+/, (ctx) =>
   userHandlers.handleAmountSelection(ctx),
 );
-bot.action("deposit_custom_amount", (ctx) =>
+bot.action('deposit_custom_amount', (ctx) =>
   userHandlers.handleCustomAmount(ctx),
 );
 bot.action(/deposit_back_.+/, (ctx) => userHandlers.handleBackButton(ctx));
 bot.action(/deposit_done_.+/, (ctx) => userHandlers.handleDoneButton(ctx));
-bot.action("cancel_operation", (ctx) => userHandlers.handleCancelCommand(ctx));
+bot.action('cancel_operation', (ctx) => userHandlers.handleCancelCommand(ctx));
 
 // Пользовательские callback'ы - Вывод
 bot.action(/withdraw_currency_.+/, (ctx) =>
@@ -192,18 +192,18 @@ bot.action(/admin_(.+)/, async (ctx) => {
     return;
   }
 
-  if (callbackData === "menu") {
+  if (callbackData === 'menu') {
     await adminHandlers.showAdminMenu(ctx);
-  } else if (callbackData === "stats") {
+  } else if (callbackData === 'stats') {
     await adminHandlers.showStats(ctx);
-  } else if (callbackData === "stats_all") {
-    await adminHandlers.showStats(ctx, "all");
-  } else if (callbackData === "stats_crypto") {
-    await adminHandlers.showStats(ctx, "crypto");
-  } else if (callbackData === "stats_fiat") {
-    await adminHandlers.showStats(ctx, "fiat");
-  } else if (callbackData.startsWith("users_")) {
-    const parts = callbackData.split("_");
+  } else if (callbackData === 'stats_all') {
+    await adminHandlers.showStats(ctx, 'all');
+  } else if (callbackData === 'stats_crypto') {
+    await adminHandlers.showStats(ctx, 'crypto');
+  } else if (callbackData === 'stats_fiat') {
+    await adminHandlers.showStats(ctx, 'fiat');
+  } else if (callbackData.startsWith('users_')) {
+    const parts = callbackData.split('_');
     const pageStr = parts[1];
     if (pageStr) {
       const page = parseInt(pageStr);
@@ -211,38 +211,38 @@ bot.action(/admin_(.+)/, async (ctx) => {
         await adminHandlers.showUsers(ctx, page);
       }
     }
-  } else if (callbackData.startsWith("user_")) {
-    const parts = callbackData.split("_");
+  } else if (callbackData.startsWith('user_')) {
+    const parts = callbackData.split('_');
     const telegramId = parts[1];
     if (telegramId) {
       await adminHandlers.showUserInfo(ctx, telegramId);
     }
-  } else if (callbackData === "search") {
+  } else if (callbackData === 'search') {
     await adminHandlers.showSearchPrompt(ctx);
-  } else if (callbackData.startsWith("add_balance_")) {
-    const parts = callbackData.split("_");
+  } else if (callbackData.startsWith('add_balance_')) {
+    const parts = callbackData.split('_');
     const telegramId = parts[2];
     if (telegramId) {
       await adminHandlers.handleAddBalance(ctx, telegramId);
     }
-  } else if (callbackData.startsWith("remove_balance_")) {
-    const parts = callbackData.split("_");
+  } else if (callbackData.startsWith('remove_balance_')) {
+    const parts = callbackData.split('_');
     const telegramId = parts[2];
     if (telegramId) {
       await adminHandlers.handleRemoveBalance(ctx, telegramId);
     }
-  } else if (callbackData === "system_wallet") {
+  } else if (callbackData === 'system_wallet') {
     await adminHandlers.showSystemWallet(ctx);
-  } else if (callbackData === "system_withdraw_start") {
+  } else if (callbackData === 'system_withdraw_start') {
     await adminHandlers.handleSystemWithdrawStart(ctx);
-  } else if (callbackData.startsWith("system_withdraw_currency_")) {
-    const currency = callbackData.replace("system_withdraw_currency_", "");
+  } else if (callbackData.startsWith('system_withdraw_currency_')) {
+    const currency = callbackData.replace('system_withdraw_currency_', '');
     await adminHandlers.handleSystemWithdrawCurrency(ctx, currency);
-  } else if (callbackData === "system_withdraw_confirm") {
+  } else if (callbackData === 'system_withdraw_confirm') {
     await adminHandlers.handleSystemWithdrawConfirm(ctx);
-  } else if (callbackData === "system_wallet_reset") {
+  } else if (callbackData === 'system_wallet_reset') {
     await adminHandlers.handleSystemWalletReset(ctx);
-  } else if (callbackData === "system_wallet_reset_confirm") {
+  } else if (callbackData === 'system_wallet_reset_confirm') {
     await adminHandlers.handleSystemWalletResetConfirm(ctx);
   }
 
@@ -250,11 +250,11 @@ bot.action(/admin_(.+)/, async (ctx) => {
 });
 
 // Обработка текстовых сообщений от клавиатуры
-bot.hears("💰 Пополнить", (ctx) => userHandlers.handleDepositCommand(ctx));
-bot.hears("💸 Средства", (ctx) => userHandlers.handleWithdrawCommand(ctx));
-bot.hears("📜 История", (ctx) => userHandlers.handleFiatHistoryCommand(ctx));
-bot.hears("📊 Курс", (ctx) => userHandlers.handleRateCommand(ctx));
-bot.hears("🧑‍💻 Связь с поддержкой", (ctx) =>
+bot.hears('💰 Пополнить', (ctx) => userHandlers.handleDepositCommand(ctx));
+bot.hears('💸 Средства', (ctx) => userHandlers.handleWithdrawCommand(ctx));
+bot.hears('📜 История', (ctx) => userHandlers.handleFiatHistoryCommand(ctx));
+bot.hears('📊 Курс', (ctx) => userHandlers.handleRateCommand(ctx));
+bot.hears('🧑‍💻 Связь с поддержкой', (ctx) =>
   userHandlers.handleSupportCommand(ctx),
 );
 
@@ -274,14 +274,14 @@ const shutdown = (signal: NodeJS.Signals) => {
   process.exit(0);
 };
 
-process.once("SIGINT", shutdown);
-process.once("SIGTERM", shutdown);
+process.once('SIGINT', shutdown);
+process.once('SIGTERM', shutdown);
 
 // Запуск
 bot
   .launch()
-  .then(() => console.log("Service bot started on @" + bot.botInfo?.username))
+  .then(() => console.log('Service bot started on @' + bot.botInfo?.username))
   .catch((err) => {
-    console.error("Service bot start failed:", err);
+    console.error('Service bot start failed:', err);
     process.exit(1);
   });

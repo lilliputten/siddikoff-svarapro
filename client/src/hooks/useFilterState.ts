@@ -1,13 +1,14 @@
-import { useEffect, useState } from "react";
+/* eslint-disable no-console */
+import { useEffect, useState } from 'react';
 
 export const useFilterState = (): [boolean, (value: boolean) => void] => {
   const [isAvailable, setIsAvailable] = useState(() => {
     try {
-      const saved = localStorage.getItem("isAvailableFilter");
+      const saved = localStorage.getItem('isAvailableFilter');
       return saved !== null ? JSON.parse(saved) : false;
     } catch (error) {
       console.error(
-        "Failed to parse isAvailableFilter from localStorage",
+        'Failed to parse isAvailableFilter from localStorage',
         error,
       );
       return false;
@@ -16,9 +17,9 @@ export const useFilterState = (): [boolean, (value: boolean) => void] => {
 
   useEffect(() => {
     try {
-      localStorage.setItem("isAvailableFilter", JSON.stringify(isAvailable));
+      localStorage.setItem('isAvailableFilter', JSON.stringify(isAvailable));
     } catch (error) {
-      console.error("Failed to set isAvailableFilter in localStorage", error);
+      console.error('Failed to set isAvailableFilter in localStorage', error);
     }
   }, [isAvailable]);
 

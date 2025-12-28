@@ -1,18 +1,19 @@
 import {
-  Controller,
-  Post,
-  Body,
-  Get,
-  Param,
   BadRequestException,
-  Query,
+  Body,
+  Controller,
+  Get,
+  Logger,
+  Param,
   Patch,
+  Post,
+  Query,
 } from '@nestjs/common';
-import { FinancesService } from './finances.service';
-import { Logger } from '@nestjs/common';
+
+import { RubPaymentMethod } from '../../services/noros.service';
 import { CallbackDto } from './dto/callback.dto';
 import { GetBanksDto } from './dto/get-banks.dto';
-import { RubPaymentMethod } from '../../services/noros.service';
+import { FinancesService } from './finances.service';
 
 @Controller('finances')
 export class FinancesController {

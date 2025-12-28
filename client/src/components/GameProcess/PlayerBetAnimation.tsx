@@ -1,11 +1,11 @@
-import { HTMLAttributes, useContext, useEffect, useState } from "react";
-import { createPortal } from "react-dom";
+import { HTMLAttributes, useContext, useEffect, useState } from 'react';
+import { createPortal } from 'react-dom';
 
-import { PositionElement, PositionsContext } from "@/context/PositionsContext";
-import { cn } from "@/utils/cn";
-import { getChipsCountFromBet } from "@/utils/getChipsCountFromBet";
+import { PositionElement, PositionsContext } from '@/context/PositionsContext';
+import { cn } from '@/utils/cn';
+import { getChipsCountFromBet } from '@/utils/getChipsCountFromBet';
 
-import { Coin } from "../Coin/Coin";
+import { Coin } from '../Coin/Coin';
 
 interface Props extends HTMLAttributes<HTMLDivElement> {
   bet?: number;
@@ -125,7 +125,7 @@ export const PlayerBetAnimation = ({
               top: chip.startY,
               transform: chip.animate
                 ? `translate(${chip.targetX - chip.startX}px, ${chip.targetY - chip.startY}px)`
-                : "translate(0, 0)",
+                : 'translate(0, 0)',
               opacity: chip.faded ? 0 : 1,
               transition: `
   transform 2s cubic-bezier(0.25, 1, 0.5, 1),

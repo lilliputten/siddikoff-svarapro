@@ -1,12 +1,13 @@
-import { Room } from './rooms.entity';
 import {
-  Entity,
   Column,
-  PrimaryGeneratedColumn,
+  Entity,
   Index,
   ManyToOne,
   OneToMany,
+  PrimaryGeneratedColumn,
 } from 'typeorm';
+
+import { Room } from './rooms.entity';
 
 @Entity('users')
 export class User {

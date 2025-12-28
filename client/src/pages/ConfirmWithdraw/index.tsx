@@ -1,8 +1,8 @@
-import { useState } from "react";
+import { useState } from 'react';
 
-import { YellowButton } from "@/components/Button/YellowButton";
-import { apiService } from "@/services/api/api";
-import { ConfirmWithdrawProps } from "@/types/components";
+import { YellowButton } from '@/components/Button/YellowButton';
+import { apiService } from '@/services/api/api';
+import { ConfirmWithdrawProps } from '@/types/components';
 
 export function ConfirmWithdraw({
   withdrawAmount,
@@ -12,19 +12,20 @@ export function ConfirmWithdraw({
 
   const handleConfirmWithdraw = async () => {
     if (!walletAddress) {
-      alert("Адрес кошелька не указан");
+      alert('Адрес кошелька не указан');
       return;
     }
 
     setIsProcessing(true);
     try {
       const amount = parseFloat(withdrawAmount);
-      await apiService.initiateWithdraw("USDTTON", amount, walletAddress);
-      alert("Заявка на вывод создана успешно!");
+      await apiService.initiateWithdraw('USDTTON', amount, walletAddress);
+      alert('Заявка на вывод создана успешно!');
       // Здесь можно добавить переход на другую страницу или обновление состояния
     } catch (error) {
-      console.error("Failed to initiate withdraw:", error);
-      alert("Ошибка при создании заявки на вывод. Попробуйте еще раз.");
+      // eslint-disable-next-line no-console
+      console.error('Failed to initiate withdraw:', error);
+      alert('Ошибка при создании заявки на вывод. Попробуйте еще раз.');
     } finally {
       setIsProcessing(false);
     }
@@ -68,7 +69,7 @@ export function ConfirmWithdraw({
           className="w-full"
           isActive={!isProcessing}
         >
-          {isProcessing ? "Обработка..." : "Подтвердить"}
+          {isProcessing ? 'Обработка...' : 'Подтвердить'}
         </YellowButton>
       </div>
     </div>

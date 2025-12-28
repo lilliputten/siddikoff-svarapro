@@ -1,10 +1,10 @@
-import { isMiniAppDark } from "@telegram-apps/sdk";
-import { AppRoot } from "@telegram-apps/telegram-ui";
-import { io } from "socket.io-client";
+import { isMiniAppDark } from '@telegram-apps/sdk';
+import { AppRoot } from '@telegram-apps/telegram-ui';
+import { io } from 'socket.io-client';
 
-import { PositionsProvider } from "./context/PositionsContext";
-import { SoundProvider } from "./context/SoundContext";
-import { GameRoom } from "./pages/GameRoom";
+import { PositionsProvider } from './context/PositionsContext';
+import { SoundProvider } from './context/SoundContext';
+import { GameRoom } from './pages/GameRoom';
 
 const socket = io();
 
@@ -12,7 +12,7 @@ const AppTest = () => {
   const isDark = isMiniAppDark();
 
   return (
-    <AppRoot appearance={isDark ? "dark" : "light"} platform="base">
+    <AppRoot appearance={isDark ? 'dark' : 'light'} platform="base">
       <SoundProvider>
         <PositionsProvider>
           <GameRoom
@@ -21,16 +21,16 @@ const AppTest = () => {
             socket={socket}
             setCurrentPage={() => {}}
             userData={{
-              id: "123123",
-              username: "test username",
-              first_name: "test first name",
-              photo_url: "",
+              id: '123123',
+              username: 'test username',
+              first_name: 'test first name',
+              photo_url: '',
             }}
             pageData={{
-              address: "address",
-              trackerId: "trackerId",
-              currency: "currency",
-              roomId: "roomId",
+              address: 'address',
+              trackerId: 'trackerId',
+              currency: 'currency',
+              roomId: 'roomId',
             }}
           />
         </PositionsProvider>
