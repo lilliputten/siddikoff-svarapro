@@ -1,0 +1,87 @@
+# version: '3.8'  # Obsolete, commenting out
+services:
+  app:
+    environment:
+      - NODE_ENV=development
+      - BOT_TOKEN=${BOT_TOKEN:-your_bot_token_here}
+      - SERVICE_BOT_TOKEN=${SERVICE_BOT_TOKEN:-your_service_bot_token_here}
+    volumes:
+      # Mount source code for hot reload (Windows paths auto-converted)
+      - .:/app:delegated  # Full monorepo mount
+      - /app/node_modules  # Preserve container node_modules
+      - /app/server/node_modules
+      - /app/bot/node_modules
+      - /app/service-bot/node_modules
+    working_dir: /app
+    command: >  # Dev startup with pnpm workspaces - run development servers
+      sh -c "
+        pnpm install &&
+        echo 'Starting services in development mode using tsx...' &&
+        cd /app/server && npx tsx watch src/main.ts &
+        sleep 5 && cd /app/bot && npx tsx watch src/index.ts &
+        sleep 5 && cd /app/service-bot && npx tsx watch src/index.ts &
+        wait
+      "
+    stdin_open: true
+    tty: true
+
+  postgres:
+    image: ${POSTGRES_IMAGE}
+    environment:
+      - POSTGRES_PASSWORD=1  # Match your server/.env
+      - POSTGRES_USER=postgres
+      - POSTGRES_DB=svarapro
+    ports:
+      - '5432:5432'
+    volumes:
+      - postgres_dev_data:/var/lib/postgresql/data
+    networks:
+      - app-network
+    restart: unless-stopped
+    healthcheck:
+      test: ['CMD-SHELL', 'pg_isready -U postgres -d svarapro']
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  redis:
+    image: ${REDIS_IMAGE}
+    ports:
+      - '6379:6379'
+    volumes:
+      - redis_dev_data:/data
+      - ./redis.conf:/usr/local/etc/redis/redis.conf
+    command: redis-server /usr/local/etc/redis/redis.conf
+    networks:
+      - app-network
+    restart: unless-stopped
+    healthcheck:
+      test: ['CMD', 'redis-cli', 'ping']
+      interval: 10s
+      timeout: 5s
+      retries: 3
+
+  client:
+    build:
+      context: .
+      dockerfile: client/Dockerfile.dev  # Create this
+    ports:
+      - "5173:5173"  # Vite default
+    volumes:
+      - ./client:/app/client
+    command: >
+      sh -c "
+        npm install -g pnpm &&
+        cd /app/client &&
+        pnpm install &&
+        pnpm run dev -- --host 0.0.0.0
+      "
+
+networks:
+  app-network:
+    driver: bridge
+
+volumes:
+  postgres_dev_data:
+  redis_dev_data:
+

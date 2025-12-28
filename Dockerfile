@@ -16,7 +16,7 @@ COPY bot/package.json ./bot/package.json
 COPY service-bot/package.json ./service-bot/package.json
 
 # Install only production dependencies for server and bot
-RUN pnpm install --prod --frozen-lockfile --filter svara-pro-server --filter svara-pro-bot --filter svara-pro-service-bot
+RUN pnpm install --prod --no-frozen-lockfile --filter svara-pro-server --filter svara-pro-bot --filter svara-pro-service-bot
 
 # Build dependencies stage
 FROM base AS build-deps
@@ -26,7 +26,7 @@ COPY bot/package.json ./bot/package.json
 COPY service-bot/package.json ./service-bot/package.json
 
 # Install all dependencies including dev dependencies
-RUN pnpm install --frozen-lockfile --filter svara-pro-server --filter svara-pro-bot --filter svara-pro-service-bot
+RUN pnpm install --no-frozen-lockfile --filter svara-pro-server --filter svara-pro-bot --filter svara-pro-service-bot
 
 # Build stage
 FROM build-deps AS builder
@@ -45,12 +45,16 @@ FROM ${NODE_IMAGE} AS runner
 WORKDIR /app
 ENV NODE_ENV=production
 
+# Install PM2, pnpm, and tsx globally (as root)
+RUN npm install -g pm2 pnpm tsx
+
 # Create non-root user
 RUN addgroup --system --gid 1001 nodejs
 RUN adduser --system --uid 1001 nodejs
 
-# Install PM2 globally
-RUN npm install -g pm2
+# Change ownership of global npm packages to nodejs user so they can be used
+RUN chown -R nodejs:nodejs /usr/local/lib/node_modules
+RUN chown -R nodejs:nodejs /home/nodejs
 
 # Copy production node_modules
 COPY --from=deps --chown=nodejs:nodejs /app/node_modules ./node_modules

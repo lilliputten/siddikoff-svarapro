@@ -148,3 +148,15 @@ public
 
 # VSCode configuration
 .vscode
+
+# Temporariy, swap & ignored files
+.DS_Store
+/bin
+/log*.txt
+*UNUSED
+*~
+.*.sw?
+*.tmp
+*.zip
+*.tgz
+*.log

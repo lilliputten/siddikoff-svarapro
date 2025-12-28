@@ -13,7 +13,7 @@ COPY package.json pnpm-lock.yaml pnpm-workspace.yaml ./
 COPY client/package.json ./client/package.json
 
 # Install only client dependencies
-RUN pnpm install --frozen-lockfile --filter svara-pro-client
+RUN pnpm install --no-frozen-lockfile --filter svara-pro-client
 
 # Build stage
 FROM deps AS builder

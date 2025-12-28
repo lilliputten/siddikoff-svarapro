@@ -1,0 +1,30 @@
+# Use Node.js base image for development
+FROM node:18-alpine
+
+WORKDIR /app
+
+# Install pnpm globally
+RUN npm install -g pnpm
+
+# Install libc6-compat and additional packages for crypto compatibility
+RUN apk add --no-cache libc6-compat python3 make g++ openssl git
+
+# Copy package files
+COPY package.json pnpm-lock.yaml pnpm-workspace.yaml ./
+COPY client/package.json ./client/package.json
+
+# Install dependencies in the root first
+RUN pnpm install --no-frozen-lockfile
+
+# Copy client source code
+COPY client/ ./client/
+
+WORKDIR /app/client
+
+# Install client-specific dependencies (in case they're different)
+RUN cd /app/client && pnpm install --no-frozen-lockfile
+
+EXPOSE 5173
+
+# Command will be overridden by docker-compose.dev.yml
+CMD ["pnpm", "run", "dev", "--", "--host", "0.0.0.0"] 
