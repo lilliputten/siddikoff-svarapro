@@ -1,5 +1,5 @@
 # Use Node.js base image for development
-FROM node:18-alpine
+FROM node:20-alpine
 
 WORKDIR /app
 
@@ -27,4 +27,4 @@ RUN cd /app/client && pnpm install --no-frozen-lockfile
 EXPOSE 5173
 
 # Command will be overridden by docker-compose.dev.yml
-CMD ["pnpm", "run", "dev", "--", "--host", "0.0.0.0"] 
+CMD ["pnpm", "run", "dev", "--", "--host", "0.0.0.0"]
