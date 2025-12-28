@@ -3,16 +3,21 @@
   "version": "1.0.0",
   "private": true,
   "devDependencies": {
-    "pm2": "^5.4.2"
+    "npm-run-all": "^4.1.5",
+    "pm2": "^5.4.2",
+    "pretty-quick": "^4.2.2"
   },
   "dependencies": {
     "tailwind-merge": "^3.3.1"
   },
   "scripts": {
-    "install-workspaces": "pnpm install --frozen-lockfile --config.confirmModulesPurge=false",
+    "install-all": "pnpm --frozen-lockfile --config.confirmModulesPurge=false install",
+    "install-workspaces": "pnpm --filter svara-pro-server --filter svara-pro-bot --filter svara-pro-client --filter svara-pro-service-bot --frozen-lockfile install",
+    "format-all": "pnpm format-quick --filter svara-pro-server --filter svara-pro-bot --filter svara-pro-client --filter svara-pro-service-bot",
     "build": "pnpm --filter svara-pro-server build && pnpm --filter svara-pro-bot build",
     "build:client": "pnpm --filter svara-pro-client build",
     "start": "pm2-runtime start ecosystem.config.js",
-    "lint": "pnpm --filter svara-pro-server lint && pnpm --filter svara-pro-bot lint && pnpm --filter svara-pro-client lint"
+    "lint": "pnpm --filter svara-pro-server lint && pnpm --filter svara-pro-bot lint && pnpm --filter svara-pro-client lint",
+    "check-all": "pnpm --filter svara-pro-server check-all && pnpm --filter svara-pro-bot check-all && pnpm --filter svara-pro-client check-all && pnpm --filter svara-pro-service-bot check-all"
   }
 }

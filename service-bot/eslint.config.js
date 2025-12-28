@@ -11,6 +11,12 @@ export default [
   ...tseslint.configs.recommended,
   pluginPrettierRecommended,
   {
+    rules: {
+      '@typescript-eslint/no-unused-vars': 'warn',
+      "prettier/prettier": "warn",
+    },
+  },
+  {
     ignores: ["dist/**/*", "node_modules/**/*"],
   },
 ];

@@ -11,6 +11,11 @@ export default [
   ...tseslint.configs.recommended,
   pluginPrettierRecommended,
   {
+    rules: {
+      'prettier/prettier': 'warn',
+    },
+  },
+  {
     ignores: ['dist/**/*'],
   },
 ];
