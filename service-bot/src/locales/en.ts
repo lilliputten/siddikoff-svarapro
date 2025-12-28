@@ -15,7 +15,8 @@ export const en = {
     serverError: "❌ Server error. Try again later.",
     accessDenied: "❌ Access denied",
     invalidCommand: "❌ Invalid command",
-    invalidPassword: "❌ Password must contain only letters and numbers (6-20 characters)",
+    invalidPassword:
+      "❌ Password must contain only letters and numbers (6-20 characters)",
   },
 
   success: {
@@ -36,11 +37,13 @@ export const en = {
     banUser: "🚫 Ban user",
     unbanUser: "✅ Unban user",
     enterPassword: "🔐 Enter admin password:",
-    createPassword: "🔐 Create new admin password (only letters and numbers, 6-20 characters):",
+    createPassword:
+      "🔐 Create new admin password (only letters and numbers, 6-20 characters):",
     wrongPassword: "❌ Wrong password",
     alreadyLoggedIn: "✅ You are already logged in as administrator.",
     notInAdminList: "❌ You are not in the administrators list.",
-    firstTimeAdmin: "🔐 Welcome! This is your first login. Create admin password:",
+    firstTimeAdmin:
+      "🔐 Welcome! This is your first login. Create admin password:",
     back: "⬅️ Back",
     search: "🔍 Search",
     next: "➡️ Next",

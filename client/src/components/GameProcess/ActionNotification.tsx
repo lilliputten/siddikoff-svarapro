@@ -5,7 +5,10 @@ interface ActionNotificationProps {
   visible: boolean;
 }
 
-export function ActionNotification({ action, visible }: ActionNotificationProps) {
+export function ActionNotification({
+  action,
+  visible,
+}: ActionNotificationProps) {
   const { t } = useTranslation("common");
 
   const actionConfig = {

@@ -8,7 +8,11 @@ import lockIcon from "@/assets/lock.png";
 import { apiService } from "@/services/api/api";
 import { ConnectRoomProps } from "@/types/components";
 
-export const ConnectRoom: React.FC<ConnectRoomProps> = ({ onClose, openModal, setCurrentPage }) => {
+export const ConnectRoom: React.FC<ConnectRoomProps> = ({
+  onClose,
+  openModal,
+  setCurrentPage,
+}) => {
   const { t } = useTranslation("common");
   const [inputValue, setInputValue] = useState("");
   const [isValid, setIsValid] = useState(false);
@@ -38,8 +42,8 @@ export const ConnectRoom: React.FC<ConnectRoomProps> = ({ onClose, openModal, se
       setCurrentPage("gameRoom", { roomId: inputValue });
     } catch (error: unknown) {
       setError(
-        (error as { response?: { data?: { message?: string } } }).response?.data?.message ||
-          "Failed to join room",
+        (error as { response?: { data?: { message?: string } } }).response?.data
+          ?.message || "Failed to join room",
       );
       setIsLoading(false);
     } finally {
@@ -59,7 +63,9 @@ export const ConnectRoom: React.FC<ConnectRoomProps> = ({ onClose, openModal, se
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50 backdrop-blur-sm">
       <div className="relative flex h-[172px] w-[316px] flex-col items-center rounded-lg bg-[#47444C] px-4 py-4">
-        <h2 className="mb-4 text-lg font-semibold text-white">{t("join_room")}</h2>
+        <h2 className="mb-4 text-lg font-semibold text-white">
+          {t("join_room")}
+        </h2>
         {error && <p className="mb-2 text-sm text-red-500">{error}</p>}
         <div className="relative mb-4 w-full">
           <img

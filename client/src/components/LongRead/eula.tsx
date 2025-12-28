@@ -4,11 +4,15 @@ import closeIcon from "@/assets/close.png";
 import { EulaProps, TextProps } from "@/types/components";
 
 export const EulaHeader = ({ children }: TextProps) => (
-  <h2 className="text-base font-bold leading-tight tracking-tighter text-white">{children}</h2>
+  <h2 className="text-base font-bold leading-tight tracking-tighter text-white">
+    {children}
+  </h2>
 );
 
 export const EulaBody = ({ children }: TextProps) => (
-  <p className="text-xs font-normal leading-tight tracking-tighter text-white">{children}</p>
+  <p className="text-xs font-normal leading-tight tracking-tighter text-white">
+    {children}
+  </p>
 );
 
 export const EulaSubtext = ({ children }: TextProps) => (

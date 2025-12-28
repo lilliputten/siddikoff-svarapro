@@ -27,7 +27,8 @@ export function Deposit({ setCurrentPage }: DepositProps) {
         currency, // Явно задаем currency из аргумента
       });
     } catch (error) {
-      const errorMessage = error instanceof Error ? error.message : "Failed to initiate deposit";
+      const errorMessage =
+        error instanceof Error ? error.message : "Failed to initiate deposit";
       console.error("Failed to initiate deposit:", error);
       setError(errorMessage);
     } finally {
@@ -79,7 +80,8 @@ export function Deposit({ setCurrentPage }: DepositProps) {
               width: "100%",
               height: "40px",
               borderRadius: "8px",
-              background: "linear-gradient(0deg, #36333B 7.5%, #46434B 100%, #48454D 100%)",
+              background:
+                "linear-gradient(0deg, #36333B 7.5%, #46434B 100%, #48454D 100%)",
               color: "#FFFFFF",
               fontWeight: 600,
               fontSize: "16px",

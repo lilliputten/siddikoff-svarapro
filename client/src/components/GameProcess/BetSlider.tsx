@@ -137,10 +137,13 @@ export function BetSlider({
               handleConfirm();
             }}
             className={`flex h-[29px] w-1/4 cursor-pointer items-center justify-center rounded-md text-xs font-bold text-white transition ${
-              value > maxBet || isProcessing ? "cursor-not-allowed opacity-50" : ""
+              value > maxBet || isProcessing
+                ? "cursor-not-allowed opacity-50"
+                : ""
             }`}
             style={{
-              backgroundColor: value > maxBet || isProcessing ? "#666" : "#56BF00",
+              backgroundColor:
+                value > maxBet || isProcessing ? "#666" : "#56BF00",
               WebkitTapHighlightColor: "transparent",
               touchAction: "manipulation",
             }}
@@ -154,7 +157,8 @@ export function BetSlider({
         <div className="mx-auto mb-4 grid w-[85%] grid-cols-4 justify-items-center gap-2">
           {multipliers.map((mult, index) => {
             // Проверяем, не превышает ли множитель баланс
-            const multiplierValue = mult.value === "max" ? maxBet : minBet * (mult.value as number);
+            const multiplierValue =
+              mult.value === "max" ? maxBet : minBet * (mult.value as number);
             const isDisabled = multiplierValue > maxBet || isProcessing;
 
             return (

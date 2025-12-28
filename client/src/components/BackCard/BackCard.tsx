@@ -10,7 +10,11 @@ interface Props extends HTMLAttributes<HTMLDivElement> {
 export function BackCard({ className, classNameImage, ...props }: Props) {
   return (
     <div className={cn(className)} {...props}>
-      <img className={cn("h-11 w-8", classNameImage)} src={backImage} alt="Back" />
+      <img
+        className={cn("h-11 w-8", classNameImage)}
+        src={backImage}
+        alt="Back"
+      />
     </div>
   );
 }

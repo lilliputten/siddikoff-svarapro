@@ -64,15 +64,25 @@ export function GameMenu({ isOpen, onClose, onExit }: GameMenuProps) {
           >
             <div className="flex items-center space-x-2">
               <img src={languageIcon} alt="Language" className="h-4 w-4" />
-              <span className="text-white" style={{ fontWeight: 500, fontSize: "12px" }}>
+              <span
+                className="text-white"
+                style={{ fontWeight: 500, fontSize: "12px" }}
+              >
                 {t("current_language")}
               </span>
             </div>
             <div className="flex items-center space-x-2">
-              <span className="text-white" style={{ fontWeight: 500, fontSize: "12px" }}>
+              <span
+                className="text-white"
+                style={{ fontWeight: 500, fontSize: "12px" }}
+              >
                 {t(languageKeyMap[currentLanguage] || "russian")}
               </span>
-              <img src={slideDownIcon} alt="arrow" className="h-[7px] w-[15px]" />
+              <img
+                src={slideDownIcon}
+                alt="arrow"
+                className="h-[7px] w-[15px]"
+              />
             </div>
           </div>
           {/* Sound Toggle */}
@@ -82,7 +92,10 @@ export function GameMenu({ isOpen, onClose, onExit }: GameMenuProps) {
           >
             <div className="flex items-center space-x-2">
               <img src={volumeIcon} alt="Звук" className="h-4 w-4" />
-              <span className="text-white" style={{ fontWeight: 500, fontSize: "12px" }}>
+              <span
+                className="text-white"
+                style={{ fontWeight: 500, fontSize: "12px" }}
+              >
                 {t("sound")}
               </span>
             </div>
@@ -94,7 +107,9 @@ export function GameMenu({ isOpen, onClose, onExit }: GameMenuProps) {
               <div
                 className="h-[16px] w-[16px] rounded-full bg-white transition-all duration-300"
                 style={{
-                  transform: isSoundEnabled ? "translateX(20px)" : "translateX(0)",
+                  transform: isSoundEnabled
+                    ? "translateX(20px)"
+                    : "translateX(0)",
                 }}
               ></div>
             </div>
@@ -107,14 +122,19 @@ export function GameMenu({ isOpen, onClose, onExit }: GameMenuProps) {
             style={{ backgroundColor: "rgba(19, 18, 23, 0.7)" }}
           >
             <img src={exitIcon} alt="Выйти" className="h-4 w-4" />
-            <span className="text-white" style={{ fontWeight: 500, fontSize: "12px" }}>
+            <span
+              className="text-white"
+              style={{ fontWeight: 500, fontSize: "12px" }}
+            >
               {t("exit")}
             </span>
           </button>
         </StyledContainer>
       </div>
 
-      {showExitMenu && <ExitMenu onClose={handleExitCancel} onConfirm={handleExitConfirm} />}
+      {showExitMenu && (
+        <ExitMenu onClose={handleExitCancel} onConfirm={handleExitConfirm} />
+      )}
       <LanguageSelector
         isOpen={showLanguageSelector}
         onClose={() => setShowLanguageSelector(false)}

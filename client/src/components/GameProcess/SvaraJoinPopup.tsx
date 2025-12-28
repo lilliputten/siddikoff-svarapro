@@ -55,7 +55,11 @@ const SvaraAvatar = ({ player }: { player: Player }) => {
   );
 };
 
-export function SvaraJoinPopup({ gameState, userData, actions }: SvaraJoinPopupProps) {
+export function SvaraJoinPopup({
+  gameState,
+  userData,
+  actions,
+}: SvaraJoinPopupProps) {
   const { t } = useTranslation("common");
   const [timer, setTimer] = useState(20);
   const popupRef = useRef<HTMLDivElement>(null);
@@ -78,7 +82,10 @@ export function SvaraJoinPopup({ gameState, userData, actions }: SvaraJoinPopupP
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
-      if (popupRef.current && !popupRef.current.contains(event.target as Node)) {
+      if (
+        popupRef.current &&
+        !popupRef.current.contains(event.target as Node)
+      ) {
         actions.skipSvara();
       }
     };
@@ -90,8 +97,11 @@ export function SvaraJoinPopup({ gameState, userData, actions }: SvaraJoinPopupP
   }, [actions, popupRef]);
 
   const svaraWinners = gameState.winners || [];
-  const isParticipant = svaraWinners.some((p) => p.id === userData.id?.toString());
-  const hasConfirmed = gameState.svaraConfirmed?.includes(userData.id?.toString() || "") || false;
+  const isParticipant = svaraWinners.some(
+    (p) => p.id === userData.id?.toString(),
+  );
+  const hasConfirmed =
+    gameState.svaraConfirmed?.includes(userData.id?.toString() || "") || false;
 
   const renderAvatars = () => {
     if (svaraWinners.length === 2) {
@@ -163,12 +173,16 @@ export function SvaraJoinPopup({ gameState, userData, actions }: SvaraJoinPopupP
                     }`}
                     disabled={hasConfirmed}
                   >
-                    {hasConfirmed ? t("decision_made") : t("skip_with_timer", { timer })}
+                    {hasConfirmed
+                      ? t("decision_made")
+                      : t("skip_with_timer", { timer })}
                   </button>
                 </>
               ) : (
                 <>
-                  <p className="mb-3 text-sm font-bold">{t("join_or_skip_svara")}</p>
+                  <p className="mb-3 text-sm font-bold">
+                    {t("join_or_skip_svara")}
+                  </p>
                   <button
                     onClick={actions.joinSvara}
                     className="mb-2 h-[32px] w-[224px] rounded-lg bg-[#00AF17] text-sm font-bold text-white"

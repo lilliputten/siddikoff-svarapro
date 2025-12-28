@@ -73,8 +73,8 @@ export const CreatePrivate: React.FC<CreatePrivateProps> = ({
       setCurrentPage("gameRoom", { roomId: room.roomId, autoSit: true });
     } catch (error: unknown) {
       setError(
-        (error as { response?: { data?: { message?: string } } }).response?.data?.message ||
-          "Failed to create room",
+        (error as { response?: { data?: { message?: string } } }).response?.data
+          ?.message || "Failed to create room",
       );
       setIsCreatingRoom(false); // Hide loading on error
     }
@@ -90,7 +90,9 @@ export const CreatePrivate: React.FC<CreatePrivateProps> = ({
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50 backdrop-blur-sm">
       <div className="relative flex h-[215px] w-[316px] flex-col items-center rounded-lg bg-[#47444C] px-4 py-4">
-        <h2 className="mb-4 text-lg font-semibold text-white">{t("create_private_room")}</h2>
+        <h2 className="mb-4 text-lg font-semibold text-white">
+          {t("create_private_room")}
+        </h2>
         {error && <p className="mb-2 text-sm text-red-500">{error}</p>}
         <div className="relative mb-4 w-full">
           <img

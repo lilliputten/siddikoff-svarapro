@@ -16,7 +16,8 @@ export function RedButton({ children, onClick, ...rest }: ButtonProps) {
       style={{
         ...rest.style,
         backgroundColor: "rgb(255 68 58)",
-        textShadow: "0px 1px 2px rgba(0, 0, 0, 0.3), 0px 1px 3px rgba(0, 0, 0, 0.15)",
+        textShadow:
+          "0px 1px 2px rgba(0, 0, 0, 0.3), 0px 1px 3px rgba(0, 0, 0, 0.15)",
       }}
       onClick={handleClick}
     >

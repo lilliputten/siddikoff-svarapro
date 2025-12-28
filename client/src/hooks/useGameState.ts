@@ -34,12 +34,15 @@ export const useGameState = (roomId: string, socket: Socket | null) => {
       setLoading(false);
       setIsProcessing(false);
 
-      const userId = window.Telegram?.WebApp?.initDataUnsafe?.user?.id?.toString() || "";
+      const userId =
+        window.Telegram?.WebApp?.initDataUnsafe?.user?.id?.toString() || "";
       setIsSeated(state.players.some((p) => p.id === userId));
     });
 
     socket.on("game_update", (state: GameState) => {
-      console.log(`[GAME_UPDATE_DEBUG] Received game update, log length: ${state.log.length}`);
+      console.log(
+        `[GAME_UPDATE_DEBUG] Received game update, log length: ${state.log.length}`,
+      );
       console.log(
         `[LAST_ACTION_AMOUNT_DEBUG] lastActionAmount: ${state.lastActionAmount}, lastBlindBet: ${state.lastBlindBet}`,
       );
@@ -53,7 +56,8 @@ export const useGameState = (roomId: string, socket: Socket | null) => {
       setLoading(false);
       setIsProcessing(false);
 
-      const userId = window.Telegram?.WebApp?.initDataUnsafe?.user?.id?.toString() || "";
+      const userId =
+        window.Telegram?.WebApp?.initDataUnsafe?.user?.id?.toString() || "";
       setIsSeated(state.players.some((p) => p.id === userId));
     });
 
@@ -65,7 +69,10 @@ export const useGameState = (roomId: string, socket: Socket | null) => {
       console.error("Socket error:", data.message);
 
       // Показываем NoConnect для определенных ошибок подключения
-      if (data.message === "Игра не найдена" || data.message === "WebSocket не инициализирован") {
+      if (
+        data.message === "Игра не найдена" ||
+        data.message === "WebSocket не инициализирован"
+      ) {
         setShowNoConnect(true);
         setError(null); // Не показываем эти ошибки как критические
       } else {
@@ -192,7 +199,15 @@ export const useGameState = (roomId: string, socket: Socket | null) => {
       leaveRoom,
       playSound,
     }),
-    [performAction, sitDown, invitePlayer, leaveRoom, playSound, socket, roomId],
+    [
+      performAction,
+      sitDown,
+      invitePlayer,
+      leaveRoom,
+      playSound,
+      socket,
+      roomId,
+    ],
   );
 
   return {

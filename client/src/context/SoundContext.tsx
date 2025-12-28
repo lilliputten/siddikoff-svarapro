@@ -13,7 +13,9 @@ const SoundContext = createContext<SoundContextType | undefined>(undefined);
 export const SoundProvider = ({ children }: { children: ReactNode }) => {
   const sound = useSound();
 
-  return <SoundContext.Provider value={sound}>{children}</SoundContext.Provider>;
+  return (
+    <SoundContext.Provider value={sound}>{children}</SoundContext.Provider>
+  );
 };
 
 export const useSoundContext = () => {

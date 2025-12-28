@@ -31,14 +31,19 @@ export function Dashboard({
   const [isAvailableFilter, setIsAvailableFilter] = useState(false);
   const [stakeRange, setStakeRange] = useState<[number, number]>([0, 1000000]);
   const [isAddWalletVisible, setIsAddWalletVisible] = useState(false);
-  const [notification, setNotification] = useState<NotificationType | null>(null);
+  const [notification, setNotification] = useState<NotificationType | null>(
+    null,
+  );
   const [isEnterGameMenuVisible, setIsEnterGameMenuVisible] = useState(false);
   const [activeModal, setActiveModal] = useState<
     "createPublic" | "createPrivate" | "connectRoom" | null
   >(null);
 
   // Отладочные логи
-  console.log("Dashboard render - isEnterGameMenuVisible:", isEnterGameMenuVisible);
+  console.log(
+    "Dashboard render - isEnterGameMenuVisible:",
+    isEnterGameMenuVisible,
+  );
   console.log("Dashboard render - activeModal:", activeModal);
   const [isCreatingRoom, setIsCreatingRoom] = useState(false);
 
@@ -64,7 +69,9 @@ export function Dashboard({
     setIsEnterGameMenuVisible(false);
   };
 
-  const openModal = (modal: "createPublic" | "createPrivate" | "connectRoom") => {
+  const openModal = (
+    modal: "createPublic" | "createPrivate" | "connectRoom",
+  ) => {
     setActiveModal(modal);
     setIsEnterGameMenuVisible(false);
   };

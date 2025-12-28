@@ -16,7 +16,11 @@ interface EnterGameMenuProps {
   openModal: (type: "createPublic" | "createPrivate" | "connectRoom") => void;
 }
 
-const EnterGameMenu: React.FC<EnterGameMenuProps> = ({ isOpen, onClose, openModal }) => {
+const EnterGameMenu: React.FC<EnterGameMenuProps> = ({
+  isOpen,
+  onClose,
+  openModal,
+}) => {
   const { t } = useTranslation("common");
 
   console.log("EnterGameMenu render - isOpen:", isOpen);

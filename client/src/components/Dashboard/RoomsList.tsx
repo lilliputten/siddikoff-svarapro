@@ -49,18 +49,30 @@ export function RoomsList({
 
   const filteredRooms = rooms.filter((room) => {
     const matchesSearch = searchId === "" || room.roomId === searchId;
-    const matchesAvailability = !isAvailableFilter || room.players.length < room.maxPlayers;
-    const matchesStake = room.minBet >= stakeRange[0] && room.minBet <= stakeRange[1];
-    return matchesSearch && matchesAvailability && matchesStake && room.type === "public"; // Только публичные
+    const matchesAvailability =
+      !isAvailableFilter || room.players.length < room.maxPlayers;
+    const matchesStake =
+      room.minBet >= stakeRange[0] && room.minBet <= stakeRange[1];
+    return (
+      matchesSearch &&
+      matchesAvailability &&
+      matchesStake &&
+      room.type === "public"
+    ); // Только публичные
   });
 
   const totalPages = Math.ceil(filteredRooms.length / ITEMS_PER_PAGE);
   const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
-  const paginatedRooms = filteredRooms.slice(startIndex, startIndex + ITEMS_PER_PAGE);
+  const paginatedRooms = filteredRooms.slice(
+    startIndex,
+    startIndex + ITEMS_PER_PAGE,
+  );
 
   return (
     <div className="mx-auto w-[93vw] space-y-4">
-      <p className="adaprive_font mb-2 text-center text-white">{t("join_game_now")}</p>
+      <p className="adaprive_font mb-2 text-center text-white">
+        {t("join_game_now")}
+      </p>
       {paginatedRooms.length > 0 ? (
         paginatedRooms.map((room) => (
           <RoomComponent
@@ -78,17 +90,19 @@ export function RoomsList({
       )}
       {totalPages > 1 && (
         <div className="mt-4 flex justify-center space-x-2">
-          {Array.from({ length: totalPages }, (_, index) => index + 1).map((page) => (
-            <Button
-              key={page}
-              variant="secondary"
-              className="h-[25px] w-[32px] text-sm text-gray-400"
-              isActive={page === currentPage}
-              onClick={() => setPage(page)}
-            >
-              {page}
-            </Button>
-          ))}
+          {Array.from({ length: totalPages }, (_, index) => index + 1).map(
+            (page) => (
+              <Button
+                key={page}
+                variant="secondary"
+                className="h-[25px] w-[32px] text-sm text-gray-400"
+                isActive={page === currentPage}
+                onClick={() => setPage(page)}
+              >
+                {page}
+              </Button>
+            ),
+          )}
         </div>
       )}
     </div>

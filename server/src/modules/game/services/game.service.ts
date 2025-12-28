@@ -17,7 +17,7 @@ import { TURN_DURATION_SECONDS } from '../../../constants/game.constants';
 
 @Injectable()
 export class GameService {
-  private turnTimers = new Map<string, NodeJS.Timeout>(); // Хранение таймеров ходов
+  private turnTimers = new Map<string, ReturnType<typeof setTimeout>>(); // Хранение таймеров ходов
   private endGameInProgress = new Set<string>(); // Защита от повторных вызовов endGameWithWinner
 
   constructor(
@@ -340,7 +340,7 @@ export class GameService {
     await this.redisService.publishGameUpdate(roomId, gameState);
   }
 
-  private svaraTimers: Map<string, NodeJS.Timeout> = new Map();
+  private svaraTimers: Map<string, ReturnType<typeof setTimeout>> = new Map();
 
   async joinSvara(
     roomId: string,

@@ -1,4 +1,10 @@
-import { backButton, expandViewport, init, isTMA, swipeBehavior } from "@telegram-apps/sdk-react";
+import {
+  backButton,
+  expandViewport,
+  init,
+  isTMA,
+  swipeBehavior,
+} from "@telegram-apps/sdk-react";
 
 let isInitialized = false;
 
@@ -9,7 +15,9 @@ export async function initTelegramSdk(): Promise<void> {
 
   // Проверяем наличие Telegram WebApp
   if (!window.Telegram?.WebApp) {
-    console.error("Telegram WebApp is not available. Ensure the app is running in Telegram.");
+    console.error(
+      "Telegram WebApp is not available. Ensure the app is running in Telegram.",
+    );
     throw new Error("Telegram WebApp is not available");
   }
 

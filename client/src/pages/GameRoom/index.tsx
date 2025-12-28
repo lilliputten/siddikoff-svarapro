@@ -64,9 +64,13 @@ const useWindowSize = () => {
     function updateSize() {
       // Для iOS Safari используем более надежный способ получения размеров
       const width =
-        window.innerWidth || document.documentElement.clientWidth || document.body.clientWidth;
+        window.innerWidth ||
+        document.documentElement.clientWidth ||
+        document.body.clientWidth;
       const height =
-        window.innerHeight || document.documentElement.clientHeight || document.body.clientHeight;
+        window.innerHeight ||
+        document.documentElement.clientHeight ||
+        document.body.clientHeight;
       setSize([width, height]);
     }
 
@@ -106,7 +110,10 @@ const useTablePositioning = (gameStateLoaded: boolean) => {
       ? Math.max(0.5, (windowWidth * 0.85) / tableSize.width)
       : 0.5;
 
-  const getPositionClasses = (position: number, isShowdown: boolean): string => {
+  const getPositionClasses = (
+    position: number,
+    isShowdown: boolean,
+  ): string => {
     const zIndex = isShowdown ? "z-40" : "z-30";
     const baseClasses = `absolute ${zIndex} transition-all duration-300 ease-in-out hover:scale-105 hover:z-40 w-20 h-24 flex items-center justify-center`;
     const positionClasses = {
@@ -155,17 +162,23 @@ export function GameRoom({
   const [showMenuModal, setShowMenuModal] = useState(false);
   const [showChatMenu, setShowChatMenu] = useState(false);
   const [activeChats, setActiveChats] = useState<
-    Record<string, { phrase: string; timerId: NodeJS.Timeout }>
+    Record<string, { phrase: string; timerId: ReturnType<typeof setTimeout> }>
   >({});
-  const [notification, setNotification] = useState<NotificationType | null>(null);
-  const { getPositionStyle, getPositionClasses, scale } = useTablePositioning(!!gameState);
+  const [notification, setNotification] = useState<NotificationType | null>(
+    null,
+  );
+  const { getPositionStyle, getPositionClasses, scale } =
+    useTablePositioning(!!gameState);
   const [turnTimer, setTurnTimer] = useState(TURN_DURATION_SECONDS);
-  const [svaraStep, setSvaraStep] = useState<"none" | "animating" | "joining">("none");
-  const { triggerImpact } = useHapticFeedback();
-  const currentUserId = window.Telegram?.WebApp?.initDataUnsafe?.user?.id?.toString() || "";
-  const [winSequenceStep, setWinSequenceStep] = useState<"none" | "showdown" | "winner" | "chips">(
+  const [svaraStep, setSvaraStep] = useState<"none" | "animating" | "joining">(
     "none",
   );
+  const { triggerImpact } = useHapticFeedback();
+  const currentUserId =
+    window.Telegram?.WebApp?.initDataUnsafe?.user?.id?.toString() || "";
+  const [winSequenceStep, setWinSequenceStep] = useState<
+    "none" | "showdown" | "winner" | "chips"
+  >("none");
   const [isSittingDown, setIsSittingDown] = useState(false);
   const [isMenuButtonPressed, setIsMenuButtonPressed] = useState(false);
 
@@ -180,7 +193,9 @@ export function GameRoom({
   const currentUserPosition = currentPlayer?.position;
 
   // Объявляем состояния для useCallback
-  const [chipAnimations, setChipAnimations] = useState<Array<ChipAnimation>>([]);
+  const [chipAnimations, setChipAnimations] = useState<Array<ChipAnimation>>(
+    [],
+  );
   // const [cardAnimations, setCardAnimations] = useState<Array<CardAnimation>>(
   //   [],
   // );
@@ -207,7 +222,9 @@ export function GameRoom({
       }
 
       // Проверяем, не создается ли уже анимация для этого игрока
-      const existingAnimation = chipAnimations.find((chip) => chip.id.includes(playerId));
+      const existingAnimation = chipAnimations.find((chip) =>
+        chip.id.includes(playerId),
+      );
       if (existingAnimation) {
         return;
       }
@@ -217,7 +234,9 @@ export function GameRoom({
       const absolutePosition = player.position;
       const isCurrentPlayer = player.id === currentUserId;
       // Текущий игрок ВСЕГДА в позиции 4 (снизу по центру), другие игроки преобразуются через getScreenPosition
-      const relativePosition = isCurrentPlayer ? 4 : getScreenPosition(absolutePosition);
+      const relativePosition = isCurrentPlayer
+        ? 4
+        : getScreenPosition(absolutePosition);
 
       // Получаем координаты на основе CSS классов позиций PlayerSpot
       let playerX = 0;
@@ -333,7 +352,9 @@ export function GameRoom({
       if (!player.isActive) return;
 
       const isCurrentPlayer = player.id === currentUserId;
-      const relativePosition = isCurrentPlayer ? 4 : getScreenPosition(player.position);
+      const relativePosition = isCurrentPlayer
+        ? 4
+        : getScreenPosition(player.position);
 
       // Вычисляем позицию игрока
       let playerX = 0;
@@ -411,7 +432,9 @@ export function GameRoom({
     const verticalOffset = 100;
 
     const isCurrentPlayer = winnerPlayer.id === currentUserId;
-    const relativePosition = isCurrentPlayer ? 4 : getScreenPosition(winnerPlayer.position);
+    const relativePosition = isCurrentPlayer
+      ? 4
+      : getScreenPosition(winnerPlayer.position);
 
     // Вычисляем позицию победителя
     let winnerX = 0;
@@ -462,7 +485,14 @@ export function GameRoom({
         },
       ]);
     }
-  }, [gameState?.winners, gameState?.players, scale, currentUserId, getScreenPosition, actions]);
+  }, [
+    gameState?.winners,
+    gameState?.players,
+    scale,
+    currentUserId,
+    getScreenPosition,
+    actions,
+  ]);
 
   const handleFoldCards = useCallback(
     (playerId: string) => {
@@ -617,7 +647,13 @@ export function GameRoom({
   useEffect(() => {
     if (!socket) return;
 
-    const handleNewChatMessage = ({ playerId, phrase }: { playerId: string; phrase: string }) => {
+    const handleNewChatMessage = ({
+      playerId,
+      phrase,
+    }: {
+      playerId: string;
+      phrase: string;
+    }) => {
       setActiveChats((prev) => {
         if (prev[playerId]) {
           clearTimeout(prev[playerId].timerId);
@@ -652,7 +688,10 @@ export function GameRoom({
     }
   };
 
-  const activeGamePhases: GameState["status"][] = useMemo(() => ["blind_betting", "betting"], []);
+  const activeGamePhases: GameState["status"][] = useMemo(
+    () => ["blind_betting", "betting"],
+    [],
+  );
   const isCurrentUserTurn = !!(
     isSeated &&
     gameState &&
@@ -670,7 +709,9 @@ export function GameRoom({
     }
 
     const updateTimer = () => {
-      const elapsed = Math.floor((Date.now() - (gameState.turnStartTime || 0)) / 1000);
+      const elapsed = Math.floor(
+        (Date.now() - (gameState.turnStartTime || 0)) / 1000,
+      );
       const remaining = Math.max(0, TURN_DURATION_SECONDS - elapsed);
       setTurnTimer(remaining);
     };
@@ -739,7 +780,11 @@ export function GameRoom({
         handleFoldCards(lastAction.telegramId);
       }
 
-      console.error("анимация не запустилась. Код 1", lastAction, lastAction.type);
+      console.error(
+        "анимация не запустилась. Код 1",
+        lastAction,
+        lastAction.type,
+      );
       // Анимация фишек для ante действий
       if (lastAction && lastAction.type == "ante") {
         console.error("анимация не запустилась. Код 0");
@@ -765,7 +810,9 @@ export function GameRoom({
   // Play win sound for current user if they won
   useEffect(() => {
     if (winSequenceStep === "winner") {
-      const currentUserWon = gameState?.winners?.some((winner) => winner.id === currentUserId);
+      const currentUserWon = gameState?.winners?.some(
+        (winner) => winner.id === currentUserId,
+      );
       if (currentUserWon && !winSoundPlayed) {
         actions.playSound("win");
         setWinSoundPlayed(true);
@@ -773,7 +820,13 @@ export function GameRoom({
     } else if (winSequenceStep === "none") {
       setWinSoundPlayed(false); // Reset for next round
     }
-  }, [winSequenceStep, gameState?.winners, currentUserId, actions, winSoundPlayed]);
+  }, [
+    winSequenceStep,
+    gameState?.winners,
+    currentUserId,
+    actions,
+    winSoundPlayed,
+  ]);
 
   const handleChipAnimationComplete = useCallback((chipId: string) => {
     setChipAnimations((prev) => {
@@ -783,7 +836,9 @@ export function GameRoom({
       const remainingWinnerChips = newAnimations.filter((chip) =>
         chip.id.startsWith("winner-chip-"),
       );
-      const hasWinnerChips = prev.some((chip) => chip.id.startsWith("winner-chip-"));
+      const hasWinnerChips = prev.some((chip) =>
+        chip.id.startsWith("winner-chip-"),
+      );
 
       if (hasWinnerChips && remainingWinnerChips.length === 0) {
         setShowChipStack(false);
@@ -807,7 +862,8 @@ export function GameRoom({
     }
   }, [pageData, isSeated, gameState, actions, userData, isSittingDown]);
 
-  if (loading || assetsLoading) return <LoadingPage isLoading={loading || assetsLoading} />;
+  if (loading || assetsLoading)
+    return <LoadingPage isLoading={loading || assetsLoading} />;
 
   if (error) {
     return (
@@ -828,20 +884,26 @@ export function GameRoom({
   if (!gameState) {
     return (
       <div className="flex min-h-screen flex-col items-center justify-center bg-primary">
-        <div className="text-xl text-red-500">{t("error_loading_game_state")}</div>
+        <div className="text-xl text-red-500">
+          {t("error_loading_game_state")}
+        </div>
       </div>
     );
   }
 
   const isAnimating = !!gameState.isAnimating;
-  const postLookActions = isCurrentUserTurn && !!currentPlayer?.hasLookedAndMustAct;
+  const postLookActions =
+    isCurrentUserTurn && !!currentPlayer?.hasLookedAndMustAct;
   const postLookCallAmount =
     gameState.lastBlindBet > 0 ? gameState.lastBlindBet * 2 : gameState.minBet;
 
   // ИСПРАВЛЕНИЕ: Улучшенный расчет callAmount с учетом blind ставок
   const callAmount = (() => {
     if (postLookActions) {
-      const result = gameState.lastBlindBet > 0 ? gameState.lastBlindBet * 2 : gameState.minBet;
+      const result =
+        gameState.lastBlindBet > 0
+          ? gameState.lastBlindBet * 2
+          : gameState.minBet;
       console.log(
         `[CALL_AMOUNT_DEBUG] postLookActions: lastBlindBet=${gameState.lastBlindBet}, result=${result}`,
       );
@@ -855,13 +917,16 @@ export function GameRoom({
 
   const minRaiseAmount = (() => {
     if (postLookActions) {
-      return gameState.lastBlindBet > 0 ? gameState.lastBlindBet * 2 : gameState.minBet;
+      return gameState.lastBlindBet > 0
+        ? gameState.lastBlindBet * 2
+        : gameState.minBet;
     }
     return gameState.lastActionAmount * 2;
   })();
 
   const maxRaise = currentPlayer?.balance || 0;
-  const blindBetAmount = gameState.lastBlindBet > 0 ? gameState.lastBlindBet * 2 : gameState.minBet;
+  const blindBetAmount =
+    gameState.lastBlindBet > 0 ? gameState.lastBlindBet * 2 : gameState.minBet;
 
   const canPerformBettingActions = !!(
     isCurrentUserTurn &&
@@ -884,7 +949,8 @@ export function GameRoom({
 
   // ИСПРАВЛЕНИЕ: Дополнительная проверка для look в blind_betting
   // Если у игрока нет денег на blind, но есть на look, то после look call/raise будут disabled
-  const canMakeCallAfterLook = (currentPlayer?.balance || 0) >= blindBetAmount * 2;
+  const canMakeCallAfterLook =
+    (currentPlayer?.balance || 0) >= blindBetAmount * 2;
 
   // ИСПРАВЛЕНИЕ: Правильная логика disabled кнопок с проверкой баланса
   const isCallDisabled = !!(
@@ -991,7 +1057,11 @@ export function GameRoom({
 
       {svaraStep === "joining" &&
         !(gameState.svaraParticipants?.includes(currentUserId) ?? false) && (
-          <SvaraJoinPopup gameState={gameState} userData={userData} actions={actions} />
+          <SvaraJoinPopup
+            gameState={gameState}
+            userData={userData}
+            actions={actions}
+          />
         )}
 
       <div className="relative z-30 flex items-center justify-between p-4 text-white">
@@ -1030,11 +1100,17 @@ export function GameRoom({
             {Array.from({ length: 6 }).map((_, index) => {
               const absolutePosition = index + 1;
               const screenPosition = getScreenPosition(absolutePosition);
-              const player = gameState.players.find((p) => p.position === absolutePosition);
+              const player = gameState.players.find(
+                (p) => p.position === absolutePosition,
+              );
               const positionStyle = getPositionStyle(screenPosition);
-              const positionClasses = getPositionClasses(screenPosition, showCards);
+              const positionClasses = getPositionClasses(
+                screenPosition,
+                showCards,
+              );
 
-              let cardSide = screenPosition === 2 || screenPosition === 3 ? "left" : "right";
+              let cardSide =
+                screenPosition === 2 || screenPosition === 3 ? "left" : "right";
 
               if (screenPosition == 4) {
                 cardSide = "bottom";
@@ -1065,24 +1141,37 @@ export function GameRoom({
               const isTurn = !!(
                 gameState &&
                 player &&
-                gameState.players[gameState.currentPlayerIndex]?.id === player.id
+                gameState.players[gameState.currentPlayerIndex]?.id ===
+                  player.id
               );
-              const chatPhrase = player ? activeChats[player.id]?.phrase : undefined;
+              const chatPhrase = player
+                ? activeChats[player.id]?.phrase
+                : undefined;
 
               return (
-                <div key={absolutePosition} style={positionStyle} className={positionClasses}>
+                <div
+                  key={absolutePosition}
+                  style={positionStyle}
+                  className={positionClasses}
+                >
                   {player ? (
                     (() => {
                       const isCurrentUser =
-                        userData && userData.id && player.id.toString() === userData.id.toString();
+                        userData &&
+                        userData.id &&
+                        player.id.toString() === userData.id.toString();
                       const isWinner = !!(
                         gameState.winners &&
                         gameState.winners.some(
-                          (winner) => winner.id.toString() === player.id.toString(),
+                          (winner) =>
+                            winner.id.toString() === player.id.toString(),
                         )
                       );
-                      const winAmount = isWinner ? player.lastWinAmount || 0 : 0;
-                      const showWinIndicator = winSequenceStep === "winner" && isWinner;
+                      const winAmount = isWinner
+                        ? player.lastWinAmount || 0
+                        : 0;
+                      const showWinIndicator =
+                        winSequenceStep === "winner" && isWinner;
 
                       let notificationType:
                         | "blind"
@@ -1119,7 +1208,10 @@ export function GameRoom({
                       if (isCurrentUser) {
                         const mergedPlayer = {
                           ...player,
-                          username: userData.username || userData.first_name || player.username,
+                          username:
+                            userData.username ||
+                            userData.first_name ||
+                            player.username,
                           avatar: userData.photo_url || player.avatar,
                         };
                         return (
@@ -1206,7 +1298,11 @@ export function GameRoom({
                   isCallDisabled={isCallDisabled || isProcessing}
                   isRaiseDisabled={isRaiseDisabled || isProcessing}
                   isBlindBetDisabled={isBlindBetDisabled || isProcessing}
-                  minBet={effectiveGameStatus === "blind_betting" ? blindBetAmount : minRaiseAmount}
+                  minBet={
+                    effectiveGameStatus === "blind_betting"
+                      ? blindBetAmount
+                      : minRaiseAmount
+                  }
                 />
               ) : gameState?.status === "waiting" ? (
                 <div className="flex h-full items-center justify-center p-4">
@@ -1270,7 +1366,12 @@ export function GameRoom({
         </button>
       )}
 
-      {notification && <Notification type={notification} onClose={() => setNotification(null)} />}
+      {notification && (
+        <Notification
+          type={notification}
+          onClose={() => setNotification(null)}
+        />
+      )}
 
       <div className="pointer-events-none fixed inset-0" style={{ zIndex: 50 }}>
         {chipAnimations.map((chip) => (

@@ -16,7 +16,11 @@ interface LanguageSelectorProps {
   zIndex?: number;
 }
 
-export function LanguageSelector({ isOpen, onClose, zIndex }: LanguageSelectorProps) {
+export function LanguageSelector({
+  isOpen,
+  onClose,
+  zIndex,
+}: LanguageSelectorProps) {
   const { currentLanguage, changeLanguage } = useLanguage();
   const { t } = useTranslation("common");
   const [pressed, setPressed] = useState<string | null>(null);

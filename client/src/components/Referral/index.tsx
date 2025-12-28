@@ -64,9 +64,17 @@ export function Referral({ onClose }: ReferralProps) {
   }, [t]);
 
   if (loading)
-    return <div className="fixed inset-0 flex items-center justify-center">{t("loading")}</div>;
+    return (
+      <div className="fixed inset-0 flex items-center justify-center">
+        {t("loading")}
+      </div>
+    );
   if (error)
-    return <div className="fixed inset-0 flex items-center justify-center text-white">{error}</div>;
+    return (
+      <div className="fixed inset-0 flex items-center justify-center text-white">
+        {error}
+      </div>
+    );
   if (!referralData) return null;
 
   const { refBalance, refBonus, referralCount, referrals } = referralData;
@@ -74,27 +82,38 @@ export function Referral({ onClose }: ReferralProps) {
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50 p-4 backdrop-blur-sm">
       {showSuccess && <PopSuccess onClose={() => setShowSuccess(false)} />}
-      {isRefrulesVisible && <Refrules onClose={() => setIsRefrulesVisible(false)} />}
+      {isRefrulesVisible && (
+        <Refrules onClose={() => setIsRefrulesVisible(false)} />
+      )}
       <div className="relative flex w-[330px] flex-col items-center gap-4 rounded-lg bg-[#2E2B33] p-4">
-        <h2 className="text-center text-lg font-bold text-white">{t("referral_program")}</h2>
+        <h2 className="text-center text-lg font-bold text-white">
+          {t("referral_program")}
+        </h2>
         <button onClick={onClose} className="absolute right-4 top-4 z-10">
           <img src={closeIcon} alt="Close" className="h-6 w-6" />
         </button>
 
         {/* Статистика */}
         <div className="flex w-full justify-between gap-2">
-          <button className="h-[55px] w-[150px]" onClick={() => setIsRefrulesVisible(true)}>
+          <button
+            className="h-[55px] w-[150px]"
+            onClick={() => setIsRefrulesVisible(true)}
+          >
             <StyledContainer className="h-full w-full">
               <div className="flex h-full flex-col items-center justify-center">
                 <span className="text-sm text-gray-400">{t("level")}</span>
-                <span className="text-lg font-semibold text-white">{refBonus}%</span>
+                <span className="text-lg font-semibold text-white">
+                  {refBonus}%
+                </span>
               </div>
             </StyledContainer>
           </button>
           <StyledContainer className="h-[55px] w-[150px]">
             <div className="flex h-full flex-col items-center justify-center">
               <span className="text-sm text-gray-400">{t("earnings")}</span>
-              <span className="text-lg font-semibold text-white">${refBalance}</span>
+              <span className="text-lg font-semibold text-white">
+                ${refBalance}
+              </span>
             </div>
           </StyledContainer>
         </div>
@@ -149,7 +168,10 @@ export function Referral({ onClose }: ReferralProps) {
               </div>
               <hr className="my-2 w-full border-t border-white opacity-10" />
               {referrals?.map((ref, index) => (
-                <div key={index} className="my-1 flex justify-between text-xs text-white">
+                <div
+                  key={index}
+                  className="my-1 flex justify-between text-xs text-white"
+                >
                   <span>{truncateUsername(ref.username)}</span>
                   <span>$0.00</span>
                 </div>

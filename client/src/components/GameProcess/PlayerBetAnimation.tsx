@@ -72,11 +72,15 @@ export const PlayerBetAnimation = ({
       const randomDelay = Math.random() * 80;
 
       // меняем старт и цель в зависимости от reverse
-      const startX = reverse ? bidsPosition.x + CHIP_WIDTH + randomOffsetX : playerPosition.x + 60;
+      const startX = reverse
+        ? bidsPosition.x + CHIP_WIDTH + randomOffsetX
+        : playerPosition.x + 60;
       const startY = reverse
         ? bidsPosition.y - CHIP_HEIGHT / 2 + randomOffsetY
         : playerPosition.y + 60;
-      const targetX = reverse ? playerPosition.x + 60 : bidsPosition.x + CHIP_WIDTH + randomOffsetX;
+      const targetX = reverse
+        ? playerPosition.x + 60
+        : bidsPosition.x + CHIP_WIDTH + randomOffsetX;
       const targetY = reverse
         ? playerPosition.y + 60
         : bidsPosition.y - CHIP_HEIGHT / 2 + randomOffsetY;

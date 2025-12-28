@@ -77,7 +77,11 @@ const FlyingCard: React.FC<FlyingCardProps> = ({
         zIndex: 1000,
       }}
     >
-      <img src={cardBackImage} alt="flying card" className="h-full w-full object-contain" />
+      <img
+        src={cardBackImage}
+        alt="flying card"
+        className="h-full w-full object-contain"
+      />
     </div>
   );
 };

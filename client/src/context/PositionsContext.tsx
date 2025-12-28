@@ -37,9 +37,13 @@ interface Props {
 }
 
 export function PositionsProvider({ children }: Props) {
-  const [deckPosition, setDeckPosition] = useState<WithNull<PositionElement>>(null);
-  const [playersPositions, setPlayersPositions] = useState<PlayerPosition[]>([]);
-  const [bidsPosition, setBidsPosition] = useState<WithNull<PositionElement>>(null);
+  const [deckPosition, setDeckPosition] =
+    useState<WithNull<PositionElement>>(null);
+  const [playersPositions, setPlayersPositions] = useState<PlayerPosition[]>(
+    [],
+  );
+  const [bidsPosition, setBidsPosition] =
+    useState<WithNull<PositionElement>>(null);
 
   const changeDeckPosition = (position: WithNull<PositionElement>) => {
     setDeckPosition(position);

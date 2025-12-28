@@ -26,7 +26,8 @@ export function YellowButton({
   };
   const finalSizeClasses = sizeClasses[size];
 
-  const activeClasses = "text-black bg-[linear-gradient(180deg,#FFC53F_7.5%,#AF6600_100%)]";
+  const activeClasses =
+    "text-black bg-[linear-gradient(180deg,#FFC53F_7.5%,#AF6600_100%)]";
   const inactiveClasses = "bg-[#48454D] text-[#3B3846]";
 
   const buttonClasses = clsx(
@@ -46,7 +47,12 @@ export function YellowButton({
   );
 
   return (
-    <button onClick={handleClick} className={buttonClasses} disabled={!isActive} {...rest}>
+    <button
+      onClick={handleClick}
+      className={buttonClasses}
+      disabled={!isActive}
+      {...rest}
+    >
       {icon && iconPosition === "left" && (
         <img src={icon} alt="" className="mr-2 h-[24px] w-[24px]" />
       )}

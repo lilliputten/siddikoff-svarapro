@@ -72,7 +72,11 @@ export const useSound = () => {
         if (sound) {
           sound.volume = 0.5; // Фиксированная громкость 50%
           sound.currentTime = 0;
-          sound.play().catch((error) => console.error(`Error playing sound: ${type}`, error));
+          sound
+            .play()
+            .catch((error) =>
+              console.error(`Error playing sound: ${type}`, error),
+            );
         }
       } catch (error) {
         console.error(`Error accessing sound: ${type}`, error);

@@ -34,7 +34,10 @@ const languageKeyMap: { [key: string]: string } = {
 export function More({ userData, setCurrentPage }: MoreProps) {
   const { t } = useTranslation("common");
   const { currentLanguage } = useLanguage();
-  const userId = useMemo(() => userData?.id?.toString() || "N/A", [userData?.id]);
+  const userId = useMemo(
+    () => userData?.id?.toString() || "N/A",
+    [userData?.id],
+  );
   const [isEulaVisible, setIsEulaVisible] = useState(false);
   const [isReferralVisible, setIsReferralVisible] = useState(false);
   const [isGamerulesVisible, setIsGamerulesVisible] = useState(false);
@@ -187,7 +190,11 @@ export function More({ userData, setCurrentPage }: MoreProps) {
             <StyledContainer className="h-12">
               <div className="flex w-full items-center justify-between px-4">
                 <div className="flex items-center">
-                  <img src={tetherIcon} alt="USDT TON" className="mr-2 h-6 w-6" />
+                  <img
+                    src={tetherIcon}
+                    alt="USDT TON"
+                    className="mr-2 h-6 w-6"
+                  />
                   <span>USDT TON</span>
                 </div>
                 <YellowButton
@@ -209,8 +216,12 @@ export function More({ userData, setCurrentPage }: MoreProps) {
       />
       <Footer />
       {isEulaVisible && <Eula onClose={() => setIsEulaVisible(false)} />}
-      {isReferralVisible && <Referral onClose={() => setIsReferralVisible(false)} />}
-      {isGamerulesVisible && <Gamerules onClose={() => setIsGamerulesVisible(false)} />}
+      {isReferralVisible && (
+        <Referral onClose={() => setIsReferralVisible(false)} />
+      )}
+      {isGamerulesVisible && (
+        <Gamerules onClose={() => setIsGamerulesVisible(false)} />
+      )}
     </div>
   );
 }

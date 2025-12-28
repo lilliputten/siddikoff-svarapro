@@ -5,11 +5,15 @@ import combosImage from "@/assets/combos.jpg";
 import { GamerulesProps, TextProps } from "@/types/components";
 
 export const GamerulesHeader = ({ children }: TextProps) => (
-  <h2 className="text-base font-bold leading-tight tracking-tighter text-white">{children}</h2>
+  <h2 className="text-base font-bold leading-tight tracking-tighter text-white">
+    {children}
+  </h2>
 );
 
 export const GamerulesBody = ({ children }: TextProps) => (
-  <p className="text-xs font-normal leading-tight tracking-tighter text-white">{children}</p>
+  <p className="text-xs font-normal leading-tight tracking-tighter text-white">
+    {children}
+  </p>
 );
 
 export function Gamerules({ onClose }: GamerulesProps) {
@@ -58,7 +62,11 @@ export function Gamerules({ onClose }: GamerulesProps) {
           <GamerulesBody>{t("gamerules_special_body3")}</GamerulesBody>
           <GamerulesBody>{t("gamerules_special_body4")}</GamerulesBody>
           <GamerulesHeader>{t("gamerules_examples_title")}</GamerulesHeader>
-          <img src={combosImage} alt="Examples of combinations" className="max-w-full rounded-lg" />
+          <img
+            src={combosImage}
+            alt="Examples of combinations"
+            className="max-w-full rounded-lg"
+          />
           <GamerulesBody>{t("gamerules_example1")}</GamerulesBody>
           <GamerulesBody>{t("gamerules_example2")}</GamerulesBody>
           <GamerulesBody>{t("gamerules_example3")}</GamerulesBody>

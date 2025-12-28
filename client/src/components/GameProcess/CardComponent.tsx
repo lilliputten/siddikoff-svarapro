@@ -148,7 +148,11 @@ export function CardComponent({
   if (hidden || !card) {
     return (
       <div style={cardStyle} className={cardClasses}>
-        <img src={backImage} alt="Card back" className="h-full w-full object-contain" />
+        <img
+          src={backImage}
+          alt="Card back"
+          className="h-full w-full object-contain"
+        />
       </div>
     );
   }

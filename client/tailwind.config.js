@@ -3,7 +3,8 @@ export default {
   theme: {
     extend: {
       backgroundImage: {
-        secondary: "linear-gradient(180deg, #36333B 0%, #46434B 0.01%, #48454D 91.15%)",
+        secondary:
+          "linear-gradient(180deg, #36333B 0%, #46434B 0.01%, #48454D 91.15%)",
       },
       colors: {
         primary: "#2E2B33",

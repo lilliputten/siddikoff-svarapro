@@ -9,7 +9,7 @@
     "lint": "eslint . --ext .ts",
     "format": "prettier --write .",
     "format-quick": "pretty-quick --write --cache .",
-    "check-all": "npm-run-all lint type-check",
+    "check-all": "npm-run-all format-quick lint type-check",
     "type-check": "tsc --pretty --noEmit"
   },
   "dependencies": {

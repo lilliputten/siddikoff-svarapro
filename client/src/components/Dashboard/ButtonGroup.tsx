@@ -30,7 +30,12 @@ export function ButtonGroup({
       >
         {t("tournaments")}
       </Button>
-      <Button layout="vertical" icon={moreIcon} onClick={onMoreClick} className="h-[57px] flex-1">
+      <Button
+        layout="vertical"
+        icon={moreIcon}
+        onClick={onMoreClick}
+        className="h-[57px] flex-1"
+      >
         {t("more")}
       </Button>
     </div>

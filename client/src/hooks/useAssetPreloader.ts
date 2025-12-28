@@ -82,7 +82,8 @@ export const useAssetPreloader = () => {
         } else if (isAudio) {
           const audio = new Audio();
           audio.oncanplaythrough = () => resolve();
-          audio.onerror = () => reject(new Error(`Failed to load audio: ${src}`));
+          audio.onerror = () =>
+            reject(new Error(`Failed to load audio: ${src}`));
           audio.src = src;
         } else {
           resolve(); // Skip unknown file types
@@ -113,7 +114,9 @@ export const useAssetPreloader = () => {
         }
       } catch (error) {
         if (isMounted) {
-          setError(error instanceof Error ? error.message : "Failed to preload assets");
+          setError(
+            error instanceof Error ? error.message : "Failed to preload assets",
+          );
           setIsLoading(false);
         }
       }
@@ -131,6 +134,9 @@ export const useAssetPreloader = () => {
     loadedCount,
     totalCount: ASSETS_TO_PRELOAD.length,
     error,
-    progress: ASSETS_TO_PRELOAD.length > 0 ? (loadedCount / ASSETS_TO_PRELOAD.length) * 100 : 0,
+    progress:
+      ASSETS_TO_PRELOAD.length > 0
+        ? (loadedCount / ASSETS_TO_PRELOAD.length) * 100
+        : 0,
   };
 };

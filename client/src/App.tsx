@@ -97,7 +97,9 @@ function App() {
   const [withdrawAmount, setWithdrawAmount] = useState("");
   const [socket, setSocket] = useState<Socket | null>(null);
   const [successMessage, setSuccessMessage] = useState<string | null>(null);
-  const [notification, setNotification] = useState<NotificationType | null>(null);
+  const [notification, setNotification] = useState<NotificationType | null>(
+    null,
+  );
   const [isPhoneVertical, setIsPhoneVertical] = useState(false);
 
   useEffect(() => {
@@ -184,7 +186,10 @@ function App() {
           let roomIdFromPayload: string | undefined = undefined;
           let referrerIdFromPayload: string | undefined = undefined;
 
-          if (launchParams.startPayload && launchParams.startPayload.startsWith("join_")) {
+          if (
+            launchParams.startPayload &&
+            launchParams.startPayload.startsWith("join_")
+          ) {
             const parts = launchParams.startPayload.split("_");
             if (parts.length > 2) {
               // join_roomId_referrerId
@@ -216,7 +221,10 @@ function App() {
               });
             } catch (error) {
               let errorMessage = "";
-              if (axios.isAxiosError(error) && isErrorResponse(error.response?.data)) {
+              if (
+                axios.isAxiosError(error) &&
+                isErrorResponse(error.response?.data)
+              ) {
                 errorMessage = error.response.data.message;
               }
 
@@ -249,17 +257,25 @@ function App() {
               }
             };
 
-            window.addEventListener("balanceUpdated", handleBalanceUpdate as EventListener);
+            window.addEventListener(
+              "balanceUpdated",
+              handleBalanceUpdate as EventListener,
+            );
 
             // Очистка обработчика при размонтировании
             return () => {
-              window.removeEventListener("balanceUpdated", handleBalanceUpdate as EventListener);
+              window.removeEventListener(
+                "balanceUpdated",
+                handleBalanceUpdate as EventListener,
+              );
             };
           }
         } catch (error) {
           const apiError = error as ApiError;
           const errorMessage =
-            typeof apiError === "string" ? apiError : apiError.message || "Unknown error";
+            typeof apiError === "string"
+              ? apiError
+              : apiError.message || "Unknown error";
           console.error(
             "Login error:",
             errorMessage,
@@ -284,7 +300,11 @@ function App() {
   }, [socket]);
 
   return (
-    <AppRoot className="overflow-x-hidden" appearance={isDark ? "dark" : "light"} platform="base">
+    <AppRoot
+      className="overflow-x-hidden"
+      appearance={isDark ? "dark" : "light"}
+      platform="base"
+    >
       <SoundProvider>
         {/* Уведомление об обновлении приложения */}
         {updateAvailable && (
@@ -321,11 +341,20 @@ function App() {
             setWithdrawAmount={setWithdrawAmount}
           />
         ) : currentPage === "confirmWithdraw" ? (
-          <ConfirmWithdraw withdrawAmount={withdrawAmount} walletAddress={walletAddress || ""} />
+          <ConfirmWithdraw
+            withdrawAmount={withdrawAmount}
+            walletAddress={walletAddress || ""}
+          />
         ) : currentPage === "addWallet" ? (
-          <AddWallet setCurrentPage={handleSetCurrentPage} setWalletAddress={setWalletAddress} />
+          <AddWallet
+            setCurrentPage={handleSetCurrentPage}
+            setWalletAddress={setWalletAddress}
+          />
         ) : currentPage === "depositHistory" ? (
-          <DepositHistory setCurrentPage={handleSetCurrentPage} userId={String(userData.id)} />
+          <DepositHistory
+            setCurrentPage={handleSetCurrentPage}
+            userId={String(userData.id)}
+          />
         ) : currentPage === "gameRoom" && pageData && pageData.roomId ? (
           <PositionsProvider>
             <GameRoom
@@ -347,9 +376,17 @@ function App() {
           />
         )}
         {successMessage && (
-          <PopSuccess message={successMessage} onClose={() => setSuccessMessage(null)} />
+          <PopSuccess
+            message={successMessage}
+            onClose={() => setSuccessMessage(null)}
+          />
         )}
-        {notification && <Notification type={notification} onClose={() => setNotification(null)} />}
+        {notification && (
+          <Notification
+            type={notification}
+            onClose={() => setNotification(null)}
+          />
+        )}
       </SoundProvider>
     </AppRoot>
   );

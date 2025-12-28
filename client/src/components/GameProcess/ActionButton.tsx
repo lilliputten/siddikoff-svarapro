@@ -73,8 +73,16 @@ export function ActionButtons({
     blindBet: false,
   });
 
-  const handleButtonPress = (buttonType: keyof typeof isPressed, callback: () => void) => {
-    console.log("🎯 Button press:", buttonType, "isPressed:", isPressed[buttonType]);
+  const handleButtonPress = (
+    buttonType: keyof typeof isPressed,
+    callback: () => void,
+  ) => {
+    console.log(
+      "🎯 Button press:",
+      buttonType,
+      "isPressed:",
+      isPressed[buttonType],
+    );
     setIsPressed((prev) => ({ ...prev, [buttonType]: true }));
     setTimeout(() => {
       setIsPressed((prev) => ({ ...prev, [buttonType]: false }));
@@ -97,7 +105,11 @@ export function ActionButtons({
               className={`action-button-shadow flex h-[42px] w-[95px] flex-col items-center justify-center rounded-lg text-white ${isPressed.fold ? "button-press" : ""}`}
               style={{ backgroundColor: "#FF443A" }}
             >
-              <img src={passIcon} alt={t("pass")} style={{ width: "16px", height: "16px" }} />
+              <img
+                src={passIcon}
+                alt={t("pass")}
+                style={{ width: "16px", height: "16px" }}
+              />
               <span className="-mt-1">{t("pass")}</span>
             </button>
             <div
@@ -146,7 +158,11 @@ export function ActionButtons({
             style={{ backgroundColor: "#56BF00" }}
             disabled={isRaiseDisabled}
           >
-            <img src={raiseIcon} alt={t("raise")} style={{ width: "19px", height: "14px" }} />
+            <img
+              src={raiseIcon}
+              alt={t("raise")}
+              style={{ width: "19px", height: "14px" }}
+            />
             <span className="-mt-1">{t("raise")}</span>
           </button>
         </div>
@@ -164,7 +180,11 @@ export function ActionButtons({
               className={`action-button-shadow flex h-[42px] w-[95px] flex-col items-center justify-center rounded-lg text-white ${isPressed.fold ? "button-press" : ""}`}
               style={{ backgroundColor: "#FF443A" }}
             >
-              <img src={passIcon} alt={t("pass")} style={{ width: "16px", height: "16px" }} />
+              <img
+                src={passIcon}
+                alt={t("pass")}
+                style={{ width: "16px", height: "16px" }}
+              />
               <span className="-mt-1">{t("pass")}</span>
             </button>
             <div
@@ -206,7 +226,11 @@ export function ActionButtons({
             style={{ backgroundColor: "#56BF00" }}
             disabled={isRaiseDisabled}
           >
-            <img src={raiseIcon} alt={t("raise")} style={{ width: "19px", height: "14px" }} />
+            <img
+              src={raiseIcon}
+              alt={t("raise")}
+              style={{ width: "19px", height: "14px" }}
+            />
             <span className="-mt-1">{t("raise")}</span>
           </button>
         )}
@@ -220,7 +244,11 @@ export function ActionButtons({
             style={{ backgroundColor: "#0E5C89" }}
             disabled={blindButtonsDisabled}
           >
-            <img src={lookIcon} alt={t("open")} style={{ width: "42px", height: "13px" }} />
+            <img
+              src={lookIcon}
+              alt={t("open")}
+              style={{ width: "42px", height: "13px" }}
+            />
             <span className="-mt-1">{t("open")}</span>
           </button>
         )}
@@ -229,7 +257,9 @@ export function ActionButtons({
           <button
             onClick={() => handleButtonPress("blindBet", onBlindBet)}
             className={`action-button-shadow flex h-[42px] w-[95px] flex-col items-center justify-center rounded-lg text-white ${
-              blindButtonsDisabled || isBlindBetDisabled ? "cursor-not-allowed opacity-50" : ""
+              blindButtonsDisabled || isBlindBetDisabled
+                ? "cursor-not-allowed opacity-50"
+                : ""
             } ${isPressed.blindBet ? "button-press" : ""}`}
             style={{ backgroundColor: "#0E5C89" }}
             disabled={blindButtonsDisabled || isBlindBetDisabled}

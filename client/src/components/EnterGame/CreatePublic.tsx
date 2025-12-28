@@ -73,7 +73,9 @@ export const CreatePublic: React.FC<CreatePublicProps> = ({
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50 backdrop-blur-sm">
       <div className="relative flex h-[172px] w-[316px] flex-col items-center rounded-lg bg-[#47444C] px-4 py-4">
-        <h2 className="mb-4 text-lg font-semibold text-white">{t("create_room")}</h2>
+        <h2 className="mb-4 text-lg font-semibold text-white">
+          {t("create_room")}
+        </h2>
         <div className="relative mb-4 w-full">
           <img
             src={dollarIcon}

@@ -77,7 +77,11 @@ const FlyingChip: React.FC<FlyingChipProps> = ({
         zIndex: 1000,
       }}
     >
-      <img src={coinImage} alt="flying chip" className="h-full w-full object-contain" />
+      <img
+        src={coinImage}
+        alt="flying chip"
+        className="h-full w-full object-contain"
+      />
     </div>
   );
 };

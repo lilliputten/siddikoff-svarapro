@@ -1,6 +1,5 @@
-import js from "@eslint/js";
+import pluginJs from "@eslint/js";
 import pluginPrettierRecommended from "eslint-plugin-prettier/recommended";
-import eslintPluginPrettierRecommended from "eslint-plugin-prettier/recommended";
 import reactHooks from "eslint-plugin-react-hooks";
 import reactRefresh from "eslint-plugin-react-refresh";
 import { globalIgnores } from "eslint/config";
@@ -12,18 +11,22 @@ export default tseslint.config([
   {
     files: ["**/*.{ts,tsx}"],
     extends: [
-      js.configs.recommended,
-      tseslint.configs.recommended,
+      pluginJs.configs.recommended,
+      ...tseslint.configs.recommended,
       // ...tseslint.configs.recommendedTypeChecked,
       reactHooks.configs["recommended-latest"],
       reactRefresh.configs.vite,
-      eslintPluginPrettierRecommended,
+      pluginPrettierRecommended,
     ],
     languageOptions: {
       ecmaVersion: 2020,
       globals: globals.browser,
     },
     rules: {
+      "no-undef": "error",
+      "no-unreachable": "warn",
+      "no-unused-vars": ["warn", { argsIgnorePattern: "^_" }],
+      "prefer-const": "warn",
       "@typescript-eslint/no-unused-vars": [
         "warn",
         {

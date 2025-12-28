@@ -76,10 +76,20 @@ export function Room({
           gap: "6px 25px",
         }}
       >
-        <p className="m-0 text-center text-sm font-semibold text-[#C9C6CE]">{t("room")}</p>
-        <p className="m-0 text-center text-sm font-semibold text-[#C9C6CE]">{t("players")}</p>
-        <p className="m-0 text-center text-sm font-semibold text-[#C9C6CE]">{t("stake")}</p>
-        <YellowButton style={{ marginTop: "5px" }} onClick={handleJoin} disabled={isJoining}>
+        <p className="m-0 text-center text-sm font-semibold text-[#C9C6CE]">
+          {t("room")}
+        </p>
+        <p className="m-0 text-center text-sm font-semibold text-[#C9C6CE]">
+          {t("players")}
+        </p>
+        <p className="m-0 text-center text-sm font-semibold text-[#C9C6CE]">
+          {t("stake")}
+        </p>
+        <YellowButton
+          style={{ marginTop: "5px" }}
+          onClick={handleJoin}
+          disabled={isJoining}
+        >
           {t("enter")}
         </YellowButton>
         <div
@@ -93,12 +103,16 @@ export function Room({
             opacity: 0.05,
           }}
         />
-        <p className="m-0 text-left text-base font-semibold text-white">№{roomId.slice(0, 8)}</p>
+        <p className="m-0 text-left text-base font-semibold text-white">
+          №{roomId.slice(0, 8)}
+        </p>
         <p className="m-0 text-center text-base font-semibold">
           <span style={{ color: "#12B754" }}>{players}</span>
           <span className="text-white"> / 6</span>
         </p>
-        <p className="m-0 text-center text-base font-semibold text-white">${stake}</p>
+        <p className="m-0 text-center text-base font-semibold text-white">
+          ${stake}
+        </p>
         <button
           style={{
             height: "21px",

@@ -2,10 +2,15 @@ import { io, Socket } from "socket.io-client";
 
 import { UserData } from "@/types/entities";
 
-export const initSocket = (telegramId?: string, userData?: UserData): Socket => {
-  const defaultTelegramId = window.Telegram?.WebApp?.initDataUnsafe?.user?.id?.toString() || "";
+export const initSocket = (
+  telegramId?: string,
+  userData?: UserData,
+): Socket => {
+  const defaultTelegramId =
+    window.Telegram?.WebApp?.initDataUnsafe?.user?.id?.toString() || "";
   const defaultUserData = {
-    username: window.Telegram?.WebApp?.initDataUnsafe?.user?.username || "Unknown",
+    username:
+      window.Telegram?.WebApp?.initDataUnsafe?.user?.username || "Unknown",
     avatar: window.Telegram?.WebApp?.initDataUnsafe?.user?.photo_url || "",
   };
 
@@ -57,14 +62,17 @@ export const initSocket = (telegramId?: string, userData?: UserData): Socket => 
   });
 
   // Добавляем обработчики для баланса
-  socket.on("transactionConfirmed", (data: { balance: string; message: string }) => {
-    // Эмитим событие для App.tsx
-    window.dispatchEvent(
-      new CustomEvent("balanceUpdated", {
-        detail: { balance: data.balance, message: data.message },
-      }),
-    );
-  });
+  socket.on(
+    "transactionConfirmed",
+    (data: { balance: string; message: string }) => {
+      // Эмитим событие для App.tsx
+      window.dispatchEvent(
+        new CustomEvent("balanceUpdated", {
+          detail: { balance: data.balance, message: data.message },
+        }),
+      );
+    },
+  );
 
   socket.on("balanceUpdated", (data: { balance: string }) => {
     // Эмитим событие для App.tsx

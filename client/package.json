@@ -12,7 +12,7 @@
     "format": "prettier --write .",
     "format-quick": "pretty-quick --write --cache .",
     "type-check": "tsc --pretty --noEmit",
-    "check-all": "npm-run-all lint type-check"
+    "check-all": "npm-run-all format-quick lint type-check"
   },
   "dependencies": {
     "@telegram-apps/sdk": "^3.11.4",

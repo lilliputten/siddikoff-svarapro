@@ -27,7 +27,10 @@ const formatDate = (dateString: string) => {
   return date.toLocaleString("en-US", options).replace(",", "");
 };
 
-export function DepositHistory({ setCurrentPage, userId }: DepositHistoryProps) {
+export function DepositHistory({
+  setCurrentPage,
+  userId,
+}: DepositHistoryProps) {
   const { t } = useTranslation("common");
   const [transactions, setTransactions] = useState<Transaction[]>([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -49,7 +52,9 @@ export function DepositHistory({ setCurrentPage, userId }: DepositHistoryProps) 
         const formattedData: Transaction[] = data.map((item) => ({
           ...item,
           currency:
-            item.currency === "USDTTON" || item.currency === "TON" ? item.currency : "USDTTON", // Дефолтное значение, если currency некорректна
+            item.currency === "USDTTON" || item.currency === "TON"
+              ? item.currency
+              : "USDTTON", // Дефолтное значение, если currency некорректна
         }));
         setTransactions(formattedData);
       } catch (err) {
@@ -97,7 +102,9 @@ export function DepositHistory({ setCurrentPage, userId }: DepositHistoryProps) 
         {/* Список транзакций */}
         <div className="flex w-full max-w-[320px] flex-col gap-4 overflow-y-auto">
           {transactions.length === 0 ? (
-            <div className="text-center text-white/60">{t("no_transactions_found")}</div>
+            <div className="text-center text-white/60">
+              {t("no_transactions_found")}
+            </div>
           ) : (
             transactions.map((transaction, index) => (
               <React.Fragment key={transaction.tracker_id}>
@@ -108,7 +115,11 @@ export function DepositHistory({ setCurrentPage, userId }: DepositHistoryProps) 
                     style={{ backgroundColor: "#35333B" }}
                   >
                     <img
-                      src={transaction.currency === "USDTTON" ? tetherIcon : tonIcon}
+                      src={
+                        transaction.currency === "USDTTON"
+                          ? tetherIcon
+                          : tonIcon
+                      }
                       alt={transaction.currency}
                       className="h-[32px] w-[32px]"
                     />
@@ -129,7 +140,9 @@ export function DepositHistory({ setCurrentPage, userId }: DepositHistoryProps) 
                           color: "#FFFFFF",
                         }}
                       >
-                        {transaction.type === "deposit" ? "Пополнение" : "Вывод"}
+                        {transaction.type === "deposit"
+                          ? "Пополнение"
+                          : "Вывод"}
                       </span>
                       <span
                         style={{

@@ -15,7 +15,11 @@ interface ChipPosition {
   zIndex: number;
 }
 
-const ChipsStack: React.FC<ChipsStackProps> = ({ totalChips, gameStatus, pot }) => {
+const ChipsStack: React.FC<ChipsStackProps> = ({
+  totalChips,
+  gameStatus,
+  pot,
+}) => {
   const [chipPositions, setChipPositions] = useState<ChipPosition[]>([]);
   const [shouldHide, setShouldHide] = useState(false);
 
@@ -76,7 +80,11 @@ const ChipsStack: React.FC<ChipsStackProps> = ({ totalChips, gameStatus, pot }) 
             height: "18px",
           }}
         >
-          <img src={coinImage} alt="chip" className="h-full w-full object-contain" />
+          <img
+            src={coinImage}
+            alt="chip"
+            className="h-full w-full object-contain"
+          />
         </div>
       ))}
     </div>

@@ -15,7 +15,9 @@ export function ErrorAlert({
     <div
       className={clsx(
         "rounded-lg border p-3",
-        severity === "error" ? "border-error bg-error-muted" : "border-warning bg-warning-muted",
+        severity === "error"
+          ? "border-error bg-error-muted"
+          : "border-warning bg-warning-muted",
         className,
       )}
     >

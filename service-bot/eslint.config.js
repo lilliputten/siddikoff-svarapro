@@ -12,6 +12,10 @@ export default [
   pluginPrettierRecommended,
   {
     rules: {
+      "no-undef": "error",
+      "no-unreachable": "warn",
+      "no-unused-vars": ["warn", { argsIgnorePattern: "^_" }],
+      "prefer-const": "warn",
       "@typescript-eslint/no-unused-vars": [
         "warn",
         {

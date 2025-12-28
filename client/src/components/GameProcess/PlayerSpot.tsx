@@ -77,11 +77,13 @@ export function PlayerSpot({
   showWinIndicator,
 }: PlayerSpotProps) {
   scale = 1;
-  const { username, avatar, balance, cards, hasFolded, hasLooked, score } = player;
+  const { username, avatar, balance, cards, hasFolded, hasLooked, score } =
+    player;
   const [lastTotalBet, setLastTotalBet] = useState(player.totalBet);
   const { addPlayerPosition } = useContext(PositionsContext);
   const ref = useRef<HTMLDivElement>(null);
-  const [playerPosition, setPlayerPosition] = useState<WithNull<PositionElement>>(null);
+  const [playerPosition, setPlayerPosition] =
+    useState<WithNull<PositionElement>>(null);
   const [_showBetAnimation, setShowBetAnimation] = useState(false);
   const [lastBet, setLastBet] = useState(player.currentBet);
 
@@ -89,7 +91,10 @@ export function PlayerSpot({
   const [newShowWinIndicator, setNewShowWinIndicator] = useState(false);
 
   useEffect(() => {
-    console.log("shoWinIndicator!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!>>", showWinIndicator);
+    console.log(
+      "shoWinIndicator!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!>>",
+      showWinIndicator,
+    );
     if (showWinIndicator) {
       setNewShowWinIndicator(true);
       setTimeout(() => {
@@ -162,8 +167,12 @@ export function PlayerSpot({
   const otherPlayersStep = Math.round(otherPlayersCardWidth * 0.46);
 
   // Выбираем размеры в зависимости от того, текущий ли это пользователь
-  const cardHeight = isCurrentUser ? currentUserCardHeight : otherPlayersCardHeight;
-  const cardWidth = isCurrentUser ? currentUserCardWidth : otherPlayersCardWidth;
+  const cardHeight = isCurrentUser
+    ? currentUserCardHeight
+    : otherPlayersCardHeight;
+  const cardWidth = isCurrentUser
+    ? currentUserCardWidth
+    : otherPlayersCardWidth;
   const step = isCurrentUser ? currentUserStep : otherPlayersStep;
 
   const spotClasses = `
@@ -360,7 +369,10 @@ export function PlayerSpot({
     const bettingStatuses: GameStatuses[] = ["blind_betting", "betting"];
 
     // Если игрок делает ставку
-    if (player.currentBet > lastBet && bettingStatuses.includes(gameState.status as GameStatuses)) {
+    if (
+      player.currentBet > lastBet &&
+      bettingStatuses.includes(gameState.status as GameStatuses)
+    ) {
       setShowBetAnimation(true);
       const timeout = setTimeout(() => setShowBetAnimation(false), 2000);
       return () => clearTimeout(timeout);
@@ -374,7 +386,13 @@ export function PlayerSpot({
     }
 
     setLastBet(player.currentBet);
-  }, [player.currentBet, lastBet, gameState?.status, playerPosition, winAmount]);
+  }, [
+    player.currentBet,
+    lastBet,
+    gameState?.status,
+    playerPosition,
+    winAmount,
+  ]);
 
   const hue = progress * 1.2;
   const progressBarColor = `hsl(${hue}, 100%, 50%)`;
@@ -429,9 +447,17 @@ export function PlayerSpot({
                 }}
               >
                 {avatar ? (
-                  <img src={avatar} alt={username} className="h-full w-full object-cover" />
+                  <img
+                    src={avatar}
+                    alt={username}
+                    className="h-full w-full object-cover"
+                  />
                 ) : (
-                  <img src={defaultAvatar} alt={username} className="h-full w-full object-cover" />
+                  <img
+                    src={defaultAvatar}
+                    alt={username}
+                    className="h-full w-full object-cover"
+                  />
                 )}
               </div>
             </div>
@@ -490,7 +516,11 @@ export function PlayerSpot({
   }
 
   return (
-    <div className={`${spotClasses} player-spot`} style={containerStyle} ref={ref}>
+    <div
+      className={`${spotClasses} player-spot`}
+      style={containerStyle}
+      ref={ref}
+    >
       {chatPhrase && (
         <div
           className="absolute left-1/2 z-50 flex -translate-x-1/2 items-center justify-center p-1"
@@ -510,7 +540,9 @@ export function PlayerSpot({
       )}
       <ActionNotification
         action={notificationType}
-        visible={!!notificationType && (notificationType === "pass" || !hasFolded)}
+        visible={
+          !!notificationType && (notificationType === "pass" || !hasFolded)
+        }
       />
       <div className="relative">
         <div
@@ -586,9 +618,17 @@ export function PlayerSpot({
               }}
             >
               {avatar ? (
-                <img src={avatar} alt={username} className="h-full w-full object-cover" />
+                <img
+                  src={avatar}
+                  alt={username}
+                  className="h-full w-full object-cover"
+                />
               ) : (
-                <img src={defaultAvatar} alt={username} className="h-full w-full object-cover" />
+                <img
+                  src={defaultAvatar}
+                  alt={username}
+                  className="h-full w-full object-cover"
+                />
               )}
             </div>
 
@@ -658,7 +698,8 @@ export function PlayerSpot({
                     style={{
                       top: "50%",
                       transform: "translateY(-50%)",
-                      [cardSide === "left" ? "left" : "right"]: `${-20 * scale}px`,
+                      [cardSide === "left" ? "left" : "right"]:
+                        `${-20 * scale}px`,
                       zIndex: 25,
                     }}
                   >
@@ -686,7 +727,8 @@ export function PlayerSpot({
                       height: "100%",
                       backgroundColor: progressBarColor,
                       borderRadius: "3px",
-                      transition: "width 0.1s linear, background-color 0.1s linear",
+                      transition:
+                        "width 0.1s linear, background-color 0.1s linear",
                     }}
                   />
                 </div>
@@ -698,7 +740,8 @@ export function PlayerSpot({
           (showCards ||
             (isCurrentUser &&
               hasLooked &&
-              (gameState?.status === "blind_betting" || gameState?.status === "betting"))) && (
+              (gameState?.status === "blind_betting" ||
+                gameState?.status === "betting"))) && (
             <div
               className="absolute z-50"
               style={{
@@ -759,14 +802,18 @@ export function PlayerSpot({
           )}
         {!hasFolded && (
           <div
-            className={cn("absolute top-8 z-30 flex -translate-y-1/2 items-center space-x-2", {
-              "-right-[22px]": cardSide === "right",
-              "-left-[13px]": cardSide === "left",
-              "left-[53%] -translate-x-[25%]":
-                openCardsPosition === "bottom" || openCardsPosition === "top",
+            className={cn(
+              "absolute top-8 z-30 flex -translate-y-1/2 items-center space-x-2",
+              {
+                "-right-[22px]": cardSide === "right",
+                "-left-[13px]": cardSide === "left",
+                "left-[53%] -translate-x-[25%]":
+                  openCardsPosition === "bottom" || openCardsPosition === "top",
 
-              "left-[53px]": openCardsPosition === "top" || openCardsPosition === "bottom",
-            })}
+                "left-[53px]":
+                  openCardsPosition === "top" || openCardsPosition === "bottom",
+              },
+            )}
           >
             <div
               className={`delay-3400 transition ${
@@ -785,11 +832,15 @@ export function PlayerSpot({
         )}
         <div className="absolute -left-[0] top-[0] h-full w-full">
           {cardSide === "left" && !isCurrentUser && (
-            <div className="absolute left-[-55px] top-[23px]">{TotalBetComponent}</div>
+            <div className="absolute left-[-55px] top-[23px]">
+              {TotalBetComponent}
+            </div>
           )}
 
           {cardSide === "right" && !isCurrentUser && (
-            <div className="absolute right-[-52px] top-[23px]">{TotalBetComponent}</div>
+            <div className="absolute right-[-52px] top-[23px]">
+              {TotalBetComponent}
+            </div>
           )}
           {cardSide === "top" && !isCurrentUser && (
             <div className="absolute bottom-[-40px] left-1/2 -translate-x-1/2 transform">
@@ -797,7 +848,9 @@ export function PlayerSpot({
             </div>
           )}
           {cardSide === "bottom" && !isCurrentUser && (
-            <div className="absolute left-[16px] top-[-56px]">{TotalBetComponent}</div>
+            <div className="absolute left-[16px] top-[-56px]">
+              {TotalBetComponent}
+            </div>
           )}
         </div>
         {/* {(() => {

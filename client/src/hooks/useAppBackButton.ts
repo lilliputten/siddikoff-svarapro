@@ -12,7 +12,9 @@ export const useAppBackButton = (isVisible: boolean, handler: () => void) => {
     }
 
     if (!window.Telegram?.WebApp) {
-      console.warn("Telegram WebApp is not available. BackButton will not be used.");
+      console.warn(
+        "Telegram WebApp is not available. BackButton will not be used.",
+      );
       return;
     }
 

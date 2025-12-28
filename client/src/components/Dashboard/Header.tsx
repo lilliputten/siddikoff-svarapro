@@ -10,7 +10,12 @@ const truncateUsername = (username: string | undefined) => {
   return username.length > 12 ? `${username.slice(0, 12)}...` : username;
 };
 
-export function Header({ user, balance, onWithdrawClick, setCurrentPage }: HeaderProps) {
+export function Header({
+  user,
+  balance,
+  onWithdrawClick,
+  setCurrentPage,
+}: HeaderProps) {
   // Форматируем баланс: принимаем строку или число, приводим к строке с двумя десятичными знаками
   const formattedBalance =
     typeof balance === "number"
@@ -47,7 +52,8 @@ export function Header({ user, balance, onWithdrawClick, setCurrentPage }: Heade
           className="text-center font-inter text-[14px] font-semibold leading-[21px] text-white"
           style={{
             letterSpacing: "-0.011em",
-            textShadow: "0px 1px 2px rgba(0, 0, 0, 0.3), 0px 1px 3px rgba(0, 0, 0, 0.15)",
+            textShadow:
+              "0px 1px 2px rgba(0, 0, 0, 0.3), 0px 1px 3px rgba(0, 0, 0, 0.15)",
           }}
         >
           {truncateUsername(user?.username || user?.first_name)}
@@ -73,14 +79,20 @@ export function Header({ user, balance, onWithdrawClick, setCurrentPage }: Heade
             </span>
           </div>
         </div>
-        <div className="mt-4 flex" style={{ position: "relative", zIndex: 20, gap: "15px" }}>
+        <div
+          className="mt-4 flex"
+          style={{ position: "relative", zIndex: 20, gap: "15px" }}
+        >
           <GreenButton
             onClick={() => setCurrentPage("deposit")}
             style={{ boxShadow: "0px 1px 3px 1px #00000026" }}
           >
             {t("deposit")}
           </GreenButton>
-          <RedButton onClick={onWithdrawClick} style={{ boxShadow: "0px 1px 3px 1px #00000026" }}>
+          <RedButton
+            onClick={onWithdrawClick}
+            style={{ boxShadow: "0px 1px 3px 1px #00000026" }}
+          >
             {t("withdraw")}
           </RedButton>
         </div>

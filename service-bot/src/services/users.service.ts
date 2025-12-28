@@ -40,10 +40,13 @@ export class UsersService {
 
   async searchUsers(query: string): Promise<User[]> {
     try {
-      const response = await axios.get(`${this.API_BASE_URL}/admin/users/search`, {
-        params: { q: query },
-        headers: { Authorization: `Bearer ${this.API_SECRET}` },
-      });
+      const response = await axios.get(
+        `${this.API_BASE_URL}/admin/users/search`,
+        {
+          params: { q: query },
+          headers: { Authorization: `Bearer ${this.API_SECRET}` },
+        },
+      );
 
       return response.data.users;
     } catch (error) {
@@ -54,15 +57,21 @@ export class UsersService {
 
   async getUserById(telegramId: string): Promise<User | null> {
     try {
-      const response = await axios.get(`${this.API_BASE_URL}/admin/users/${telegramId}`, {
-        headers: { Authorization: `Bearer ${this.API_SECRET}` },
-      });
+      const response = await axios.get(
+        `${this.API_BASE_URL}/admin/users/${telegramId}`,
+        {
+          headers: { Authorization: `Bearer ${this.API_SECRET}` },
+        },
+      );
 
       return response.data;
     } catch (error: unknown) {
       if (error && typeof error === "object" && "response" in error) {
         const axiosError = error as { response?: { status?: number } };
-        if (axiosError.response?.status === 400 || axiosError.response?.status === 404) {
+        if (
+          axiosError.response?.status === 400 ||
+          axiosError.response?.status === 404
+        ) {
           console.log(`User ${telegramId} not found`);
           return null;
         }

@@ -5,11 +5,15 @@ import referralsIcon from "@/assets/referrals.svg";
 import { RefrulesProps, TextProps } from "@/types/components";
 
 export const RefrulesHeader = ({ children }: TextProps) => (
-  <h2 className="text-base font-bold leading-tight tracking-tighter text-white">{children}</h2>
+  <h2 className="text-base font-bold leading-tight tracking-tighter text-white">
+    {children}
+  </h2>
 );
 
 export const RefrulesBody = ({ children }: TextProps) => (
-  <p className="text-xs font-normal leading-tight tracking-tighter text-white">{children}</p>
+  <p className="text-xs font-normal leading-tight tracking-tighter text-white">
+    {children}
+  </p>
 );
 
 export const RefrulesSubtext = ({ children }: TextProps) => (
@@ -44,7 +48,9 @@ export function Refrules({ onClose }: RefrulesProps) {
                   <RefrulesSubtext>{t("refrules_table_level")}</RefrulesSubtext>
                 </th>
                 <th className="p-2">
-                  <RefrulesSubtext>{t("refrules_table_deposits")}</RefrulesSubtext>
+                  <RefrulesSubtext>
+                    {t("refrules_table_deposits")}
+                  </RefrulesSubtext>
                 </th>
                 <th className="p-2">
                   <RefrulesSubtext>%</RefrulesSubtext>
@@ -52,7 +58,9 @@ export function Refrules({ onClose }: RefrulesProps) {
               </tr>
             </thead>
             <tbody>
-              <tr style={{ borderBottom: "0.5px solid rgba(255, 255, 255, 0.1)" }}>
+              <tr
+                style={{ borderBottom: "0.5px solid rgba(255, 255, 255, 0.1)" }}
+              >
                 <td className="p-2">
                   <RefrulesBody>{t("refrules_table_row_1_col_1")}</RefrulesBody>
                 </td>
@@ -63,10 +71,16 @@ export function Refrules({ onClose }: RefrulesProps) {
                   <RefrulesBody>{t("refrules_table_row_1_col_3")}</RefrulesBody>
                 </td>
               </tr>
-              <tr style={{ borderBottom: "0.5px solid rgba(255, 255, 255, 0.1)" }}>
+              <tr
+                style={{ borderBottom: "0.5px solid rgba(255, 255, 255, 0.1)" }}
+              >
                 <td className="flex items-center gap-1 p-2">
                   <RefrulesBody>{t("refrules_table_row_2_col_1")}</RefrulesBody>
-                  <img src={referralsIcon} alt="Referrals" className="h-[10px] w-[14px]" />
+                  <img
+                    src={referralsIcon}
+                    alt="Referrals"
+                    className="h-[10px] w-[14px]"
+                  />
                 </td>
                 <td className="p-2">
                   <RefrulesBody>{t("refrules_table_row_2_col_2")}</RefrulesBody>
@@ -75,10 +89,16 @@ export function Refrules({ onClose }: RefrulesProps) {
                   <RefrulesBody>{t("refrules_table_row_2_col_3")}</RefrulesBody>
                 </td>
               </tr>
-              <tr style={{ borderBottom: "0.5px solid rgba(255, 255, 255, 0.1)" }}>
+              <tr
+                style={{ borderBottom: "0.5px solid rgba(255, 255, 255, 0.1)" }}
+              >
                 <td className="flex items-center gap-1 p-2">
                   <RefrulesBody>{t("refrules_table_row_3_col_1")}</RefrulesBody>
-                  <img src={referralsIcon} alt="Referrals" className="h-[10px] w-[14px]" />
+                  <img
+                    src={referralsIcon}
+                    alt="Referrals"
+                    className="h-[10px] w-[14px]"
+                  />
                 </td>
                 <td className="p-2">
                   <RefrulesBody>{t("refrules_table_row_3_col_2")}</RefrulesBody>
@@ -90,7 +110,11 @@ export function Refrules({ onClose }: RefrulesProps) {
               <tr>
                 <td className="flex items-center gap-1 p-2">
                   <RefrulesBody>{t("refrules_table_row_4_col_1")}</RefrulesBody>
-                  <img src={referralsIcon} alt="Referrals" className="h-[10px] w-[14px]" />
+                  <img
+                    src={referralsIcon}
+                    alt="Referrals"
+                    className="h-[10px] w-[14px]"
+                  />
                 </td>
                 <td className="p-2">
                   <RefrulesBody>{t("refrules_table_row_4_col_2")}</RefrulesBody>

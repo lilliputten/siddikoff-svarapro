@@ -23,7 +23,8 @@ interface Props extends HTMLAttributes<HTMLDivElement> {
 const MAX_ROUNDS = 3;
 
 export function CardsDeck({ className, gameStatus }: Props) {
-  const { changeDeckPosition, playersPositions, deckPosition } = useContext(PositionsContext);
+  const { changeDeckPosition, playersPositions, deckPosition } =
+    useContext(PositionsContext);
   const cardsDeckArray = new Array(6).fill(1);
   const ref = useRef<HTMLDivElement>(null);
   const [animatedCards, setAnimatedCards] = useState<AnimatedCard[]>([]);
@@ -62,7 +63,11 @@ export function CardsDeck({ className, gameStatus }: Props) {
     const CARD_HEIGHT = 44;
 
     for (let round = 0; round < MAX_ROUNDS; round++) {
-      for (let playerIndex = 0; playerIndex < playersPositions.length; playerIndex++) {
+      for (
+        let playerIndex = 0;
+        playerIndex < playersPositions.length;
+        playerIndex++
+      ) {
         const pos = playersPositions[playerIndex];
         const offsetX = round * MAX_ROUNDS;
         const targetXLeft = pos.x + CARD_WIDTH - 30 + offsetX;
@@ -81,7 +86,9 @@ export function CardsDeck({ className, gameStatus }: Props) {
     }
 
     setAnimatedCards(cards);
-    requestAnimationFrame(() => setAnimatedCards(cards.map((c) => ({ ...c, animate: true }))));
+    requestAnimationFrame(() =>
+      setAnimatedCards(cards.map((c) => ({ ...c, animate: true }))),
+    );
 
     // cards.forEach((card) => {
     //   setTimeout(() => playSound("deal"), card.delay);
@@ -101,13 +108,19 @@ export function CardsDeck({ className, gameStatus }: Props) {
 
   return (
     <div
-      className={cn("absolute bottom-40 left-1/2 z-30 -translate-x-1/2", className)}
+      className={cn(
+        "absolute bottom-40 left-1/2 z-30 -translate-x-1/2",
+        className,
+      )}
       ref={ref}
       id="cards-deck"
     >
       <div className="relative h-11 w-8">
         {cardsDeckArray.map((_, index) => (
-          <BackCard className="absolute h-full w-full" style={{ bottom: index + "px" }} />
+          <BackCard
+            className="absolute h-full w-full"
+            style={{ bottom: index + "px" }}
+          />
         ))}
 
         {deckPosition &&

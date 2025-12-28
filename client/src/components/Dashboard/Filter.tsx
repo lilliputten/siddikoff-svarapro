@@ -11,7 +11,11 @@ import { FilterProps } from "@/types/components";
 // import { CSSTransition } from "react-transition-group";
 import { SlidePanel } from "./SlidePanel";
 
-export function Filter({ onSearchChange, onAvailabilityChange, onRangeChange }: FilterProps) {
+export function Filter({
+  onSearchChange,
+  onAvailabilityChange,
+  onRangeChange,
+}: FilterProps) {
   const [isPanelOpen, setIsPanelOpen] = useState(false);
   const [isToggleOn, setIsToggleOn] = useFilterState();
   const [searchId, setSearchId] = useState("");
@@ -74,7 +78,9 @@ export function Filter({ onSearchChange, onAvailabilityChange, onRangeChange }: 
           {t("stakes")}
         </Button>
         <div className="flex items-center">
-          <span className="mr-2 text-[12px] text-white">{t("available_colon")}</span>
+          <span className="mr-2 text-[12px] text-white">
+            {t("available_colon")}
+          </span>
           <div
             className="relative flex h-[20px] w-[40px] cursor-pointer items-center rounded-full p-0.5"
             style={{
@@ -94,7 +100,11 @@ export function Filter({ onSearchChange, onAvailabilityChange, onRangeChange }: 
         </div>
       </StyledContainer>
 
-      <SlidePanel isOpen={isPanelOpen} onClose={handleTogglePanel} onRangeChange={onRangeChange} />
+      <SlidePanel
+        isOpen={isPanelOpen}
+        onClose={handleTogglePanel}
+        onRangeChange={onRangeChange}
+      />
     </div>
   );
 }

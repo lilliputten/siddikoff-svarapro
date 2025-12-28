@@ -22,7 +22,9 @@ export function SvaraAnimation({ onAnimationComplete }: SvaraAnimationProps) {
       <div className="animate-pulse-svara">
         <div className="mx-2 flex items-center">
           <img src={starIcon} alt="*" className="h-8 w-8" />
-          <h1 className="mx-2 text-3xl font-semibold text-white">{t("svara")}</h1>
+          <h1 className="mx-2 text-3xl font-semibold text-white">
+            {t("svara")}
+          </h1>
           <img src={starIcon} alt="*" className="h-8 w-8" />
         </div>
       </div>

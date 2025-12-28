@@ -4,7 +4,10 @@ import { YellowButton } from "@/components/Button/YellowButton";
 import { apiService } from "@/services/api/api";
 import { ConfirmWithdrawProps } from "@/types/components";
 
-export function ConfirmWithdraw({ withdrawAmount, walletAddress }: ConfirmWithdrawProps) {
+export function ConfirmWithdraw({
+  withdrawAmount,
+  walletAddress,
+}: ConfirmWithdrawProps) {
   const [isProcessing, setIsProcessing] = useState(false);
 
   const handleConfirmWithdraw = async () => {
@@ -45,7 +48,9 @@ export function ConfirmWithdraw({ withdrawAmount, walletAddress }: ConfirmWithdr
           Сеть
         </p>
         <div className="mb-4 flex h-[53px] w-full items-center justify-start rounded-lg bg-black bg-opacity-30 px-4">
-          <p className="text-sm font-semibold leading-tight tracking-tighter text-white">TON</p>
+          <p className="text-sm font-semibold leading-tight tracking-tighter text-white">
+            TON
+          </p>
         </div>
         <p className="mb-2 text-left text-xs font-medium leading-tight tracking-tighter text-gray-400">
           Вы получите
