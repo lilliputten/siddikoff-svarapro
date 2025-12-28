@@ -143,3 +143,5 @@ public
 /bot/dist
 /bot/node_modules
 
+# Sessions
+*.session

@@ -11,7 +11,7 @@ export class MigrationService implements OnModuleInit {
 
   async onModuleInit() {
     try {
-      const options = this.dataSource.options as any;
+      const options = this.dataSource.options; // as any;
       if (options.synchronize) {
         console.log(
           '🔄 Database synchronization is enabled. Skipping migrations.',
@@ -24,7 +24,7 @@ export class MigrationService implements OnModuleInit {
       // Проверяем, есть ли таблица migrations
       const hasMigrationsTable = await this.dataSource.query<ExistsResult[]>(`
         SELECT EXISTS (
-          SELECT FROM information_schema.tables 
+          SELECT FROM information_schema.tables
           WHERE table_name = 'migrations'
         );
       `);

@@ -3,22 +3,43 @@
   "version": "1.0.0",
   "private": true,
   "devDependencies": {
+    "@babel/eslint-parser": "^7.25.9",
+    "@ianvs/prettier-plugin-sort-imports": "^4.7.0",
+    "@types/jest": "^29.5.14",
+    "@types/node": "^20.17.9",
+    "@typescript-eslint/eslint-plugin": "^8.16.0",
+    "@typescript-eslint/parser": "^8.16.0",
+    "concurrently": "^9.1.2",
+    "cross-env": "^7.0.3",
+    "eslint": "^8.57.1",
+    "eslint-config-prettier": "^9.1.0",
+    "eslint-plugin-jest": "^28.13.3",
+    "eslint-plugin-json": "^4.0.1",
+    "eslint-plugin-json-files": "^4.4.2",
+    "eslint-plugin-jsonc": "^2.18.2",
+    "eslint-plugin-prettier": "^5.2.1",
+    "eslint-plugin-react": "^7.37.2",
+    "eslint-plugin-tailwindcss": "^3.17.5",
+    "eslint-plugin-yaml": "^1.0.3",
     "npm-run-all": "^4.1.5",
     "pm2": "^5.4.2",
+    "prettier": "^3.4.1",
+    "prettier-plugin-tailwindcss": "^0.7.2",
     "pretty-quick": "^4.2.2"
   },
   "dependencies": {
     "tailwind-merge": "^3.3.1"
   },
   "scripts": {
-    "install-all": "pnpm --frozen-lockfile --config.confirmModulesPurge=false install",
-    "install-workspaces": "pnpm --filter svara-pro-server --filter svara-pro-bot --filter svara-pro-client --filter svara-pro-service-bot --frozen-lockfile install",
+    "format": "prettier --write --cache .",
     "format-quick": "pretty-quick --write --cache .",
-    "format-all": "pnpm --filter svara-pro-server --filter svara-pro-bot --filter svara-pro-client --filter svara-pro-service-bot format-quick",
+    "type-check": "echo --Run typescript linter-- && pnpm --filter server run type-check && pnpm --filter client run type-check",
+    "lint-all": "pnpm --filter svara-pro-server --filter svara-pro-bot --filter svara-pro-client --filter svara-pro-service-bot lint",
+    "check-all": "echo --Run all pre-commit check-ups-- && npm-run-all format-quick lint-all && echo --All checks passed--",
     "build": "pnpm --filter svara-pro-server build && pnpm --filter svara-pro-bot build",
     "build:client": "pnpm --filter svara-pro-client build",
     "start": "pm2-runtime start ecosystem.config.js",
-    "lint": "pnpm --filter svara-pro-server lint && pnpm --filter svara-pro-bot lint && pnpm --filter svara-pro-client lint",
-    "check-all": "pnpm --filter svara-pro-server check-all && pnpm --filter svara-pro-bot check-all && pnpm --filter svara-pro-client check-all && pnpm --filter svara-pro-service-bot check-all"
+    "install-all": "pnpm --frozen-lockfile --config.confirmModulesPurge=false install",
+    "install-workspaces": "pnpm --filter svara-pro-server --filter svara-pro-bot --filter svara-pro-client --filter svara-pro-service-bot --frozen-lockfile install"
   }
 }

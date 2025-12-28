@@ -23,7 +23,7 @@
     "migration:revert": "npm run typeorm -- migration:revert -d ormconfig.ts",
     "migration:show": "npm run typeorm -- migration:show -d ormconfig.ts",
     "type-check": "tsc --pretty --noEmit",
-    "check-all": "npm-run-all format-quick lint type-check"
+    "check-all": "npm-run-all lint type-check"
   },
   "dependencies": {
     "@nestjs/bull": "^11.0.3",
