@@ -145,3 +145,6 @@ public
 
 # Sessions
 *.session
+
+# VSCode configuration
+.vscode

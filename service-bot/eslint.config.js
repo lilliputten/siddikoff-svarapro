@@ -23,6 +23,7 @@ export default [
       "prettier/prettier": "warn",
       // Temporarily disabled (due to a waste amount of these errors in the code)
       "@typescript-eslint/no-explicit-any": "off",
+      "@typescript-eslint/ban-ts-comment": "off",
     },
   },
   {
