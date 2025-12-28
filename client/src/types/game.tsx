@@ -1,10 +1,10 @@
-export type RoomStatuses = 'waiting' | 'playing' | 'finished'
+export type RoomStatuses = "waiting" | "playing" | "finished";
 
 // Существующий тип Room
 export interface Room {
   roomId: string;
   minBet: number;
-  type: 'public' | 'private';
+  type: "public" | "private";
   players: string[];
   status: RoomStatuses;
   maxPlayers: number;
@@ -16,8 +16,8 @@ export interface Room {
 
 // Новые типы для игры
 export interface Card {
-  suit: 'hearts' | 'diamonds' | 'clubs' | 'spades';
-  rank: 'A' | 'K' | 'Q' | 'J' | '10' | '9' | '8' | '7';
+  suit: "hearts" | "diamonds" | "clubs" | "spades";
+  rank: "A" | "K" | "Q" | "J" | "10" | "9" | "8" | "7";
   isJoker?: boolean; // флаг для 7 треф (джокер)
   value: number; // числовое значение карты
 }
@@ -37,7 +37,7 @@ export interface Player {
   totalBet: number; // общая ставка в игре
   score?: number; // очки игрока (вычисляются при вскрытии)
   position: number; // позиция за столом (0-5)
-  lastAction?: 'fold' | 'check' | 'call' | 'raise' | 'blind' | 'look'; // последнее действие
+  lastAction?: "fold" | "check" | "call" | "raise" | "blind" | "look"; // последнее действие
   hasLookedAndMustAct?: boolean; // флаг для игрока, который посмотрел карты и должен действовать
   lastWinAmount?: number;
   inactivityCount?: number; // счетчик бездействия (fold по таймеру)
@@ -71,15 +71,35 @@ export interface GameState {
   turnStartTime?: number; // время начала текущего хода (timestamp)
   log: GameAction[]; // лог действий
   isAnimating?: boolean; // флаг анимации
-  animationType?: 'chip_fly' | 'win_animation'; // тип анимации
+  animationType?: "chip_fly" | "win_animation"; // тип анимации
   showWinnerAnimation?: boolean; // флаг показа анимации победы
   chipCount?: number; // количество фишек в банке
 }
 
-export type GameStatuses = 'waiting' | 'ante' | 'blind_betting' | 'betting' | 'showdown' | 'svara' | 'svara_pending' | 'finished';
+export type GameStatuses =
+  | "waiting"
+  | "ante"
+  | "blind_betting"
+  | "betting"
+  | "showdown"
+  | "svara"
+  | "svara_pending"
+  | "finished";
 
 export interface GameAction {
-  type: 'join' | 'leave' | 'ante' | 'blind_bet' | 'look' | 'bet' | 'call' | 'raise' | 'fold' | 'win' | 'svara' | 'return_bet';
+  type:
+    | "join"
+    | "leave"
+    | "ante"
+    | "blind_bet"
+    | "look"
+    | "bet"
+    | "call"
+    | "raise"
+    | "fold"
+    | "win"
+    | "svara"
+    | "return_bet";
   telegramId: string;
   amount?: number;
   timestamp: number;

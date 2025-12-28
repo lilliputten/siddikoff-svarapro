@@ -13,7 +13,7 @@ import { PlayerSpot } from "../../components/GameProcess/PlayerSpot";
 import { SeatButton } from "../../components/GameProcess/SeatButton";
 import { UserData, PageData } from "@/types/entities";
 import FlyingChip from "../../components/GameProcess/FlyingChip";
-import FlyingCard from '../../components/GameProcess/FlyingCard';
+import FlyingCard from "../../components/GameProcess/FlyingCard";
 import { Page } from "@/types/page";
 import backgroundImage from "../../assets/game/background.jpg";
 import menuIcon from "../../assets/game/menu.svg";
@@ -110,11 +110,10 @@ const useTablePositioning = (gameStateLoaded: boolean) => {
     gameStateLoaded && windowWidth > 0
       ? Math.max(0.5, (windowWidth * 0.85) / tableSize.width)
       : 0.5;
-  
 
   const getPositionClasses = (
     position: number,
-    isShowdown: boolean
+    isShowdown: boolean,
   ): string => {
     const zIndex = isShowdown ? "z-40" : "z-30";
     const baseClasses = `absolute ${zIndex} transition-all duration-300 ease-in-out hover:scale-105 hover:z-40 w-20 h-24 flex items-center justify-center`;
@@ -167,13 +166,13 @@ export function GameRoom({
     Record<string, { phrase: string; timerId: NodeJS.Timeout }>
   >({});
   const [notification, setNotification] = useState<NotificationType | null>(
-    null
+    null,
   );
   const { getPositionStyle, getPositionClasses, scale } =
     useTablePositioning(!!gameState);
   const [turnTimer, setTurnTimer] = useState(TURN_DURATION_SECONDS);
   const [svaraStep, setSvaraStep] = useState<"none" | "animating" | "joining">(
-    "none"
+    "none",
   );
   const { triggerImpact } = useHapticFeedback();
   const currentUserId =
@@ -196,9 +195,11 @@ export function GameRoom({
 
   // Объявляем состояния для useCallback
   const [chipAnimations, setChipAnimations] = useState<Array<ChipAnimation>>(
-    []
+    [],
   );
-  const [cardAnimations, setCardAnimations] = useState<Array<CardAnimation>>([]);
+  const [cardAnimations, setCardAnimations] = useState<Array<CardAnimation>>(
+    [],
+  );
 
   const getScreenPosition = useCallback(
     (absolutePosition: number) => {
@@ -208,12 +209,10 @@ export function GameRoom({
       const offset = 4 - currentUserPosition;
       return ((absolutePosition + offset - 1 + 6) % 6) + 1;
     },
-    [currentUserPosition, isSeated]
+    [currentUserPosition, isSeated],
   );
-  
-  const [newCallAmount, setNewCallAmount] = useState(0)
-  
-  
+
+  const [newCallAmount, setNewCallAmount] = useState(0);
 
   const handlePlayerBet = useCallback(
     (playerId: string) => {
@@ -225,12 +224,12 @@ export function GameRoom({
 
       // Проверяем, не создается ли уже анимация для этого игрока
       const existingAnimation = chipAnimations.find((chip) =>
-        chip.id.includes(playerId)
+        chip.id.includes(playerId),
       );
       if (existingAnimation) {
         return;
       }
-     
+
       actions.playSound("chip");
 
       const absolutePosition = player.position;
@@ -284,39 +283,39 @@ export function GameRoom({
       let currBet = player.totalBet;
 
       let quantChip = 3;
-      
+
       if (currBet < 1000) {
         quantChip = 12;
-      } 
+      }
       if (currBet < 200) {
         quantChip = 10;
-      } 
+      }
       if (currBet < 100) {
         quantChip = 7;
-      } 
+      }
       if (currBet < 50) {
         quantChip = 5;
-      } 
+      }
       if (currBet < 20) {
         quantChip = 4;
-      } 
+      }
       if (currBet < 10) {
         quantChip = 3;
-      } 
+      }
       if (currBet < 5) {
         quantChip = 1;
       }
-      
+
       for (let i = 0; i < quantChip; i++) {
         const chipId = `chip-${Date.now()}-${Math.random()}`;
         setChipAnimations((prev) => [
           ...prev,
           {
             id: chipId,
-            fromX: playerX + Math.random() * 21-10,
-            fromY: playerY + Math.random() * 21-10,
-            toX: centerX + Math.random() * 21-10,
-            toY: centerY + Math.random() * 21-10,
+            fromX: playerX + Math.random() * 21 - 10,
+            fromY: playerY + Math.random() * 21 - 10,
+            toX: centerX + Math.random() * 21 - 10,
+            toY: centerY + Math.random() * 21 - 10,
             delay: i * 50, // Небольшая задержка между фишками
           },
         ]);
@@ -330,16 +329,16 @@ export function GameRoom({
       scale,
       setChipAnimations,
       actions,
-    ]
+    ],
   );
 
   const handleOtherPlayerAction = useCallback(
     (playerId: string) => {
       handlePlayerBet(playerId);
     },
-    [handlePlayerBet]
+    [handlePlayerBet],
   );
-  
+
   const handleChipsAnte = () => {
     if (!gameState) return;
     const centerX = window.innerWidth / 2;
@@ -350,56 +349,67 @@ export function GameRoom({
 
     // Раздаем по 3 карты каждому активному игроку
 
-  
-  
-      gameState.players.forEach((player, i) => {
-        if (!player.isActive) return;
-  
-        const isCurrentPlayer = player.id === currentUserId;
-        const relativePosition = isCurrentPlayer ? 4 : getScreenPosition(player.position);
-  
-        // Вычисляем позицию игрока
-        let playerX = 0;
-        let playerY = 0;
-  
-        switch (relativePosition) {
-          case 1: playerX = centerX + tableWidth * 0.1; playerY = centerY - tableHeight * 0.44 - verticalOffset; break; // Поднимаем выше
-          case 2: playerX = centerX + tableWidth * 0.27; playerY = centerY - tableHeight * 0.32; break; // Левее и выше
-          case 3: playerX = centerX + tableWidth * 0.27; playerY = centerY + tableHeight * 0.18 - verticalOffset; break; // Левее и выше
-          case 4: playerX = centerX + tableWidth * 0.1; playerY = centerY + tableHeight * 0.52 - verticalOffset; break; // Правее и ниже
-          case 5: playerX = centerX - tableWidth * 0.37; playerY = centerY + tableHeight * 0.18 - verticalOffset; break; // Поднимаем выше
-          case 6: playerX = centerX - tableWidth * 0.37; playerY = centerY - tableHeight * 0.32; break; // Поднимаем выше
-        }
-  
-        // Карты летят в центр компонента игрока
-        const chipX = playerX;
-        const chipY = playerY;
-  
-  
-     	actions.playSound("chip");
-        const cardId = `deal-${i}-${Date.now()}`;
-          setChipAnimations(prev => [...prev, {
-            id: cardId,
-            fromX: chipX,
-            fromY: chipY,
-            toX: centerX,
-            toY: centerY,
-            delay: 0 // Задержка для последовательной раздачи
-          }]);
-          // Проигрываем звук fold.mp3 для каждой карты с задержкой
-         
-        
-      });
+    gameState.players.forEach((player, i) => {
+      if (!player.isActive) return;
 
+      const isCurrentPlayer = player.id === currentUserId;
+      const relativePosition = isCurrentPlayer
+        ? 4
+        : getScreenPosition(player.position);
 
-    
-     
-  }
+      // Вычисляем позицию игрока
+      let playerX = 0;
+      let playerY = 0;
 
-  
+      switch (relativePosition) {
+        case 1:
+          playerX = centerX + tableWidth * 0.1;
+          playerY = centerY - tableHeight * 0.44 - verticalOffset;
+          break; // Поднимаем выше
+        case 2:
+          playerX = centerX + tableWidth * 0.27;
+          playerY = centerY - tableHeight * 0.32;
+          break; // Левее и выше
+        case 3:
+          playerX = centerX + tableWidth * 0.27;
+          playerY = centerY + tableHeight * 0.18 - verticalOffset;
+          break; // Левее и выше
+        case 4:
+          playerX = centerX + tableWidth * 0.1;
+          playerY = centerY + tableHeight * 0.52 - verticalOffset;
+          break; // Правее и ниже
+        case 5:
+          playerX = centerX - tableWidth * 0.37;
+          playerY = centerY + tableHeight * 0.18 - verticalOffset;
+          break; // Поднимаем выше
+        case 6:
+          playerX = centerX - tableWidth * 0.37;
+          playerY = centerY - tableHeight * 0.32;
+          break; // Поднимаем выше
+      }
+
+      // Карты летят в центр компонента игрока
+      const chipX = playerX;
+      const chipY = playerY;
+
+      actions.playSound("chip");
+      const cardId = `deal-${i}-${Date.now()}`;
+      setChipAnimations((prev) => [
+        ...prev,
+        {
+          id: cardId,
+          fromX: chipX,
+          fromY: chipY,
+          toX: centerX,
+          toY: centerY,
+          delay: 0, // Задержка для последовательной раздачи
+        },
+      ]);
+      // Проигрываем звук fold.mp3 для каждой карты с задержкой
+    });
+  };
 
   const handleChipsToWinner = useCallback(() => {
-  	
     if (!gameState?.winners || gameState.winners.length === 0) {
       return;
     }
@@ -460,7 +470,7 @@ export function GameRoom({
     actions.playSound("chip");
     // Подсчитываем количество фишек в банке
     const chipCount = 10;
-	setChipAnimations([])
+    setChipAnimations([]);
     // Создаем анимацию для каждой фишки
     for (let i = 0; i < chipCount; i++) {
       const chipId = `winner-chip-${Date.now()}-${i}`;
@@ -468,10 +478,10 @@ export function GameRoom({
         ...prev,
         {
           id: chipId,
-          fromX: centerX + Math.random() * 21-10-15,
-          fromY: centerY + Math.random() * 21-10-53,
-          toX: winnerX + Math.random() * 21-10,
-          toY: winnerY + Math.random() * 21-10,
+          fromX: centerX + Math.random() * 21 - 10 - 15,
+          fromY: centerY + Math.random() * 21 - 10 - 53,
+          toX: winnerX + Math.random() * 21 - 10,
+          toY: winnerY + Math.random() * 21 - 10,
           delay: i * 50, // Небольшая задержка между фишками
         },
       ]);
@@ -530,7 +540,7 @@ export function GameRoom({
         // }]);
       }
     },
-    [gameState]
+    [gameState],
   );
 
   // TODO: fix svara animation
@@ -592,13 +602,10 @@ export function GameRoom({
             id: w.id,
             username: w.username,
             lastWinAmount: w.lastWinAmount,
-          }))
+          })),
         );
-        
-        setWinSequenceStep("showdown");
-          
-        
 
+        setWinSequenceStep("showdown");
       } else if (currentStatus === "finished") {
         // Переходим к winner после showdown
         console.log("🎯 Moving to winner step");
@@ -684,7 +691,7 @@ export function GameRoom({
 
   const activeGamePhases: GameState["status"][] = useMemo(
     () => ["blind_betting", "betting"],
-    []
+    [],
   );
   const isCurrentUserTurn = !!(
     isSeated &&
@@ -703,7 +710,9 @@ export function GameRoom({
     }
 
     const updateTimer = () => {
-      const elapsed = Math.floor((Date.now() - (gameState.turnStartTime || 0)) / 1000);
+      const elapsed = Math.floor(
+        (Date.now() - (gameState.turnStartTime || 0)) / 1000,
+      );
       const remaining = Math.max(0, TURN_DURATION_SECONDS - elapsed);
       setTurnTimer(remaining);
     };
@@ -713,7 +722,6 @@ export function GameRoom({
 
     return () => clearInterval(interval);
   }, [gameState?.turnStartTime]);
-
 
   // Separate effect for auto-fold when timer reaches 0
   useEffect(() => {
@@ -773,10 +781,14 @@ export function GameRoom({
         handleFoldCards(lastAction.telegramId);
       }
 
-      console.error('анимация не запустилась. Код 1', lastAction, lastAction.type)
+      console.error(
+        "анимация не запустилась. Код 1",
+        lastAction,
+        lastAction.type,
+      );
       // Анимация фишек для ante действий
       if (lastAction && lastAction.type == "ante") {
-        console.error('анимация не запустилась. Код 0')
+        console.error("анимация не запустилась. Код 0");
         handlePlayerBet(lastAction.telegramId);
       }
     }
@@ -795,14 +807,12 @@ export function GameRoom({
   // Отслеживаем изменения в игроках для автоматического запуска анимации раздачи карт
   const prevPlayersRef = useRef<Player[]>([]);
 
-
-
   // Функция для сброса карт при fold
   // Play win sound for current user if they won
   useEffect(() => {
     if (winSequenceStep === "winner") {
       const currentUserWon = gameState?.winners?.some(
-        (winner) => winner.id === currentUserId
+        (winner) => winner.id === currentUserId,
       );
       if (currentUserWon && !winSoundPlayed) {
         actions.playSound("win");
@@ -825,23 +835,19 @@ export function GameRoom({
 
       // Скрываем ChipStack только если завершились анимации фишек к победителю
       const remainingWinnerChips = newAnimations.filter((chip) =>
-        chip.id.startsWith("winner-chip-")
+        chip.id.startsWith("winner-chip-"),
       );
       const hasWinnerChips = prev.some((chip) =>
-        chip.id.startsWith("winner-chip-")
+        chip.id.startsWith("winner-chip-"),
       );
 
       if (hasWinnerChips && remainingWinnerChips.length === 0) {
-        
-         setShowChipStack(false);
-        
+        setShowChipStack(false);
       }
 
       return newAnimations;
     });
   }, []);
-
-  
 
   useEffect(() => {
     if (pageData?.autoSit && !isSeated && !isSittingDown && gameState) {
@@ -895,11 +901,18 @@ export function GameRoom({
   // ИСПРАВЛЕНИЕ: Улучшенный расчет callAmount с учетом blind ставок
   const callAmount = (() => {
     if (postLookActions) {
-      const result = gameState.lastBlindBet > 0 ? gameState.lastBlindBet * 2 : gameState.minBet;
-      console.log(`[CALL_AMOUNT_DEBUG] postLookActions: lastBlindBet=${gameState.lastBlindBet}, result=${result}`);
+      const result =
+        gameState.lastBlindBet > 0
+          ? gameState.lastBlindBet * 2
+          : gameState.minBet;
+      console.log(
+        `[CALL_AMOUNT_DEBUG] postLookActions: lastBlindBet=${gameState.lastBlindBet}, result=${result}`,
+      );
       return result;
     }
-    console.log(`[CALL_AMOUNT_DEBUG] normal betting: lastActionAmount=${gameState.lastActionAmount}`);
+    console.log(
+      `[CALL_AMOUNT_DEBUG] normal betting: lastActionAmount=${gameState.lastActionAmount}`,
+    );
     return gameState.lastActionAmount;
   })();
 
@@ -911,7 +924,6 @@ export function GameRoom({
     }
     return gameState.lastActionAmount * 2;
   })();
-
 
   const maxRaise = currentPlayer?.balance || 0;
   const blindBetAmount =
@@ -938,7 +950,8 @@ export function GameRoom({
 
   // ИСПРАВЛЕНИЕ: Дополнительная проверка для look в blind_betting
   // Если у игрока нет денег на blind, но есть на look, то после look call/raise будут disabled
-  const canMakeCallAfterLook = (currentPlayer?.balance || 0) >= (blindBetAmount * 2);
+  const canMakeCallAfterLook =
+    (currentPlayer?.balance || 0) >= blindBetAmount * 2;
 
   // ИСПРАВЛЕНИЕ: Правильная логика disabled кнопок с проверкой баланса
   const isCallDisabled = !!(
@@ -950,17 +963,18 @@ export function GameRoom({
     gameState.hasRaiseMax ||
     (postLookActions && !canMakeCallAfterLook)
   );
-  
+
   // ОТЛАДОЧНЫЕ ЛОГИ для проблемы 3
   if (gameState.hasRaiseMax) {
-    console.log(`[RAISE_MAX_DEBUG] Client: hasRaiseMax=true, isRaiseDisabled=${isRaiseDisabled}, playerBalance=${currentPlayer?.balance}, minRaiseAmount=${minRaiseAmount}`);
+    console.log(
+      `[RAISE_MAX_DEBUG] Client: hasRaiseMax=true, isRaiseDisabled=${isRaiseDisabled}, playerBalance=${currentPlayer?.balance}, minRaiseAmount=${minRaiseAmount}`,
+    );
   }
   const isBlindBetDisabled = !!((currentPlayer?.balance || 0) < blindBetAmount);
 
   const blindButtonsDisabled = !!(effectiveGameStatus !== "blind_betting");
   // Карты показываются только после затемнения экрана
   const showCards = winSequenceStep === "showdown";
-
 
   const handleRaiseClick = () => setShowBetSlider(true);
   const handleBlindBetClick = () => {
@@ -1006,8 +1020,8 @@ export function GameRoom({
     const inviteLink = `https://t.me/Svaraprobot?start=join_${roomId}_${referrerId}`;
     WebApp.openTelegramLink(
       `https://t.me/share/url?url=${encodeURIComponent(
-        inviteLink
-      )}&text=${encodeURIComponent("Привет! Жду тебя в игре, присоединяйся!")}`
+        inviteLink,
+      )}&text=${encodeURIComponent("Привет! Жду тебя в игре, присоединяйся!")}`,
     );
   };
 
@@ -1069,9 +1083,6 @@ export function GameRoom({
       <div className="flex-grow relative p-4">
         <div className="relative flex justify-center items-center min-h-[70vh] w-full p-4 sm:p-5 lg:p-6 game-table-container -mt-8">
           <div className="relative flex justify-center items-center w-full h-full">
-            
-            
-
             <div className="flex-shrink-0 relative z-10">
               <GameTable
                 gameState={gameState}
@@ -1091,21 +1102,21 @@ export function GameRoom({
               const absolutePosition = index + 1;
               const screenPosition = getScreenPosition(absolutePosition);
               const player = gameState.players.find(
-                (p) => p.position === absolutePosition
+                (p) => p.position === absolutePosition,
               );
               const positionStyle = getPositionStyle(screenPosition);
               const positionClasses = getPositionClasses(
                 screenPosition,
-                showCards
+                showCards,
               );
 
-               let cardSide =
+              let cardSide =
                 screenPosition === 2 || screenPosition === 3 ? "left" : "right";
-              
+
               if (screenPosition == 4) {
-                cardSide = 'bottom'
+                cardSide = "bottom";
               } else if (screenPosition == 1) {
-                cardSide = 'top'
+                cardSide = "top";
               }
 
               const getOpenCardsPosition = (position: number) => {
@@ -1153,8 +1164,9 @@ export function GameRoom({
                       const isWinner = !!(
                         gameState.winners &&
                         gameState.winners.some(
-						    (winner) => winner.id.toString() === player.id.toString()
-						  )
+                          (winner) =>
+                            winner.id.toString() === player.id.toString(),
+                        )
                       );
                       const winAmount = isWinner
                         ? player.lastWinAmount || 0
@@ -1276,11 +1288,7 @@ export function GameRoom({
                   canRaise={canRaise}
                   canLook={canLook}
                   canBlindBet={canBlindBet}
-                  callAmount={
-                    postLookActions
-                      ? postLookCallAmount
-                      : callAmount
-                  }
+                  callAmount={postLookActions ? postLookCallAmount : callAmount}
                   turnTimer={turnTimer}
                   onFold={actions.fold}
                   onCall={handleCallClick}
@@ -1312,9 +1320,21 @@ export function GameRoom({
       <BetSlider
         isOpen={showBetSlider}
         onClose={() => setShowBetSlider(false)}
-        minBet={gameState?.lastActionAmount ? (gameState?.lastActionAmount==gameState?.lastBlindBet? gameState?.lastActionAmount*4 || 0 : gameState?.lastActionAmount*2 || 0) : 0}
+        minBet={
+          gameState?.lastActionAmount
+            ? gameState?.lastActionAmount == gameState?.lastBlindBet
+              ? gameState?.lastActionAmount * 4 || 0
+              : gameState?.lastActionAmount * 2 || 0
+            : 0
+        }
         maxBet={maxRaise}
-        initialBet={gameState?.lastActionAmount ? (gameState?.lastActionAmount==gameState?.lastBlindBet? gameState?.lastActionAmount*4 || 0 : gameState?.lastActionAmount*2 || 0) : 0}
+        initialBet={
+          gameState?.lastActionAmount
+            ? gameState?.lastActionAmount == gameState?.lastBlindBet
+              ? gameState?.lastActionAmount * 4 || 0
+              : gameState?.lastActionAmount * 2 || 0
+            : 0
+        }
         onConfirm={handleBetConfirm}
         isTurn={isCurrentUserTurn}
         turnTimer={turnTimer}
@@ -1354,10 +1374,7 @@ export function GameRoom({
         />
       )}
 
-      <div
-        className="fixed inset-0 pointer-events-none"
-        style={{ zIndex: 50 }}
-      >
+      <div className="fixed inset-0 pointer-events-none" style={{ zIndex: 50 }}>
         {chipAnimations.map((chip) => (
           <FlyingChip
             key={chip.id}
@@ -1370,7 +1387,6 @@ export function GameRoom({
             onComplete={handleChipAnimationComplete}
           />
         ))}
-        
       </div>
 
       {/* NoConnect компонент для проблем с подключением */}

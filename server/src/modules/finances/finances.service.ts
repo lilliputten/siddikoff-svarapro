@@ -32,19 +32,19 @@ export class FinancesService {
   private readonly feeConfig = {
     deposit: {
       RUB: {
-        CLASSIC: 0.15,    // 15%
-        '1_5K': 0.16,     // 16%
-        ALFA: 0.12,       // 12%
+        CLASSIC: 0.15, // 15%
+        '1_5K': 0.16, // 16%
+        ALFA: 0.12, // 12%
       },
-      UZS: 0.045,         // 4.5%
-      KGS: 0.065,         // 6.5%
-      TJS: 0.07,          // 7%
+      UZS: 0.045, // 4.5%
+      KGS: 0.065, // 6.5%
+      TJS: 0.07, // 7%
     },
     withdraw: {
-      RUB: 0.03,          // 3%
-      UZS: 0.01,          // 1%
-      KGS: 0.02,          // 2%
-      TJS: 0.03,          // 3%
+      RUB: 0.03, // 3%
+      UZS: 0.01, // 1%
+      KGS: 0.02, // 2%
+      TJS: 0.03, // 3%
     },
   };
 
@@ -62,11 +62,14 @@ export class FinancesService {
   ): number {
     if (type === 'deposit') {
       if (currency === 'RUB' && method) {
-        return this.feeConfig.deposit.RUB[method] || this.feeConfig.deposit.RUB.CLASSIC;
+        return (
+          this.feeConfig.deposit.RUB[method] ||
+          this.feeConfig.deposit.RUB.CLASSIC
+        );
       }
-      return this.feeConfig.deposit[currency] || 0.10; // Default 10% if not configured
+      return this.feeConfig.deposit[currency] || 0.1; // Default 10% if not configured
     } else {
-      return this.feeConfig.withdraw[currency] || 0.10; // Default 10% if not configured
+      return this.feeConfig.withdraw[currency] || 0.1; // Default 10% if not configured
     }
   }
 
@@ -100,7 +103,10 @@ export class FinancesService {
         const rate = await this.apiService.getCurrencyRate(currency);
         rates.push({ currency, rate });
       } catch (error) {
-        this.logger.error(`Failed to get rate for currency: ${currency}`, error);
+        this.logger.error(
+          `Failed to get rate for currency: ${currency}`,
+          error,
+        );
         // Skip this currency and continue with the others
       }
     }
@@ -108,7 +114,9 @@ export class FinancesService {
   }
 
   async getSystemWallet(): Promise<SystemWallet> {
-    let wallet = await this.systemWalletRepository.findOne({ where: { id: 1 } });
+    let wallet = await this.systemWalletRepository.findOne({
+      where: { id: 1 },
+    });
     if (!wallet) {
       wallet = this.systemWalletRepository.create({ id: 1, balance: 0.0 });
       await this.systemWalletRepository.save(wallet);
@@ -120,7 +128,9 @@ export class FinancesService {
     const wallet = await this.getSystemWallet();
     wallet.balance = Number(wallet.balance) + Number(amount);
     await this.systemWalletRepository.save(wallet);
-    this.logger.log(`Added ${amount} to system wallet. New balance: ${wallet.balance}`);
+    this.logger.log(
+      `Added ${amount} to system wallet. New balance: ${wallet.balance}`,
+    );
   }
 
   async resetSystemWallet(): Promise<void> {
@@ -169,7 +179,9 @@ export class FinancesService {
 
     // Check balance in System Wallet
     if (wallet.balance < usdtToDebit) {
-      throw new BadRequestException(`Недостаточно средств в кошельке проекта. Требуется: ${usdtToDebit.toFixed(2)} USDT, доступно: ${wallet.balance} USDT`);
+      throw new BadRequestException(
+        `Недостаточно средств в кошельке проекта. Требуется: ${usdtToDebit.toFixed(2)} USDT, доступно: ${wallet.balance} USDT`,
+      );
     }
 
     const clientID = uuidv4();
@@ -190,12 +202,14 @@ export class FinancesService {
       );
 
       // Find admin user to link transaction
-      const adminUser = await this.userRepository.findOne({ where: { telegramId: adminTelegramId } });
+      const adminUser = await this.userRepository.findOne({
+        where: { telegramId: adminTelegramId },
+      });
 
       const transaction = this.transactionRepository.create({
         user: adminUser || undefined, // Link to admin user if exists in users table, else null (but schema might require user...)
         // Actually, Transaction entity requires user. Admins should be in users table if they use the bot.
-        // If admin is NOT in users table (unlikely for bot users), this might fail. 
+        // If admin is NOT in users table (unlikely for bot users), this might fail.
         // Assuming admin calling this is a bot user.
         type: 'withdraw',
         currency,
@@ -213,11 +227,12 @@ export class FinancesService {
           recipientName: owner,
           rubMethod: method,
           isSystemWithdraw: true, // Mark as system withdraw
-          adminId: adminTelegramId
+          adminId: adminTelegramId,
         },
       });
 
-      const savedTransaction = await this.transactionRepository.save(transaction);
+      const savedTransaction =
+        await this.transactionRepository.save(transaction);
 
       this.logger.log(
         `System wallet withdrawal initiated: payoutId: ${payoutResponse.id}, clientID: ${clientID}, currency: ${currency}, amount: ${amount}, admin: ${adminTelegramId}`,
@@ -258,7 +273,9 @@ export class FinancesService {
             this.logger.log(
               `Checking status for clientID: ${transaction.client_transaction_id}`,
             );
-            await this.processNorosTransactionStatus(transaction.client_transaction_id);
+            await this.processNorosTransactionStatus(
+              transaction.client_transaction_id,
+            );
           } else {
             this.logger.warn(
               `Skipping pending transaction ${transaction.id} because it has no client_transaction_id.`,
@@ -273,12 +290,21 @@ export class FinancesService {
         }
       }
     } catch (error) {
-      this.logger.error('Error in checkPendingFiatTransactions cron job:', error);
+      this.logger.error(
+        'Error in checkPendingFiatTransactions cron job:',
+        error,
+      );
     }
   }
 
-  async getBanks(currency: string, amount?: number, method?: RubPaymentMethod): Promise<any[]> {
-    this.logger.log(`Fetching banks for currency: ${currency}, amount: ${amount}, method: ${method}`);
+  async getBanks(
+    currency: string,
+    amount?: number,
+    method?: RubPaymentMethod,
+  ): Promise<any[]> {
+    this.logger.log(
+      `Fetching banks for currency: ${currency}, amount: ${amount}, method: ${method}`,
+    );
     return this.norosService.getBanks(currency, amount, method);
   }
 
@@ -456,21 +482,33 @@ export class FinancesService {
 
       // Accept payment terms (PATCH /transaction/{id}) - might be required to get full details
       try {
-        await this.norosService.acceptPaymentTerms(payinResponse.id, currency, method, amount);
-        this.logger.log(`Accepted payment terms for transaction ${payinResponse.id}`);
+        await this.norosService.acceptPaymentTerms(
+          payinResponse.id,
+          currency,
+          method,
+          amount,
+        );
+        this.logger.log(
+          `Accepted payment terms for transaction ${payinResponse.id}`,
+        );
       } catch (error) {
-        this.logger.warn(`Could not accept payment terms: ${error instanceof Error ? error.message : String(error)}`);
+        this.logger.warn(
+          `Could not accept payment terms: ${error instanceof Error ? error.message : String(error)}`,
+        );
       }
 
       // Immediately fetch full transaction details (Noros may not return all fields on creation)
-      const fullTransactionDetails = await this.norosService.getTransactionStatus(
-        payinResponse.id,
-        currency,
-        method,
-        amount, // Pass amount so NorosService can auto-select the correct RUB variant
-      );
+      const fullTransactionDetails =
+        await this.norosService.getTransactionStatus(
+          payinResponse.id,
+          currency,
+          method,
+          amount, // Pass amount so NorosService can auto-select the correct RUB variant
+        );
 
-      this.logger.log(`Full transaction details: ${JSON.stringify(fullTransactionDetails)}`);
+      this.logger.log(
+        `Full transaction details: ${JSON.stringify(fullTransactionDetails)}`,
+      );
 
       // Validate that we have the required payment details
       if (!fullTransactionDetails.card || !fullTransactionDetails.cardOwner) {
@@ -480,10 +518,19 @@ export class FinancesService {
 
         // Try to cancel the transaction in Noros since we can't proceed
         try {
-          await this.norosService.cancelTransaction(payinResponse.id, currency, method, amount);
-          this.logger.log(`Cancelled incomplete transaction ${payinResponse.id}`);
+          await this.norosService.cancelTransaction(
+            payinResponse.id,
+            currency,
+            method,
+            amount,
+          );
+          this.logger.log(
+            `Cancelled incomplete transaction ${payinResponse.id}`,
+          );
         } catch (cancelError) {
-          this.logger.warn(`Failed to cancel transaction ${payinResponse.id}: ${cancelError instanceof Error ? cancelError.message : String(cancelError)}`);
+          this.logger.warn(
+            `Failed to cancel transaction ${payinResponse.id}: ${cancelError instanceof Error ? cancelError.message : String(cancelError)}`,
+          );
         }
 
         throw new BadRequestException(
@@ -512,9 +559,8 @@ export class FinancesService {
         },
       });
 
-      const savedTransaction = await this.transactionRepository.save(
-        transaction,
-      );
+      const savedTransaction =
+        await this.transactionRepository.save(transaction);
 
       this.logger.log(
         `Noros fiat transaction initiated: norosId: ${payinResponse.id}, clientID: ${clientID}, currency: ${currency}, bankId: ${bankId}, amount: ${amount}`,
@@ -603,7 +649,9 @@ export class FinancesService {
       this.logger.error(
         `Insufficient balance for user ${telegramId}: balance=${user.balance} USDT, required=${usdtToDebit.toFixed(2)} USDT`,
       );
-      throw new BadRequestException(`Недостаточно средств. Требуется: ${usdtToDebit.toFixed(2)} USDT, доступно: ${user.balance.toFixed(2)} USDT`);
+      throw new BadRequestException(
+        `Недостаточно средств. Требуется: ${usdtToDebit.toFixed(2)} USDT, доступно: ${user.balance.toFixed(2)} USDT`,
+      );
     }
 
     const clientID = uuidv4();
@@ -643,9 +691,8 @@ export class FinancesService {
         },
       });
 
-      const savedTransaction = await this.transactionRepository.save(
-        transaction,
-      );
+      const savedTransaction =
+        await this.transactionRepository.save(transaction);
 
       this.logger.log(
         `Noros fiat withdrawal initiated: payoutId: ${payoutResponse.id}, clientID: ${clientID}, currency: ${currency}, amount: ${amount}`,
@@ -898,9 +945,7 @@ export class FinancesService {
   }
 
   async processNorosTransactionStatus(clientID: string): Promise<void> {
-    this.logger.log(
-      `Processing fiat callback for clientID: ${clientID}`,
-    );
+    this.logger.log(`Processing fiat callback for clientID: ${clientID}`);
 
     try {
       // First, find the transaction to get the currency
@@ -910,9 +955,7 @@ export class FinancesService {
       });
 
       if (!transaction) {
-        this.logger.warn(
-          `Transaction not found for clientID: ${clientID}`,
-        );
+        this.logger.warn(`Transaction not found for clientID: ${clientID}`);
         return;
       }
 
@@ -920,7 +963,9 @@ export class FinancesService {
       // Noros API expects a number, so we parse it.
       const norosTransId = parseInt(transaction.tracker_id, 10);
       if (isNaN(norosTransId)) {
-        this.logger.error(`Invalid Noros transaction ID found in tracker_id: ${transaction.tracker_id}`);
+        this.logger.error(
+          `Invalid Noros transaction ID found in tracker_id: ${transaction.tracker_id}`,
+        );
         // Mark as failed to avoid retrying indefinitely
         transaction.status = 'failed';
         await this.transactionRepository.save(transaction);
@@ -928,7 +973,9 @@ export class FinancesService {
       }
 
       // Extract RUB method from transaction extra if available
-      const rubMethod = transaction.extra?.rubMethod as RubPaymentMethod | undefined;
+      const rubMethod = transaction.extra?.rubMethod as
+        | RubPaymentMethod
+        | undefined;
 
       // Use different endpoints for deposits and withdrawals
       let statusData: any;
@@ -954,7 +1001,10 @@ export class FinancesService {
         );
       }
 
-      if (statusData.status === 'success' || statusData.status === 'completed') {
+      if (
+        statusData.status === 'success' ||
+        statusData.status === 'completed'
+      ) {
         if (transaction.status === 'complete') {
           this.logger.warn(
             `Transaction ${clientID} already processed as complete, skipping duplicate processing`,
@@ -965,8 +1015,14 @@ export class FinancesService {
         transaction.status = 'complete';
 
         // Convert fiat currency to USDT using exchange rate (with fee)
-        const currencyRate = await this.apiService.getCurrencyRate(transaction.currency);
-        const feePercentage = this.getFeePercentage(transaction.type, transaction.currency, rubMethod);
+        const currencyRate = await this.apiService.getCurrencyRate(
+          transaction.currency,
+        );
+        const feePercentage = this.getFeePercentage(
+          transaction.type,
+          transaction.currency,
+          rubMethod,
+        );
         const convertedAmountBeforeFee = statusData.amount * currencyRate;
         const convertedAmount = convertedAmountBeforeFee * (1 - feePercentage); // Deduct fee
 
@@ -1041,8 +1097,7 @@ export class FinancesService {
                   refBonus = 8;
                 else if (referralCount > 100) refBonus = 10;
 
-                const bonusAmount =
-                  ((convertedAmount - 100) * refBonus) / 100;
+                const bonusAmount = ((convertedAmount - 100) * refBonus) / 100;
                 if (bonusAmount > 0) {
                   referrer.refBalance += bonusAmount;
                   await this.userRepository.save(referrer);
@@ -1060,7 +1115,9 @@ export class FinancesService {
             }
           } else if (transaction.type === 'withdraw') {
             // This part of logic will be triggered by a separate cron for withdrawals
-            this.logger.log(`Fiat withdrawal completed: ${transaction.amount} USDT`);
+            this.logger.log(
+              `Fiat withdrawal completed: ${transaction.amount} USDT`,
+            );
             try {
               const message =
                 `✅ *Вывод средств выполнен!*\n\n` +
@@ -1082,7 +1139,9 @@ export class FinancesService {
             }
           }
         }
-      } else if (['error', 'cancelled', 'canceled'].includes(statusData.status)) {
+      } else if (
+        ['error', 'cancelled', 'canceled'].includes(statusData.status)
+      ) {
         if (transaction.status === 'failed') {
           this.logger.warn(
             `Transaction ${clientID} already processed as failed, skipping duplicate processing`,
@@ -1105,7 +1164,9 @@ export class FinancesService {
             );
           }
         }
-      } else if (['created', 'pending', 'accepted'].includes(statusData.status)) {
+      } else if (
+        ['created', 'pending', 'accepted'].includes(statusData.status)
+      ) {
         this.logger.log(
           `Transaction ${clientID} is still pending (status: ${statusData.status})`,
         );
@@ -1147,7 +1208,9 @@ export class FinancesService {
     });
   }
 
-  async getCryptoTransactionHistory(telegramId: string): Promise<Transaction[]> {
+  async getCryptoTransactionHistory(
+    telegramId: string,
+  ): Promise<Transaction[]> {
     return this.transactionRepository.find({
       where: {
         user: { telegramId },
@@ -1216,7 +1279,9 @@ export class FinancesService {
     });
 
     if (!transaction) {
-      this.logger.error(`Transaction with norosId (tracker_id) ${norosId} not found.`);
+      this.logger.error(
+        `Transaction with norosId (tracker_id) ${norosId} not found.`,
+      );
       throw new BadRequestException('Transaction not found.');
     }
 
@@ -1227,14 +1292,22 @@ export class FinancesService {
 
     // User has confirmed payment on their end.
     // Immediately check the transaction status from Noros instead of waiting for the cron job.
-    this.logger.log(`User confirmed payment for transaction ${norosId}. Triggering immediate status check...`);
+    this.logger.log(
+      `User confirmed payment for transaction ${norosId}. Triggering immediate status check...`,
+    );
 
     try {
-      await this.processNorosTransactionStatus(transaction.client_transaction_id);
-      this.logger.log(`Immediate status check completed for transaction ${norosId}`);
+      await this.processNorosTransactionStatus(
+        transaction.client_transaction_id,
+      );
+      this.logger.log(
+        `Immediate status check completed for transaction ${norosId}`,
+      );
     } catch (error) {
       const message = error instanceof Error ? error.message : String(error);
-      this.logger.error(`Failed to check transaction status immediately: ${message}`);
+      this.logger.error(
+        `Failed to check transaction status immediately: ${message}`,
+      );
       // Don't throw - the cron job will handle it eventually
       // But log the error so we know something went wrong
     }

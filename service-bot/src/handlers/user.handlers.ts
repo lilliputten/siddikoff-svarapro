@@ -25,7 +25,11 @@ interface WithdrawSession {
 const depositSessions: Map<string, DepositSession> = new Map();
 const withdrawSessions: Map<string, WithdrawSession> = new Map();
 
-async function getMainMenuMessage(apiService: ApiService, userId: string, prefix: string = ""): Promise<string> {
+async function getMainMenuMessage(
+  apiService: ApiService,
+  userId: string,
+  prefix: string = "",
+): Promise<string> {
   try {
     const profile = await apiService.getUserProfile(userId);
     return (
@@ -171,7 +175,9 @@ export class UserHandlers {
       const banks = await this.apiService.getFiatBanks(currency);
 
       if (!banks || banks.length === 0) {
-        await ctx.reply("⚠️ Для этой валюты пока нет доступных способов оплаты (банков).");
+        await ctx.reply(
+          "⚠️ Для этой валюты пока нет доступных способов оплаты (банков).",
+        );
         return;
       }
 
@@ -181,10 +187,7 @@ export class UserHandlers {
         `Выберите банк для оплаты:`;
 
       const buttons = banks.map((bank) =>
-        Markup.button.callback(
-          bank.name,
-          `deposit_bank_${bank.id}`,
-        ),
+        Markup.button.callback(bank.name, `deposit_bank_${bank.id}`),
       );
 
       buttons.push(Markup.button.callback("⬅️ Назад", "deposit_back_currency"));
@@ -224,7 +227,9 @@ export class UserHandlers {
       const banks = await this.apiService.getFiatBanks("RUB", amount);
 
       if (!banks || banks.length === 0) {
-        await ctx.reply("⚠️ Для этой суммы пока нет доступных способов оплаты.");
+        await ctx.reply(
+          "⚠️ Для этой суммы пока нет доступных способов оплаты.",
+        );
         return;
       }
 
@@ -235,13 +240,12 @@ export class UserHandlers {
         `Выберите банк для оплаты:`;
 
       const buttons = banks.map((bank) =>
-        Markup.button.callback(
-          bank.name,
-          `deposit_bank_${bank.id}`,
-        ),
+        Markup.button.callback(bank.name, `deposit_bank_${bank.id}`),
       );
 
-      buttons.push(Markup.button.callback("⬅️ Назад", "deposit_back_rub_amount"));
+      buttons.push(
+        Markup.button.callback("⬅️ Назад", "deposit_back_rub_amount"),
+      );
       buttons.push(Markup.button.callback("🚫 Отмена", "cancel_operation"));
 
       await ctx.editMessageText(message, {
@@ -264,14 +268,14 @@ export class UserHandlers {
 
     await ctx.editMessageText(
       `💰 *Пополнение баланса*\n\n` +
-      `Валюта: RUB\n\n` +
-      `Введите сумму пополнения в рублях (минимум 5000 ₽):`,
+        `Валюта: RUB\n\n` +
+        `Введите сумму пополнения в рублях (минимум 5000 ₽):`,
       {
         parse_mode: "Markdown",
         ...Markup.inlineKeyboard([
           Markup.button.callback("🚫 Отмена", "cancel_operation"),
         ]),
-      }
+      },
     );
   }
 
@@ -292,7 +296,7 @@ export class UserHandlers {
     const session = this.getSession(userId);
     session.bankId = bankId;
 
-    const currency = session.currency || '';
+    const currency = session.currency || "";
 
     // For RUB, amount is already selected - proceed to deposit
     if (currency === "RUB" && session.amount) {
@@ -301,7 +305,9 @@ export class UserHandlers {
     }
 
     // For other currencies, show amount selection
-    const suggestedAmounts = this.suggestedAmounts[currency] || [20000, 50000, 100000, 200000];
+    const suggestedAmounts = this.suggestedAmounts[currency] || [
+      20000, 50000, 100000, 200000,
+    ];
     const amounts = suggestedAmounts;
 
     const message =
@@ -377,14 +383,16 @@ export class UserHandlers {
     if (!userId) return;
 
     const session = this.getSession(userId);
-    const currency = session.currency || '';
+    const currency = session.currency || "";
     const minAmount = this.minAmounts[currency] || 1000;
 
     await ctx.editMessageText(
       `💰 Введите сумму пополнения в ${currency} (только число):\n\n` +
-      `Минимальная сумма: ${minAmount.toLocaleString('ru-RU')} ${currency}\n` +
-      (this.maxAmounts[currency] ? `Максимальная сумма: ${this.maxAmounts[currency].toLocaleString('ru-RU')} ${currency}\n\n` : `\n`) +
-      "Для отмены отправьте /cancel",
+        `Минимальная сумма: ${minAmount.toLocaleString("ru-RU")} ${currency}\n` +
+        (this.maxAmounts[currency]
+          ? `Максимальная сумма: ${this.maxAmounts[currency].toLocaleString("ru-RU")} ${currency}\n\n`
+          : `\n`) +
+        "Для отмены отправьте /cancel",
       {
         parse_mode: "Markdown",
         ...Markup.inlineKeyboard([
@@ -405,7 +413,7 @@ export class UserHandlers {
     if (!userId) return;
 
     const session = this.getSession(userId);
-    const currency = session.currency || '';
+    const currency = session.currency || "";
     const minAmount = this.minAmounts[currency] || 0;
 
     if (amount <= 0) {
@@ -420,8 +428,8 @@ export class UserHandlers {
         `⚠️ Минимальная сумма для пополнения: ${minAmount.toLocaleString(
           "ru-RU",
         )} ${currency}\n\n` +
-        `Вы указали: ${amount.toLocaleString("ru-RU")} ${currency}\n\n` +
-        `Попробуйте ещё раз или отправьте /cancel`,
+          `Вы указали: ${amount.toLocaleString("ru-RU")} ${currency}\n\n` +
+          `Попробуйте ещё раз или отправьте /cancel`,
       );
       return;
     }
@@ -432,8 +440,8 @@ export class UserHandlers {
         `⚠️ Максимальная сумма для пополнения: ${maxAmount.toLocaleString(
           "ru-RU",
         )} ${currency}\n\n` +
-        `Вы указали: ${amount.toLocaleString("ru-RU")} ${currency}\n\n` +
-        `Попробуйте ещё раз или отправьте /cancel`,
+          `Вы указали: ${amount.toLocaleString("ru-RU")} ${currency}\n\n` +
+          `Попробуйте ещё раз или отправьте /cancel`,
       );
       return;
     }
@@ -443,7 +451,7 @@ export class UserHandlers {
     // For non-RUB currencies, now that we have the amount, we can proceed.
     // For RUB, this logic is handled in `handleTextMessage` which proceeds to bank selection.
     // This input handler is now primarily for non-RUB custom amounts.
-    if (currency !== 'RUB') {
+    if (currency !== "RUB") {
       await this.processDeposit(ctx, userId);
     }
   }
@@ -454,7 +462,8 @@ export class UserHandlers {
   ): Promise<void> {
     const session = this.getSession(userId);
 
-    const errorMessage = "⚠️ Ошибка: не все данные заполнены. Начните заново с /deposit";
+    const errorMessage =
+      "⚠️ Ошибка: не все данные заполнены. Начните заново с /deposit";
     if (!session.currency || !session.bankId || !session.amount) {
       if (ctx.callbackQuery) {
         await ctx.editMessageText(errorMessage);
@@ -512,15 +521,26 @@ ${result.manual ? `▪️ ${result.manual}\n` : ""}
 
 ⚠️ *Важно: совершите платеж в течении 10 минут и нажмите кнопку 'Я оплатил'*`;
 
-      await ctx.telegram.editMessageText(chatId, messageId, undefined, message, {
-        parse_mode: "Markdown",
-        ...Markup.inlineKeyboard([
-          [Markup.button.callback("✅ Я оплатил", `deposit_done_${result.norosId}`)],
-        ]),
-      });
-
+      await ctx.telegram.editMessageText(
+        chatId,
+        messageId,
+        undefined,
+        message,
+        {
+          parse_mode: "Markdown",
+          ...Markup.inlineKeyboard([
+            [
+              Markup.button.callback(
+                "✅ Я оплатил",
+                `deposit_done_${result.norosId}`,
+              ),
+            ],
+          ]),
+        },
+      );
     } catch (error) {
-      let rawMessage = error instanceof Error ? error.message : "Неизвестная ошибка";
+      let rawMessage =
+        error instanceof Error ? error.message : "Неизвестная ошибка";
       let displayMessage = rawMessage;
 
       if (rawMessage.startsWith("API error: ")) {
@@ -658,9 +678,9 @@ ${result.manual ? `▪️ ${result.manual}\n` : ""}
         const inverseRate = 1 / item.rate;
         // Check for division by zero or invalid rate
         if (item.rate > 0) {
-            message += `  ▪️ \`${inverseRate.toFixed(2)}\` ${item.currency}\n`;
+          message += `  ▪️ \`${inverseRate.toFixed(2)}\` ${item.currency}\n`;
         } else {
-            message += `  ▪️ ${item.currency}: Курс недоступен\n`;
+          message += `  ▪️ ${item.currency}: Курс недоступен\n`;
         }
       });
 
@@ -702,7 +722,7 @@ ${result.manual ? `▪️ ${result.manual}\n` : ""}
     // Check if waiting for ANY custom deposit amount
     if (depositSession.awaitingCustomAmount || depositSession.amount === -1) {
       const amount = parseInt(text);
-      const currency = depositSession.currency || '';
+      const currency = depositSession.currency || "";
       const minAmount = this.minAmounts[currency] || 0;
 
       if (isNaN(amount)) {
@@ -724,8 +744,8 @@ ${result.manual ? `▪️ ${result.manual}\n` : ""}
           `⚠️ Минимальная сумма для пополнения: ${minAmount.toLocaleString(
             "ru-RU",
           )} ${currency}\n\n` +
-          `Вы указали: ${amount.toLocaleString("ru-RU")} ${currency}\n\n` +
-          `Попробуйте ещё раз или отправьте /cancel`,
+            `Вы указали: ${amount.toLocaleString("ru-RU")} ${currency}\n\n` +
+            `Попробуйте ещё раз или отправьте /cancel`,
         );
         return;
       }
@@ -736,8 +756,8 @@ ${result.manual ? `▪️ ${result.manual}\n` : ""}
           `⚠️ Максимальная сумма для пополнения: ${maxAmount.toLocaleString(
             "ru-RU",
           )} ${currency}\n\n` +
-          `Вы указали: ${amount.toLocaleString("ru-RU")} ${currency}\n\n` +
-          `Попробуйте ещё раз или отправьте /cancel`,
+            `Вы указали: ${amount.toLocaleString("ru-RU")} ${currency}\n\n` +
+            `Попробуйте ещё раз или отправьте /cancel`,
         );
         return;
       }
@@ -752,7 +772,9 @@ ${result.manual ? `▪️ ${result.manual}\n` : ""}
           const banks = await this.apiService.getFiatBanks("RUB", amount);
 
           if (!banks || banks.length === 0) {
-            await ctx.reply("⚠️ Для этой суммы пока нет доступных способов оплаты.");
+            await ctx.reply(
+              "⚠️ Для этой суммы пока нет доступных способов оплаты.",
+            );
             this.clearSession(userId);
             return;
           }
@@ -764,13 +786,12 @@ ${result.manual ? `▪️ ${result.manual}\n` : ""}
             `Выберите банк для оплаты:`;
 
           const buttons = banks.map((bank) =>
-            Markup.button.callback(
-              bank.name,
-              `deposit_bank_${bank.id}`,
-            ),
+            Markup.button.callback(bank.name, `deposit_bank_${bank.id}`),
           );
 
-          buttons.push(Markup.button.callback("⬅️ Назад", "deposit_back_rub_amount"));
+          buttons.push(
+            Markup.button.callback("⬅️ Назад", "deposit_back_rub_amount"),
+          );
           buttons.push(Markup.button.callback("🚫 Отмена", "cancel_operation"));
 
           await ctx.reply(message, {
@@ -779,7 +800,8 @@ ${result.manual ? `▪️ ${result.manual}\n` : ""}
           });
         } catch (error) {
           this.clearSession(userId);
-          const message = error instanceof Error ? error.message : String(error);
+          const message =
+            error instanceof Error ? error.message : String(error);
           await ctx.reply(`⚠️ Ошибка при загрузке списка банков: ${message}`);
         }
       } else {
@@ -833,7 +855,11 @@ ${result.manual ? `▪️ ${result.manual}\n` : ""}
       // Ignore error if it's not a callback query
     }
 
-    const mainMenuMessage = await getMainMenuMessage(this.apiService, userId, "🚫 Операция отменена.");
+    const mainMenuMessage = await getMainMenuMessage(
+      this.apiService,
+      userId,
+      "🚫 Операция отменена.",
+    );
 
     // Just send the message, the reply keyboard is persistent
     await ctx.reply(mainMenuMessage, {
@@ -846,11 +872,10 @@ ${result.manual ? `▪️ ${result.manual}\n` : ""}
   async handleWithdrawCommand(ctx: ServiceBotContext): Promise<void> {
     const userId = ctx.from?.id.toString();
     if (!userId) return;
-    
+
     this.clearWithdrawSession(userId);
 
-    const message =
-      "💸 *Вывод средств*\n\n" + "Выберите валюту для вывода:";
+    const message = "💸 *Вывод средств*\n\n" + "Выберите валюту для вывода:";
 
     const currencies = {
       RUB: "🇷🇺 Российский рубль (RUB)",
@@ -859,10 +884,9 @@ ${result.manual ? `▪️ ${result.manual}\n` : ""}
       KGS: "🇰🇬 Киргизский сом (KGS)",
     };
 
-    const buttons = Object.entries(currencies)
-      .map(([code, name]) =>
-        Markup.button.callback(name, `withdraw_currency_${code}`),
-      );
+    const buttons = Object.entries(currencies).map(([code, name]) =>
+      Markup.button.callback(name, `withdraw_currency_${code}`),
+    );
 
     buttons.push(Markup.button.callback("🚫 Отмена", "cancel_operation"));
 
@@ -886,22 +910,25 @@ ${result.manual ? `▪️ ${result.manual}\n` : ""}
     session.waitingFor = "receiver";
     await ctx.editMessageText(
       `💸 *Реквизиты для вывода*\n\n` +
-      `Валюта: ${currency}\n\n` +
-      `Введите номер карты/счета для получения средств:`,
+        `Валюта: ${currency}\n\n` +
+        `Введите номер карты/счета для получения средств:`,
       {
         parse_mode: "Markdown",
         ...Markup.inlineKeyboard([
-          Markup.button.callback("🚫 Отмена", "cancel_operation")
-        ])
-      }
+          Markup.button.callback("🚫 Отмена", "cancel_operation"),
+        ]),
+      },
     );
   }
 
-  async handleWithdrawReceiverInput(ctx: ServiceBotContext, receiver: string): Promise<void> {
+  async handleWithdrawReceiverInput(
+    ctx: ServiceBotContext,
+    receiver: string,
+  ): Promise<void> {
     const userId = ctx.from?.id.toString();
     if (!userId) return;
 
-    const cleanedReceiver = receiver.replace(/\s/g, '');
+    const cleanedReceiver = receiver.replace(/\s/g, "");
 
     const session = this.getWithdrawSession(userId);
     session.receiver = cleanedReceiver;
@@ -909,12 +936,15 @@ ${result.manual ? `▪️ ${result.manual}\n` : ""}
 
     await ctx.reply(
       `🏦 Введите название банка получателя:\n\n` +
-      `Например: Сбербанк\n\n` +
-      `Для отмены отправьте /cancel`
+        `Например: Сбербанк\n\n` +
+        `Для отмены отправьте /cancel`,
     );
   }
 
-  async handleWithdrawBankNameInput(ctx: ServiceBotContext, bankName: string): Promise<void> {
+  async handleWithdrawBankNameInput(
+    ctx: ServiceBotContext,
+    bankName: string,
+  ): Promise<void> {
     const userId = ctx.from?.id.toString();
     if (!userId) return;
 
@@ -924,12 +954,15 @@ ${result.manual ? `▪️ ${result.manual}\n` : ""}
 
     await ctx.reply(
       `👤 Введите ФИО получателя полностью:\n\n` +
-      `Например: Иванов Иван Иванович\n\n` +
-      `Для отмены отправьте /cancel`
+        `Например: Иванов Иван Иванович\n\n` +
+        `Для отмены отправьте /cancel`,
     );
   }
 
-  async handleWithdrawRecipientNameInput(ctx: ServiceBotContext, recipientName: string): Promise<void> {
+  async handleWithdrawRecipientNameInput(
+    ctx: ServiceBotContext,
+    recipientName: string,
+  ): Promise<void> {
     const userId = ctx.from?.id.toString();
     if (!userId) return;
 
@@ -939,19 +972,24 @@ ${result.manual ? `▪️ ${result.manual}\n` : ""}
 
     await ctx.reply(
       `💰 Введите сумму для вывода в ${session.currency} (только число):\n\n` +
-      `Например: ${session.currency === 'RUB' ? '10000' : '20000'}\n\n` +
-      `Для отмены отправьте /cancel`
+        `Например: ${session.currency === "RUB" ? "10000" : "20000"}\n\n` +
+        `Для отмены отправьте /cancel`,
     );
     session.amount = -1; // Flag to indicate waiting for amount
   }
 
-  async handleWithdrawAmountInput(ctx: ServiceBotContext, amount: number): Promise<void> {
+  async handleWithdrawAmountInput(
+    ctx: ServiceBotContext,
+    amount: number,
+  ): Promise<void> {
     const userId = ctx.from?.id.toString();
     if (!userId) return;
 
     const session = this.getWithdrawSession(userId);
     if (amount <= 0) {
-      await ctx.reply("⚠️ Сумма должна быть больше 0. Попробуйте ещё раз или отправьте /cancel");
+      await ctx.reply(
+        "⚠️ Сумма должна быть больше 0. Попробуйте ещё раз или отправьте /cancel",
+      );
       return;
     }
     session.amount = amount;
@@ -961,8 +999,16 @@ ${result.manual ? `▪️ ${result.manual}\n` : ""}
   private async processWithdraw(ctx: Context, userId: string): Promise<void> {
     const session = this.getWithdrawSession(userId);
 
-    if (!session.currency || !session.amount || !session.receiver || !session.bankName || !session.recipientName) {
-      await ctx.reply("⚠️ Ошибка: не все данные для вывода заполнены. Начните заново с /withdraw");
+    if (
+      !session.currency ||
+      !session.amount ||
+      !session.receiver ||
+      !session.bankName ||
+      !session.recipientName
+    ) {
+      await ctx.reply(
+        "⚠️ Ошибка: не все данные для вывода заполнены. Начните заново с /withdraw",
+      );
       this.clearWithdrawSession(userId);
       return;
     }
@@ -997,7 +1043,8 @@ ${result.manual ? `▪️ ${result.manual}\n` : ""}
     } catch (error) {
       await ctx.telegram.deleteMessage(ctx.chat!.id, processingMsg.message_id);
 
-      let rawMessage = error instanceof Error ? error.message : "Неизвестная ошибка";
+      let rawMessage =
+        error instanceof Error ? error.message : "Неизвестная ошибка";
       let displayMessage = rawMessage;
 
       // Translate known errors
@@ -1005,17 +1052,24 @@ ${result.manual ? `▪️ ${result.manual}\n` : ""}
         displayMessage = "Недостаточно средств для вывода.";
       } else if (rawMessage.includes("минимальный лимит по валюте")) {
         const amountMatch = rawMessage.match(/\[(\d+\.?\d*)\]/g);
-        if (amountMatch && amountMatch.length >= 2 && amountMatch[0] && amountMatch[1]) {
-          const sentAmount = parseFloat(amountMatch[0].replace(/[\[\]]/g, ''));
-          const minLimit = parseFloat(amountMatch[1].replace(/[\[\]]/g, ''));
-          displayMessage = `Минимальная сумма для вывода: ${minLimit.toLocaleString('ru-RU')} ${session.currency}. Вы запросили: ${sentAmount.toLocaleString('ru-RU')} ${session.currency}.`;
+        if (
+          amountMatch &&
+          amountMatch.length >= 2 &&
+          amountMatch[0] &&
+          amountMatch[1]
+        ) {
+          const sentAmount = parseFloat(amountMatch[0].replace(/[\[\]]/g, ""));
+          const minLimit = parseFloat(amountMatch[1].replace(/[\[\]]/g, ""));
+          displayMessage = `Минимальная сумма для вывода: ${minLimit.toLocaleString("ru-RU")} ${session.currency}. Вы запросили: ${sentAmount.toLocaleString("ru-RU")} ${session.currency}.`;
         } else {
-          displayMessage = "Сумма вывода не соответствует установленным лимитам.";
+          displayMessage =
+            "Сумма вывода не соответствует установленным лимитам.";
         }
       } else if (rawMessage.includes("Unsupported fiat currency")) {
         displayMessage = "Выбранная валюта не поддерживается для вывода.";
       } else if (rawMessage.includes("Unsupported token")) {
-        displayMessage = "Выбранный способ оплаты не поддерживается для вывода.";
+        displayMessage =
+          "Выбранный способ оплаты не поддерживается для вывода.";
       } else if (rawMessage.includes("Amount must be greater than 0")) {
         displayMessage = "Сумма вывода должна быть больше нуля.";
       } else if (rawMessage.includes("Invalid receiver")) {

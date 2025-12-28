@@ -95,4 +95,4 @@ import * as Joi from 'joi';
     MigrationService,
   ],
 })
-export class AppModule { }
+export class AppModule {}

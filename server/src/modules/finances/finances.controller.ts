@@ -17,7 +17,7 @@ import { RubPaymentMethod } from '../../services/noros.service';
 @Controller('finances')
 export class FinancesController {
   private readonly logger = new Logger(FinancesController.name);
-  constructor(private financesService: FinancesService) { }
+  constructor(private financesService: FinancesService) {}
 
   @Post('transaction')
   async createTransaction(
@@ -169,8 +169,14 @@ export class FinancesController {
 
   @Get('fiat/banks')
   async getBanks(@Query() getBanksDto: GetBanksDto) {
-    this.logger.log(`Request to get banks for currency: ${getBanksDto.currency}, amount: ${getBanksDto.amount}, method: ${getBanksDto.method}`);
-    return this.financesService.getBanks(getBanksDto.currency, getBanksDto.amount, getBanksDto.method);
+    this.logger.log(
+      `Request to get banks for currency: ${getBanksDto.currency}, amount: ${getBanksDto.amount}, method: ${getBanksDto.method}`,
+    );
+    return this.financesService.getBanks(
+      getBanksDto.currency,
+      getBanksDto.amount,
+      getBanksDto.method,
+    );
   }
 
   @Get('fiat/rates')
@@ -220,9 +226,7 @@ export class FinancesController {
 
     if (!body.bankId || typeof body.bankId !== 'number') {
       this.logger.error(`Invalid or missing bankId: ${body.bankId}`);
-      throw new BadRequestException(
-        'bankId is required and must be a number',
-      );
+      throw new BadRequestException('bankId is required and must be a number');
     }
 
     if (
@@ -261,8 +265,6 @@ export class FinancesController {
       estimatedUSDT: result.estimatedUSDT,
     };
   }
-
-
 
   @Post('fiat/withdraw')
   async createFiatWithdraw(
@@ -356,7 +358,9 @@ export class FinancesController {
 
   @Patch('fiat/transaction/:norosId/proof')
   async confirmFiatTransactionProof(@Param('norosId') norosId: string) {
-    this.logger.log(`Request to confirm fiat transaction proof for norosId: ${norosId}`);
+    this.logger.log(
+      `Request to confirm fiat transaction proof for norosId: ${norosId}`,
+    );
     await this.financesService.confirmFiatPayment(norosId);
     return { status: 'ok' };
   }
@@ -380,8 +384,10 @@ export class FinancesController {
       method?: RubPaymentMethod;
     },
   ) {
-    if (!body.telegramId) throw new BadRequestException('telegramId is required');
-    if (!body.amount || body.amount <= 0) throw new BadRequestException('amount must be > 0');
+    if (!body.telegramId)
+      throw new BadRequestException('telegramId is required');
+    if (!body.amount || body.amount <= 0)
+      throw new BadRequestException('amount must be > 0');
     if (!body.currency) throw new BadRequestException('currency is required');
     if (!body.number) throw new BadRequestException('number is required');
     if (!body.bankname) throw new BadRequestException('bankname is required');

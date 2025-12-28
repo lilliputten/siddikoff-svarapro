@@ -13,7 +13,8 @@
   "scripts": {
     "install-all": "pnpm --frozen-lockfile --config.confirmModulesPurge=false install",
     "install-workspaces": "pnpm --filter svara-pro-server --filter svara-pro-bot --filter svara-pro-client --filter svara-pro-service-bot --frozen-lockfile install",
-    "format-all": "pnpm format-quick --filter svara-pro-server --filter svara-pro-bot --filter svara-pro-client --filter svara-pro-service-bot",
+    "format-quick": "pretty-quick --write --cache .",
+    "format-all": "pnpm --filter svara-pro-server --filter svara-pro-bot --filter svara-pro-client --filter svara-pro-service-bot format-quick",
     "build": "pnpm --filter svara-pro-server build && pnpm --filter svara-pro-bot build",
     "build:client": "pnpm --filter svara-pro-client build",
     "start": "pm2-runtime start ecosystem.config.js",

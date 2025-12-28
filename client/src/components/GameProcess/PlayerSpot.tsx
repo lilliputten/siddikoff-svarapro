@@ -85,18 +85,21 @@ export function PlayerSpot({
   const [showBetAnimation, setShowBetAnimation] = useState(false);
   const [lastBet, setLastBet] = useState(player.currentBet);
 
-  const [openCards, setOpenCards] = useState(false)
+  const [openCards, setOpenCards] = useState(false);
   const [newShowWinIndicator, setNewShowWinIndicator] = useState(false);
 
   useEffect(() => {
-    console.log('shoWinIndicator!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!>>', showWinIndicator)
+    console.log(
+      "shoWinIndicator!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!>>",
+      showWinIndicator,
+    );
     if (showWinIndicator) {
       setNewShowWinIndicator(true);
       setTimeout(() => {
-        setNewShowWinIndicator(false)
-      }, 2250)
+        setNewShowWinIndicator(false);
+      }, 2250);
     }
-  }, [showWinIndicator])
+  }, [showWinIndicator]);
 
   const buttonTextStyle: React.CSSProperties = {
     fontWeight: 700,
@@ -225,17 +228,18 @@ export function PlayerSpot({
     </div>
   );
 
-  const CardDeckComponent = (type: string) =>  {
-    if (type == 'right') {
-      return <div className="flex flex-col items-center space-y-1">
+  const CardDeckComponent = (type: string) => {
+    if (type == "right") {
+      return (
+        <div className="flex flex-col items-center space-y-1">
           <div className="relative" style={{ width: "42px", height: "42px" }}>
             <img
               src={cardBack}
               alt="card back"
               className="absolute rounded-sm"
               style={{
-                width: '32px',
-                height: '44px',
+                width: "32px",
+                height: "44px",
                 zIndex: 3,
                 top: "0",
                 left: "0",
@@ -246,8 +250,8 @@ export function PlayerSpot({
               alt="card back"
               className="absolute rounded-sm"
               style={{
-                width: '32px',
-                height: '44px',
+                width: "32px",
+                height: "44px",
                 zIndex: 2,
                 top: "0",
                 left: "4px",
@@ -258,17 +262,19 @@ export function PlayerSpot({
               alt="card back"
               className="absolute rounded-sm"
               style={{
-                width: '32px',
-                height: '44px',
+                width: "32px",
+                height: "44px",
                 zIndex: 1,
                 top: "0",
                 left: "8px",
               }}
             />
           </div>
-          </div>
-    } else if (type == 'left') {
-      return <div className="flex flex-col items-center space-y-1">
+        </div>
+      );
+    } else if (type == "left") {
+      return (
+        <div className="flex flex-col items-center space-y-1">
           <div className="relative" style={{ width: "42px", height: "42px" }}>
             <img
               src={cardBack}
@@ -307,9 +313,11 @@ export function PlayerSpot({
               }}
             />
           </div>
-          </div>
+        </div>
+      );
     } else {
-      return <div className="flex flex-col items-center space-y-1">
+      return (
+        <div className="flex flex-col items-center space-y-1">
           <div className="relative" style={{ width: "42px", height: "42px" }}>
             <img
               src={cardBack}
@@ -348,9 +356,9 @@ export function PlayerSpot({
               }}
             />
           </div>
-          </div>
+        </div>
+      );
     }
-    
   };
 
   useEffect(() => {
@@ -499,11 +507,11 @@ export function PlayerSpot({
     if (player.hasFolded == false) {
       setTimeout(() => {
         setOpenCards(true);
-      }, 2000)
+      }, 2000);
     } else {
-      setOpenCards(false)
+      setOpenCards(false);
     }
-  }, [player])
+  }, [player]);
 
   return (
     <div
@@ -791,7 +799,6 @@ export function PlayerSpot({
             </div>
           )}
         {!hasFolded && (
-          
           <div
             className={cn(
               "absolute z-30 top-8 -translate-y-1/2 flex items-center space-x-2",
@@ -800,37 +807,49 @@ export function PlayerSpot({
                 "-left-[13px]": cardSide === "left",
                 "left-[53%] -translate-x-[25%]":
                   openCardsPosition === "bottom" || openCardsPosition === "top",
-             
-                "left-[53px]": openCardsPosition === "top" || openCardsPosition === "bottom",
-              }
+
+                "left-[53px]":
+                  openCardsPosition === "top" || openCardsPosition === "bottom",
+              },
             )}
           >
             <div
               className={`transition delay-3400 ${
-                (!(isCurrentUser && hasLooked) &&
-              gameState?.status !== "finished" &&
-              gameState?.status !== "waiting" &&
-              gameState?.status !== "ante" &&
-              gameState?.status !== "showdown") ?
-              'opacity-100'
-              :
-              'opacity-0'
+                !(isCurrentUser && hasLooked) &&
+                gameState?.status !== "finished" &&
+                gameState?.status !== "waiting" &&
+                gameState?.status !== "ante" &&
+                gameState?.status !== "showdown"
+                  ? "opacity-100"
+                  : "opacity-0"
               }`}
-            
             >
               {CardDeckComponent(cardSide)}
             </div>
-            
-                
-           
           </div>
         )}
         <div className="absolute w-full h-full top-[0] -left-[0]">
-            {cardSide === "left" && !isCurrentUser && <div className="absolute left-[-55px] top-[23px]">{TotalBetComponent}</div>}
-            
-            {cardSide === "right" && !isCurrentUser && <div className="absolute right-[-52px] top-[23px]">{TotalBetComponent}</div>}
-            {cardSide === "top" && !isCurrentUser && <div className="absolute left-1/2 transform -translate-x-1/2 bottom-[-40px]">{TotalBetComponent}</div>}
-            {cardSide === "bottom" && !isCurrentUser && <div className="absolute left-[16px] top-[-56px]">{TotalBetComponent}</div>}
+          {cardSide === "left" && !isCurrentUser && (
+            <div className="absolute left-[-55px] top-[23px]">
+              {TotalBetComponent}
+            </div>
+          )}
+
+          {cardSide === "right" && !isCurrentUser && (
+            <div className="absolute right-[-52px] top-[23px]">
+              {TotalBetComponent}
+            </div>
+          )}
+          {cardSide === "top" && !isCurrentUser && (
+            <div className="absolute left-1/2 transform -translate-x-1/2 bottom-[-40px]">
+              {TotalBetComponent}
+            </div>
+          )}
+          {cardSide === "bottom" && !isCurrentUser && (
+            <div className="absolute left-[16px] top-[-56px]">
+              {TotalBetComponent}
+            </div>
+          )}
         </div>
         {/* {(() => {
           // For other players, show last action amount
@@ -895,8 +914,6 @@ export function PlayerSpot({
             </div>
           )}
       </div>
-
-    
     </div>
   );
 }

@@ -1,5 +1,5 @@
-import { backButton, isTMA } from '@telegram-apps/sdk-react';
-import { useEffect } from 'react';
+import { backButton, isTMA } from "@telegram-apps/sdk-react";
+import { useEffect } from "react";
 
 export const useAppBackButton = (isVisible: boolean, handler: () => void) => {
   useEffect(() => {
@@ -7,18 +7,20 @@ export const useAppBackButton = (isVisible: boolean, handler: () => void) => {
     if (!isVisible) return;
 
     if (!isTMA()) {
-      console.warn('Not in Telegram environment. BackButton will not be used.');
+      console.warn("Not in Telegram environment. BackButton will not be used.");
       return;
     }
 
     if (!window.Telegram?.WebApp) {
-      console.warn('Telegram WebApp is not available. BackButton will not be used.');
+      console.warn(
+        "Telegram WebApp is not available. BackButton will not be used.",
+      );
       return;
     }
 
     try {
       if (!backButton.isSupported()) {
-        console.warn('BackButton is not supported in this environment');
+        console.warn("BackButton is not supported in this environment");
         return;
       }
 
@@ -30,11 +32,11 @@ export const useAppBackButton = (isVisible: boolean, handler: () => void) => {
           backButton.offClick(handler);
           backButton.hide();
         } catch (e) {
-          console.error('Error cleaning up BackButton handler:', e);
+          console.error("Error cleaning up BackButton handler:", e);
         }
       };
     } catch (e) {
-      console.error('Error managing BackButton:', e);
+      console.error("Error managing BackButton:", e);
     }
   }, [isVisible, handler]);
 };

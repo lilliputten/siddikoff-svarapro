@@ -4,7 +4,7 @@ import { FinancesService } from '../../finances/finances.service';
 
 @Injectable()
 export class BettingService {
-  constructor(private financesService: FinancesService) { }
+  constructor(private financesService: FinancesService) {}
 
   // Обработка анте (входной ставки)
   processAnte(
@@ -18,7 +18,9 @@ export class BettingService {
     const actions: GameAction[] = [];
 
     // ПРАВИЛЬНО: Считаем активных игроков для определения логики fold
-    const activePlayers = updatedGameState.players.filter(p => p.isActive && !p.hasFolded);
+    const activePlayers = updatedGameState.players.filter(
+      (p) => p.isActive && !p.hasFolded,
+    );
 
     for (let i = 0; i < updatedGameState.players.length; i++) {
       const player = updatedGameState.players[i];
@@ -70,12 +72,18 @@ export class BettingService {
   // Централизованная функция определения якоря
   getAnchorPlayerIndex(gameState: GameState): number {
     // В betting фазе якорем является последний raise
-    if (gameState.status === 'betting' && gameState.lastRaiseIndex !== undefined) {
+    if (
+      gameState.status === 'betting' &&
+      gameState.lastRaiseIndex !== undefined
+    ) {
       return gameState.lastRaiseIndex;
     }
 
     // В blind_betting фазе якорем является последний blind bettor
-    if (gameState.status === 'blind_betting' && gameState.lastBlindBettorIndex !== undefined) {
+    if (
+      gameState.status === 'blind_betting' &&
+      gameState.lastBlindBettorIndex !== undefined
+    ) {
       return gameState.lastBlindBettorIndex;
     }
 
@@ -85,8 +93,10 @@ export class BettingService {
 
   // Упрощенная проверка завершения круга ставок
   isBettingRoundComplete(gameState: GameState): boolean {
-    const activePlayers = gameState.players.filter(p => p.isActive && !p.hasFolded);
-    const playersWhoCanAct = activePlayers.filter(p => p.balance > 0);
+    const activePlayers = gameState.players.filter(
+      (p) => p.isActive && !p.hasFolded,
+    );
+    const playersWhoCanAct = activePlayers.filter((p) => p.balance > 0);
 
     // Если действовать может меньше 2-х игроков - круг окончен
     if (playersWhoCanAct.length < 2) {
@@ -98,11 +108,11 @@ export class BettingService {
 
     // Круг окончен, если ход вернулся к якорю
     if (gameState.currentPlayerIndex === anchorIndex) {
-      const playersWithMoney = activePlayers.filter(p => p.balance > 0);
+      const playersWithMoney = activePlayers.filter((p) => p.balance > 0);
       if (playersWithMoney.length === 0) return true;
 
       const firstBet = playersWithMoney[0].totalBet;
-      return playersWithMoney.every(p => p.totalBet === firstBet);
+      return playersWithMoney.every((p) => p.totalBet === firstBet);
     }
 
     return false;
@@ -125,7 +135,7 @@ export class BettingService {
 
     // Если rake > 0, добавляем его в системный кошелек
     if (rake > 0) {
-      this.financesService.addToSystemWallet(rake).catch(err => {
+      this.financesService.addToSystemWallet(rake).catch((err) => {
         console.error('Failed to add rake to system wallet', err);
       });
     }
@@ -176,7 +186,11 @@ export class BettingService {
   }
 
   // Упрощенная проверка возможности действия
-  canPerformAction(player: Player, action: string, gameState: GameState): {
+  canPerformAction(
+    player: Player,
+    action: string,
+    gameState: GameState,
+  ): {
     canPerform: boolean;
     error?: string;
   } {
@@ -187,19 +201,27 @@ export class BettingService {
     // Простые проверки по типу действия
     switch (action) {
       case 'blind_bet':
-        return { canPerform: !player.hasLooked, error: 'Вы уже посмотрели карты' };
+        return {
+          canPerform: !player.hasLooked,
+          error: 'Вы уже посмотрели карты',
+        };
 
       case 'look':
-        return { canPerform: !player.hasLooked, error: 'Вы уже посмотрели карты' };
+        return {
+          canPerform: !player.hasLooked,
+          error: 'Вы уже посмотрели карты',
+        };
 
       case 'call':
         if (gameState.status === 'betting') return { canPerform: true };
-        if (gameState.status === 'blind_betting' && player.hasLookedAndMustAct) return { canPerform: true };
+        if (gameState.status === 'blind_betting' && player.hasLookedAndMustAct)
+          return { canPerform: true };
         return { canPerform: false, error: 'Сейчас нельзя уравнивать' };
 
       case 'raise':
         if (gameState.status === 'betting') return { canPerform: true };
-        if (gameState.status === 'blind_betting' && player.hasLookedAndMustAct) return { canPerform: true };
+        if (gameState.status === 'blind_betting' && player.hasLookedAndMustAct)
+          return { canPerform: true };
         return { canPerform: false, error: 'Сейчас нельзя повышать' };
 
       case 'fold':

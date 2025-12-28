@@ -91,7 +91,7 @@ export const playersMocks = [
     lastWinAmount: 0,
     inactivityCount: 1,
   },
-    {
+  {
     id: "4",
     username: "player_four",
     avatar: "https://i.pravatar.cc/150?img=2",

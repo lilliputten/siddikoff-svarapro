@@ -31,4 +31,4 @@ import { SystemWallet } from '../../entities/system-wallet.entity';
   ],
   exports: [FinancesService],
 })
-export class FinancesModule { }
+export class FinancesModule {}

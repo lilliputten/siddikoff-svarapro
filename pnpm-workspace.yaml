@@ -6,8 +6,8 @@ packages:
   - service-bot
 
 onlyBuiltDependencies:
-  - '@nestjs/core'
-  - '@swc/core'
+  - "@nestjs/core"
+  - "@swc/core"
   - bcrypt
   - esbuild
   - msgpackr-extract

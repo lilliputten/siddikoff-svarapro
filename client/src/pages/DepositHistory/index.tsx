@@ -1,11 +1,11 @@
-import closeIcon from '@/assets/close.png';
-import tonIcon from '@/assets/ton.png';
-import tetherIcon from '@/assets/tetherRound.png';
-import React, { useEffect, useState } from 'react';
-import { apiService } from '@/services/api/api';
-import { useTranslation } from 'react-i18next';
-import { Transaction } from '@/types/entities';
-import { DepositHistoryProps } from '@/types/components';
+import closeIcon from "@/assets/close.png";
+import tonIcon from "@/assets/ton.png";
+import tetherIcon from "@/assets/tetherRound.png";
+import React, { useEffect, useState } from "react";
+import { apiService } from "@/services/api/api";
+import { useTranslation } from "react-i18next";
+import { Transaction } from "@/types/entities";
+import { DepositHistoryProps } from "@/types/components";
 
 const truncateTrackerId = (id: string) => {
   if (id.length <= 15) {
@@ -16,18 +16,21 @@ const truncateTrackerId = (id: string) => {
 const formatDate = (dateString: string) => {
   const date = new Date(dateString);
   const options: Intl.DateTimeFormatOptions = {
-    day: 'numeric',
-    month: 'short',
-    year: 'numeric',
-    hour: 'numeric',
-    minute: '2-digit',
+    day: "numeric",
+    month: "short",
+    year: "numeric",
+    hour: "numeric",
+    minute: "2-digit",
     hour12: true,
   };
-  return date.toLocaleString('en-US', options).replace(',', '');
+  return date.toLocaleString("en-US", options).replace(",", "");
 };
 
-export function DepositHistory({ setCurrentPage, userId }: DepositHistoryProps) {
-  const { t } = useTranslation('common');
+export function DepositHistory({
+  setCurrentPage,
+  userId,
+}: DepositHistoryProps) {
+  const { t } = useTranslation("common");
   const [transactions, setTransactions] = useState<Transaction[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -36,7 +39,7 @@ export function DepositHistory({ setCurrentPage, userId }: DepositHistoryProps) 
   const handleCloseButtonPress = () => {
     setIsCloseButtonPressed(true);
     setTimeout(() => setIsCloseButtonPressed(false), 300);
-    setTimeout(() => setCurrentPage('more'), 100);
+    setTimeout(() => setCurrentPage("more"), 100);
   };
 
   useEffect(() => {
@@ -47,12 +50,15 @@ export function DepositHistory({ setCurrentPage, userId }: DepositHistoryProps) 
         // Приведение типов для currency
         const formattedData: Transaction[] = data.map((item) => ({
           ...item,
-          currency: item.currency === 'USDTTON' || item.currency === 'TON' ? item.currency : 'USDTTON', // Дефолтное значение, если currency некорректна
+          currency:
+            item.currency === "USDTTON" || item.currency === "TON"
+              ? item.currency
+              : "USDTTON", // Дефолтное значение, если currency некорректна
         }));
         setTransactions(formattedData);
       } catch (err) {
-        setError('Failed to load transaction history');
-        console.error('Error fetching transactions:', err);
+        setError("Failed to load transaction history");
+        console.error("Error fetching transactions:", err);
       } finally {
         setIsLoading(false);
       }
@@ -75,11 +81,19 @@ export function DepositHistory({ setCurrentPage, userId }: DepositHistoryProps) 
         <div className="w-full flex justify-between items-center mb-4">
           <h2
             className="text-xl font-semibold text-white flex items-center text-left leading-tight tracking-tighter"
-            style={{ fontSize: '20px', fontWeight: 600, lineHeight: '100%', letterSpacing: '-1.1%' }}
+            style={{
+              fontSize: "20px",
+              fontWeight: 600,
+              lineHeight: "100%",
+              letterSpacing: "-1.1%",
+            }}
           >
-            {t('deposit_history')}
+            {t("deposit_history")}
           </h2>
-          <button onClick={handleCloseButtonPress} className={`z-10 ${isCloseButtonPressed ? 'button-press' : ''}`}>
+          <button
+            onClick={handleCloseButtonPress}
+            className={`z-10 ${isCloseButtonPressed ? "button-press" : ""}`}
+          >
             <img src={closeIcon} alt="Close" className="w-6 h-6" />
           </button>
         </div>
@@ -87,7 +101,9 @@ export function DepositHistory({ setCurrentPage, userId }: DepositHistoryProps) 
         {/* Список транзакций */}
         <div className="w-full max-w-[320px] flex flex-col gap-4 overflow-y-auto">
           {transactions.length === 0 ? (
-            <div className="text-white/60 text-center">{t('no_transactions_found')}</div>
+            <div className="text-white/60 text-center">
+              {t("no_transactions_found")}
+            </div>
           ) : (
             transactions.map((transaction, index) => (
               <React.Fragment key={transaction.tracker_id}>
@@ -95,10 +111,14 @@ export function DepositHistory({ setCurrentPage, userId }: DepositHistoryProps) 
                   {/* Первая секция: Иконка */}
                   <div
                     className="w-[52px] h-[52px] rounded-lg flex items-center justify-center mr-3"
-                    style={{ backgroundColor: '#35333B' }}
+                    style={{ backgroundColor: "#35333B" }}
                   >
                     <img
-                      src={transaction.currency === 'USDTTON' ? tetherIcon : tonIcon}
+                      src={
+                        transaction.currency === "USDTTON"
+                          ? tetherIcon
+                          : tonIcon
+                      }
                       alt={transaction.currency}
                       className="w-[32px] h-[32px]"
                     />
@@ -111,25 +131,27 @@ export function DepositHistory({ setCurrentPage, userId }: DepositHistoryProps) 
                       <span
                         style={{
                           fontWeight: 500,
-                          fontStyle: 'normal',
-                          fontSize: '14px',
-                          lineHeight: '150%',
-                          letterSpacing: '-1.1%',
-                          verticalAlign: 'middle',
-                          color: '#FFFFFF',
+                          fontStyle: "normal",
+                          fontSize: "14px",
+                          lineHeight: "150%",
+                          letterSpacing: "-1.1%",
+                          verticalAlign: "middle",
+                          color: "#FFFFFF",
                         }}
                       >
-                        {transaction.type === 'deposit' ? 'Пополнение' : 'Вывод'}
+                        {transaction.type === "deposit"
+                          ? "Пополнение"
+                          : "Вывод"}
                       </span>
                       <span
                         style={{
                           fontWeight: 400,
-                          fontStyle: 'normal',
-                          fontSize: '12px',
-                          lineHeight: '100%',
-                          letterSpacing: '0%',
-                          verticalAlign: 'middle',
-                          color: 'rgba(255, 255, 255, 0.6)',
+                          fontStyle: "normal",
+                          fontSize: "12px",
+                          lineHeight: "100%",
+                          letterSpacing: "0%",
+                          verticalAlign: "middle",
+                          color: "rgba(255, 255, 255, 0.6)",
                         }}
                       >
                         Transaction ID
@@ -137,12 +159,12 @@ export function DepositHistory({ setCurrentPage, userId }: DepositHistoryProps) 
                       <span
                         style={{
                           fontWeight: 400,
-                          fontStyle: 'normal',
-                          fontSize: '12px',
-                          lineHeight: '100%',
-                          letterSpacing: '0%',
-                          verticalAlign: 'middle',
-                          color: '#FFFFFF',
+                          fontStyle: "normal",
+                          fontSize: "12px",
+                          lineHeight: "100%",
+                          letterSpacing: "0%",
+                          verticalAlign: "middle",
+                          color: "#FFFFFF",
                         }}
                       >
                         {truncateTrackerId(transaction.tracker_id)}
@@ -154,33 +176,33 @@ export function DepositHistory({ setCurrentPage, userId }: DepositHistoryProps) 
                       <span
                         style={{
                           fontWeight: 700,
-                          fontStyle: 'normal',
-                          fontSize: '16px',
-                          lineHeight: '100%',
-                          letterSpacing: '0%',
-                          textAlign: 'right',
-                          verticalAlign: 'middle',
-                          color: '#FFFFFF',
+                          fontStyle: "normal",
+                          fontSize: "16px",
+                          lineHeight: "100%",
+                          letterSpacing: "0%",
+                          textAlign: "right",
+                          verticalAlign: "middle",
+                          color: "#FFFFFF",
                         }}
                       >
                         ${transaction.amount}
                       </span>
                       <span
                         className={
-                          transaction.status === 'canceled'
-                            ? 'text-red-500'
-                            : transaction.status === 'pending'
-                            ? 'text-orange-500'
-                            : 'text-green-500'
+                          transaction.status === "canceled"
+                            ? "text-red-500"
+                            : transaction.status === "pending"
+                              ? "text-orange-500"
+                              : "text-green-500"
                         }
                         style={{
                           fontWeight: 400,
-                          fontStyle: 'normal',
-                          fontSize: '12px',
-                          lineHeight: '100%',
-                          letterSpacing: '0%',
-                          textAlign: 'right',
-                          verticalAlign: 'middle',
+                          fontStyle: "normal",
+                          fontSize: "12px",
+                          lineHeight: "100%",
+                          letterSpacing: "0%",
+                          textAlign: "right",
+                          verticalAlign: "middle",
                         }}
                       >
                         {transaction.status}
@@ -188,13 +210,13 @@ export function DepositHistory({ setCurrentPage, userId }: DepositHistoryProps) 
                       <span
                         style={{
                           fontWeight: 400,
-                          fontStyle: 'normal',
-                          fontSize: '12px',
-                          lineHeight: '100%',
-                          letterSpacing: '0%',
-                          textAlign: 'right',
-                          verticalAlign: 'middle',
-                          color: 'rgba(255, 255, 255, 0.6)',
+                          fontStyle: "normal",
+                          fontSize: "12px",
+                          lineHeight: "100%",
+                          letterSpacing: "0%",
+                          textAlign: "right",
+                          verticalAlign: "middle",
+                          color: "rgba(255, 255, 255, 0.6)",
                         }}
                       >
                         {formatDate(transaction.createdAt)}
@@ -206,7 +228,11 @@ export function DepositHistory({ setCurrentPage, userId }: DepositHistoryProps) 
                 {index < transactions.length - 1 && (
                   <hr
                     className="border-white/25 w-[320px] mt-4"
-                    style={{ borderWidth: '1px', borderStyle: 'dashed', borderImage: '2 5' }}
+                    style={{
+                      borderWidth: "1px",
+                      borderStyle: "dashed",
+                      borderImage: "2 5",
+                    }}
                   />
                 )}
               </React.Fragment>

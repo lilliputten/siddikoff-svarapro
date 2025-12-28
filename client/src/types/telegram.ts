@@ -1,4 +1,4 @@
-import { LaunchParams } from '@telegram-apps/sdk-react';
+import { LaunchParams } from "@telegram-apps/sdk-react";
 
 // Интерфейс для Telegram WebApp
 interface TelegramWebApp {

@@ -1,7 +1,7 @@
-import { Socket } from 'socket.io-client';
-import { Page } from './page';
-import { UserData } from './entities';
-import React from 'react';
+import { Socket } from "socket.io-client";
+import { Page } from "./page";
+import { UserData } from "./entities";
+import React from "react";
 
 export type DashboardProps = {
   onMoreClick: () => void;
@@ -63,7 +63,13 @@ export type PopSuccessProps = {
   onClose: () => void;
 };
 
-export type NotificationType = 'invalidAddress' | 'addressAlreadyUsed' | 'addressAdded' | 'comingSoon' | 'insufficientBalance' | 'gameJoinError';
+export type NotificationType =
+  | "invalidAddress"
+  | "addressAlreadyUsed"
+  | "addressAdded"
+  | "comingSoon"
+  | "insufficientBalance"
+  | "gameJoinError";
 
 export type NotificationProps = {
   type: NotificationType | null;
@@ -87,25 +93,25 @@ export type EulaProps = {
 };
 
 export type ErrorAlertProps = {
-  code?: keyof typeof import('@/locales/en/errors.json');
+  code?: keyof typeof import("@/locales/en/errors.json");
   customMessage?: string;
   className?: string;
-  severity?: 'error' | 'warning';
+  severity?: "error" | "warning";
 };
 
 export type ButtonProps = {
   children: React.ReactNode;
   onClick?: () => void;
-  variant?: 'primary' | 'secondary' | 'tertiary';
-  size?: 'sm' | 'md' | 'lg' | 'xl';
+  variant?: "primary" | "secondary" | "tertiary";
+  size?: "sm" | "md" | "lg" | "xl";
   fullWidth?: boolean;
   icon?: string;
   typeLeftButton?: boolean;
-  iconPosition?: 'left' | 'right';
-  layout?: 'horizontal' | 'vertical';
+  iconPosition?: "left" | "right";
+  layout?: "horizontal" | "vertical";
   iconClassName?: string;
   isActive?: boolean;
-  justify?: 'start' | 'center' | 'end';
+  justify?: "start" | "center" | "end";
   rightIcon?: string;
   rightText?: string;
   rightContentClassName?: string;
@@ -114,7 +120,7 @@ export type ButtonProps = {
 
 export type EnterGameMenuProps = {
   onClose: () => void;
-  openModal: (modal: 'createPublic' | 'createPrivate' | 'connectRoom') => void;
+  openModal: (modal: "createPublic" | "createPrivate" | "connectRoom") => void;
 };
 
 export type HeaderProps = {

@@ -1,4 +1,10 @@
-import { init, backButton, expandViewport, swipeBehavior, isTMA } from '@telegram-apps/sdk-react';
+import {
+  init,
+  backButton,
+  expandViewport,
+  swipeBehavior,
+  isTMA,
+} from "@telegram-apps/sdk-react";
 
 let isInitialized = false;
 
@@ -9,13 +15,17 @@ export async function initTelegramSdk(): Promise<void> {
 
   // Проверяем наличие Telegram WebApp
   if (!window.Telegram?.WebApp) {
-    console.error('Telegram WebApp is not available. Ensure the app is running in Telegram.');
-    throw new Error('Telegram WebApp is not available');
+    console.error(
+      "Telegram WebApp is not available. Ensure the app is running in Telegram.",
+    );
+    throw new Error("Telegram WebApp is not available");
   }
 
   if (!isTMA()) {
-    console.warn('Not running in Telegram Mini App environment (isTMA returned false). Skipping SDK initialization.');
-    throw new Error('Not in Telegram Mini App environment');
+    console.warn(
+      "Not running in Telegram Mini App environment (isTMA returned false). Skipping SDK initialization.",
+    );
+    throw new Error("Not in Telegram Mini App environment");
   }
 
   try {
@@ -26,7 +36,7 @@ export async function initTelegramSdk(): Promise<void> {
     if (backButton.isSupported()) {
       await backButton.mount();
     } else {
-      console.warn('BackButton is not supported in this environment');
+      console.warn("BackButton is not supported in this environment");
     }
 
     await swipeBehavior.mount();
@@ -34,7 +44,7 @@ export async function initTelegramSdk(): Promise<void> {
 
     isInitialized = true;
   } catch (e) {
-    console.error('Telegram SDK init error:', e);
+    console.error("Telegram SDK init error:", e);
     isInitialized = false;
     throw e;
   }

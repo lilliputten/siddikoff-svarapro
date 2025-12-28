@@ -10,6 +10,7 @@
 Запрос на получение списка доступных банков.
 
 **Запрос:**
+
 ```bash
 curl -s -X GET 'https://rest.noros.org/api/v1/banks' \
 -H 'Content-Type: application/json' \
@@ -17,6 +18,7 @@ curl -s -X GET 'https://rest.noros.org/api/v1/banks' \
 ```
 
 **Результат:**
+
 ```json
 [
   {
@@ -41,6 +43,7 @@ curl -s -X GET 'https://rest.noros.org/api/v1/banks' \
 Попытка создать транзакцию с `bankId: 1`.
 
 **Запрос:**
+
 ```bash
 curl -s -X POST 'https://rest.noros.org/api/v1/transaction' \
 -H 'Content-Type: application/json' \
@@ -54,6 +57,7 @@ curl -s -X POST 'https://rest.noros.org/api/v1/transaction' \
 ```
 
 **Результат:**
+
 ```json
 {
   "amount": 1000,
@@ -67,6 +71,7 @@ curl -s -X POST 'https://rest.noros.org/api/v1/transaction' \
   "closeAt": null
 }
 ```
+
 **Проблема:** Ответ не содержит полей `card`, `cardOwner`, `bankReceiver`, `manual`, как указано в документации.
 
 ---
@@ -76,6 +81,7 @@ curl -s -X POST 'https://rest.noros.org/api/v1/transaction' \
 Попытка подтвердить транзакцию (принять условия), как описано в документации (`PATCH /transaction/{transId}`).
 
 **Запрос:**
+
 ```bash
 curl -v -X PATCH 'https://rest.noros.org/api/v1/transaction/6561199' \
 -H 'Content-Type: application/json' \
@@ -84,15 +90,19 @@ curl -v -X PATCH 'https://rest.noros.org/api/v1/transaction/6561199' \
 ```
 
 **Результат:** `403 Forbidden`
+
 ```json
 {
   "message": "No free requisites for the selected bank. Please try again later."
 }
 ```
-**Проблема:** Этот шаг завершается ошибкой, которая указывает на отсутствие свободных реквизитов у провайдера для *любого* из доступных банков. Без успешного выполнения этого шага, реквизиты для оплаты так и не появляются.
+
+**Проблема:** Этот шаг завершается ошибкой, которая указывает на отсутствие свободных реквизитов у провайдера для _любого_ из доступных банков. Без успешного выполнения этого шага, реквизиты для оплаты так и не появляются.
 
 ## Вопрос к поддержке
 
 Не могли бы вы пояснить, пожалуйста, правильный порядок действий для создания платежа и получения реквизитов? Почему `POST /transaction` не возвращает реквизиты сразу, и при каких условиях `PATCH /transaction/{transId}` будет выполнен успешно?
+
+```
 
 ```

@@ -1,8 +1,8 @@
 export type Transaction = {
-  type: 'deposit' | 'withdraw';
-  currency: 'USDTTON' | 'TON';
+  type: "deposit" | "withdraw";
+  currency: "USDTTON" | "TON";
   amount: number;
-  status: 'canceled' | 'pending' | 'confirmed';
+  status: "canceled" | "pending" | "confirmed";
   tracker_id: string;
   createdAt: string;
 };
@@ -23,13 +23,15 @@ export interface UserProfile {
   walletAddress?: string | null;
 }
 
-export type ApiError = {
-  message?: string;
-  response?: {
-    data?: unknown;
-    status?: number;
-  };
-} | string;
+export type ApiError =
+  | {
+      message?: string;
+      response?: {
+        data?: unknown;
+        status?: number;
+      };
+    }
+  | string;
 
 export type PageData = {
   address?: string;

@@ -134,8 +134,8 @@ export const PlayerBetAnimation = ({
               transitionDelay: `${chip.delay}ms`,
             }}
           />,
-          document.body
-        )
+          document.body,
+        ),
       )}
     </div>
   );

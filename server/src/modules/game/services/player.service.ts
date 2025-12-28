@@ -148,28 +148,28 @@ export class PlayerService {
 
   // Упрощенный поиск следующего активного игрока
   findNextActivePlayer(players: Player[], currentIndex: number): number {
-    const activePlayers = players.filter(p => p.isActive && !p.hasFolded);
-    
+    const activePlayers = players.filter((p) => p.isActive && !p.hasFolded);
+
     // Если нет активных игроков, возвращаем -1 (игра должна завершиться)
     if (activePlayers.length === 0) {
       return -1;
     }
-    
+
     // Если только один активный игрок, игра должна завершиться
     if (activePlayers.length === 1) {
       return -1;
     }
-    
+
     // Ищем следующего активного игрока
     for (let i = 1; i <= players.length; i++) {
       const nextIndex = (currentIndex + i) % players.length;
       const player = players[nextIndex];
-      
+
       if (player.isActive && !player.hasFolded) {
         return nextIndex;
       }
     }
-    
+
     return -1; // Если не нашли, возвращаем -1
   }
 }

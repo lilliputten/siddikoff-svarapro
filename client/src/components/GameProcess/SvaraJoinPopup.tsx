@@ -1,10 +1,10 @@
-import { useState, useEffect, useRef } from 'react';
-import { GameState, Player } from '@/types/game';
-import { UserData } from '@/types/entities';
-import { StyledContainer } from '../StyledContainer';
-import starIcon from '@/assets/game/star.png';
-import defaultAvatar from '@/assets/main_logo.png';
-import { useTranslation } from 'react-i18next';
+import { useState, useEffect, useRef } from "react";
+import { GameState, Player } from "@/types/game";
+import { UserData } from "@/types/entities";
+import { StyledContainer } from "../StyledContainer";
+import starIcon from "@/assets/game/star.png";
+import defaultAvatar from "@/assets/main_logo.png";
+import { useTranslation } from "react-i18next";
 
 interface SvaraJoinPopupProps {
   gameState: GameState;
@@ -18,32 +18,32 @@ interface SvaraJoinPopupProps {
 const SvaraAvatar = ({ player }: { player: Player }) => {
   return (
     <div className="relative flex flex-col items-center mx-2">
-      <div 
+      <div
         className="relative rounded-full flex items-center justify-center"
-        style={{ 
-          width: '71px', 
-          height: '71px', 
-          background: '#232228',
-          boxShadow: '0px 0px 4px 2px #EC8800'
+        style={{
+          width: "71px",
+          height: "71px",
+          background: "#232228",
+          boxShadow: "0px 0px 4px 2px #EC8800",
         }}
       >
-        <img 
+        <img
           src={player.avatar || defaultAvatar}
           alt={player.username}
           className="rounded-full object-cover"
-          style={{ width: '65px', height: '65px' }}
+          style={{ width: "65px", height: "65px" }}
         />
       </div>
       {player.score !== undefined && (
-        <div 
+        <div
           className="absolute -bottom-3 flex items-center justify-center text-white"
           style={{
-            width: '22px',
-            height: '22px',
-            backgroundColor: '#FF443A',
-            borderRadius: '50%',
+            width: "22px",
+            height: "22px",
+            backgroundColor: "#FF443A",
+            borderRadius: "50%",
             fontWeight: 500,
-            fontSize: '14px'
+            fontSize: "14px",
           }}
         >
           {player.score}
@@ -53,8 +53,12 @@ const SvaraAvatar = ({ player }: { player: Player }) => {
   );
 };
 
-export function SvaraJoinPopup({ gameState, userData, actions }: SvaraJoinPopupProps) {
-  const { t } = useTranslation('common');
+export function SvaraJoinPopup({
+  gameState,
+  userData,
+  actions,
+}: SvaraJoinPopupProps) {
+  const { t } = useTranslation("common");
   const [timer, setTimer] = useState(20);
   const popupRef = useRef<HTMLDivElement>(null);
 
@@ -76,20 +80,26 @@ export function SvaraJoinPopup({ gameState, userData, actions }: SvaraJoinPopupP
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
-      if (popupRef.current && !popupRef.current.contains(event.target as Node)) {
+      if (
+        popupRef.current &&
+        !popupRef.current.contains(event.target as Node)
+      ) {
         actions.skipSvara();
       }
     };
 
-    document.addEventListener('mousedown', handleClickOutside);
+    document.addEventListener("mousedown", handleClickOutside);
     return () => {
-      document.removeEventListener('mousedown', handleClickOutside);
+      document.removeEventListener("mousedown", handleClickOutside);
     };
   }, [actions, popupRef]);
 
   const svaraWinners = gameState.winners || [];
-  const isParticipant = svaraWinners.some(p => p.id === userData.id?.toString());
-  const hasConfirmed = gameState.svaraConfirmed?.includes(userData.id?.toString() || '') || false;
+  const isParticipant = svaraWinners.some(
+    (p) => p.id === userData.id?.toString(),
+  );
+  const hasConfirmed =
+    gameState.svaraConfirmed?.includes(userData.id?.toString() || "") || false;
 
   const renderAvatars = () => {
     if (svaraWinners.length === 2) {
@@ -98,7 +108,7 @@ export function SvaraJoinPopup({ gameState, userData, actions }: SvaraJoinPopupP
           <SvaraAvatar player={svaraWinners[0]} />
           <div className="flex items-center mx-4">
             <img src={starIcon} alt="*" className="w-6 h-6" />
-            <h1 className="font-semibold text-xl mx-2">{t('svara')}</h1>
+            <h1 className="font-semibold text-xl mx-2">{t("svara")}</h1>
             <img src={starIcon} alt="*" className="w-6 h-6" />
           </div>
           <SvaraAvatar player={svaraWinners[1]} />
@@ -115,7 +125,7 @@ export function SvaraJoinPopup({ gameState, userData, actions }: SvaraJoinPopupP
             <SvaraAvatar player={svaraWinners[0]} />
             <div className="flex items-center mx-4">
               <img src={starIcon} alt="*" className="w-6 h-6" />
-              <h1 className="font-semibold text-xl mx-2">{t('svara')}</h1>
+              <h1 className="font-semibold text-xl mx-2">{t("svara")}</h1>
               <img src={starIcon} alt="*" className="w-6 h-6" />
             </div>
             <SvaraAvatar player={svaraWinners[1]} />
@@ -137,45 +147,51 @@ export function SvaraJoinPopup({ gameState, userData, actions }: SvaraJoinPopupP
               {isParticipant ? (
                 <>
                   <p className="font-bold text-sm mb-3">
-                    {hasConfirmed ? t('waiting_for_other_players') : t('svara_will_you_participate')}
+                    {hasConfirmed
+                      ? t("waiting_for_other_players")
+                      : t("svara_will_you_participate")}
                   </p>
-                  <button 
+                  <button
                     onClick={hasConfirmed ? undefined : actions.joinSvara}
                     className={`w-[224px] h-[32px] rounded-lg text-white font-bold text-sm mb-2 ${
-                      hasConfirmed 
-                        ? 'bg-gray-500 cursor-not-allowed opacity-70' 
-                        : 'bg-[#00AF17] hover:bg-[#00AF17]/90 cursor-pointer'
+                      hasConfirmed
+                        ? "bg-gray-500 cursor-not-allowed opacity-70"
+                        : "bg-[#00AF17] hover:bg-[#00AF17]/90 cursor-pointer"
                     }`}
                     disabled={hasConfirmed}
                   >
-                    {hasConfirmed ? t('participating') : t('participate_free')}
+                    {hasConfirmed ? t("participating") : t("participate_free")}
                   </button>
-                  <button 
+                  <button
                     onClick={hasConfirmed ? undefined : actions.skipSvara}
                     className={`w-[224px] h-[32px] rounded-lg text-white font-bold text-sm ${
-                      hasConfirmed 
-                        ? 'bg-gray-500 cursor-not-allowed opacity-70' 
-                        : 'bg-[#FF443A] hover:bg-[#FF443A]/90 cursor-pointer'
+                      hasConfirmed
+                        ? "bg-gray-500 cursor-not-allowed opacity-70"
+                        : "bg-[#FF443A] hover:bg-[#FF443A]/90 cursor-pointer"
                     }`}
                     disabled={hasConfirmed}
                   >
-                    {hasConfirmed ? t('decision_made') : t('skip_with_timer', { timer })}
+                    {hasConfirmed
+                      ? t("decision_made")
+                      : t("skip_with_timer", { timer })}
                   </button>
                 </>
               ) : (
                 <>
-                  <p className="font-bold text-sm mb-3">{t('join_or_skip_svara')}</p>
-                  <button 
+                  <p className="font-bold text-sm mb-3">
+                    {t("join_or_skip_svara")}
+                  </p>
+                  <button
                     onClick={actions.joinSvara}
                     className="w-[224px] h-[32px] rounded-lg bg-[#00AF17] text-white font-bold text-sm mb-2"
                   >
-                    {t('join_svara_with_pot', { pot: gameState.pot })}
+                    {t("join_svara_with_pot", { pot: gameState.pot })}
                   </button>
-                  <button 
+                  <button
                     onClick={actions.skipSvara}
                     className="w-[224px] h-[32px] rounded-lg bg-[#FF443A] text-white font-bold text-sm"
                   >
-                    {t('skip_with_timer', { timer })}
+                    {t("skip_with_timer", { timer })}
                   </button>
                 </>
               )}

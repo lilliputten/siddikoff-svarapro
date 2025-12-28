@@ -98,27 +98,26 @@ function App() {
   const [socket, setSocket] = useState<Socket | null>(null);
   const [successMessage, setSuccessMessage] = useState<string | null>(null);
   const [notification, setNotification] = useState<NotificationType | null>(
-    null
+    null,
   );
   const [isPhoneVertical, setIsPhoneVertical] = useState(false);
 
   useEffect(() => {
-
     if (window.innerWidth >= window.innerHeight) {
       setIsPhoneVertical(false);
     } else {
       setIsPhoneVertical(true);
     }
 
-    window.addEventListener('resize', () => {
+    window.addEventListener("resize", () => {
       console.log(window.innerWidth, window.innerHeight);
       if (window.innerWidth >= window.innerHeight) {
         setIsPhoneVertical(false);
       } else {
         setIsPhoneVertical(true);
       }
-    })
-  }, [])
+    });
+  }, []);
 
   const { updateAvailable, updateApp } = useAppUpdate();
 
@@ -173,7 +172,7 @@ function App() {
                 return [key, JSON.stringify(value)];
               }
               return [key, value.toString()];
-            })
+            }),
         ).toString();
       }
 
@@ -209,7 +208,7 @@ function App() {
               ? typeof profile.balance === "number"
                 ? profile.balance.toFixed(2)
                 : parseFloat(profile.balance).toFixed(2)
-              : "0.00"
+              : "0.00",
           );
           setWalletAddress(profile.walletAddress || null);
 
@@ -245,8 +244,8 @@ function App() {
           // Создаем единое WebSocket соединение
           if (!socket) {
             const socketInstance = initSocket(profile.telegramId, {
-              username: profile.username || 'Unknown',
-              photo_url: profile.avatar || '',
+              username: profile.username || "Unknown",
+              photo_url: profile.avatar || "",
             });
             setSocket(socketInstance);
 
@@ -258,11 +257,17 @@ function App() {
               }
             };
 
-            window.addEventListener('balanceUpdated', handleBalanceUpdate as EventListener);
+            window.addEventListener(
+              "balanceUpdated",
+              handleBalanceUpdate as EventListener,
+            );
 
             // Очистка обработчика при размонтировании
             return () => {
-              window.removeEventListener('balanceUpdated', handleBalanceUpdate as EventListener);
+              window.removeEventListener(
+                "balanceUpdated",
+                handleBalanceUpdate as EventListener,
+              );
             };
           }
         } catch (error) {
@@ -276,10 +281,9 @@ function App() {
             errorMessage,
             typeof apiError === "object" && apiError.response
               ? apiError.response.data
-              : "No response data"
+              : "No response data",
           );
           setError("Failed to load data. Please try again later.");
-         
         }
       };
 
@@ -296,7 +300,11 @@ function App() {
   }, [socket]);
 
   return (
-    <AppRoot className="overflow-x-hidden" appearance={isDark ? "dark" : "light"} platform="base">
+    <AppRoot
+      className="overflow-x-hidden"
+      appearance={isDark ? "dark" : "light"}
+      platform="base"
+    >
       <SoundProvider>
         {/* Уведомление об обновлении приложения */}
         {updateAvailable && (
@@ -310,14 +318,10 @@ function App() {
             </button>
           </div>
         )}
-        {
-        !isPhoneVertical &&
-          <TurnPhoneOver/>
-        }
+        {!isPhoneVertical && <TurnPhoneOver />}
         {error ? (
           <ErrorAlert code={undefined} customMessage={error} />
-        ) 
-         : currentPage === "more" ? (
+        ) : currentPage === "more" ? (
           <More userData={userData} setCurrentPage={handleSetCurrentPage} />
         ) : currentPage === "deposit" ? (
           <Deposit setCurrentPage={handleSetCurrentPage} />

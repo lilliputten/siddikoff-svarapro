@@ -146,7 +146,6 @@ export class GameStateService {
         isParticipant, // Активен только если участник свары
       );
       updatedGameState.players[i].isDealer = i === updatedGameState.dealerIndex;
-
     }
 
     // Создаем и перемешиваем новую колоду
@@ -167,7 +166,10 @@ export class GameStateService {
   }
 
   // Матрица разрешенных переходов между фазами
-  private readonly allowedTransitions: Record<GameState['status'], GameState['status'][]> = {
+  private readonly allowedTransitions: Record<
+    GameState['status'],
+    GameState['status'][]
+  > = {
     waiting: ['ante'],
     ante: ['blind_betting', 'finished'],
     blind_betting: ['betting', 'showdown', 'finished'],
@@ -179,7 +181,10 @@ export class GameStateService {
   };
 
   // Валидация перехода между фазами
-  private isValidPhaseTransition(currentPhase: GameState['status'], nextPhase: GameState['status']): boolean {
+  private isValidPhaseTransition(
+    currentPhase: GameState['status'],
+    nextPhase: GameState['status'],
+  ): boolean {
     const allowedNextPhases = this.allowedTransitions[currentPhase];
     return allowedNextPhases ? allowedNextPhases.includes(nextPhase) : false;
   }
@@ -197,7 +202,9 @@ export class GameStateService {
 
     // Валидация перехода между фазами
     if (!this.isValidPhaseTransition(gameState.status, nextPhase)) {
-      console.error(`[PHASE_VALIDATION] Invalid phase transition from ${gameState.status} to ${nextPhase}`);
+      console.error(
+        `[PHASE_VALIDATION] Invalid phase transition from ${gameState.status} to ${nextPhase}`,
+      );
       const errorAction: GameAction = {
         type: 'join',
         telegramId: 'system',

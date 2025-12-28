@@ -127,54 +127,58 @@ export class GameGateway implements OnGatewayDisconnect, OnGatewayInit {
   ): Promise<void> {
     const { roomId, action, amount } = payload;
     const telegramId = this.getTelegramId(client);
-    
+
     // 🔥 ИСПРАВЛЕННАЯ ЗАЩИТА ОТ ДУБЛИРОВАНИЯ
     // Используем client.id вместо telegramId для уникальности
     const clientKey = `${client.id}-${action}-${amount || 'null'}`;
     if (this.processingActions.has(clientKey)) {
-      console.log(`[DUPLICATE_ACTION_BLOCKED] Blocked duplicate action: ${clientKey}`);
+      console.log(
+        `[DUPLICATE_ACTION_BLOCKED] Blocked duplicate action: ${clientKey}`,
+      );
       return;
     }
-    
+
     // Дополнительная защита с timestamp для критических действий
     const timestampKey = `${client.id}-${action}-${Date.now()}`;
     this.processingActions.set(clientKey, true);
     this.processingActions.set(timestampKey, true);
-    
+
     // Очистка через 500ms для предотвращения накопления
     setTimeout(() => {
       this.processingActions.delete(clientKey);
       this.processingActions.delete(timestampKey);
     }, 500);
-    
 
     try {
       if (telegramId) {
-      const result = await this.gameService.processAction(
-        roomId,
-        telegramId,
-        action,
-        amount,
-      );
+        const result = await this.gameService.processAction(
+          roomId,
+          telegramId,
+          action,
+          amount,
+        );
 
-      if (result.events) {
-        result.events.forEach((event) => {
-          if (event.to) {
-            this.server.to(event.to).emit(event.name, event.payload);
-          } else {
-            this.server.to(roomId).emit(event.name, event.payload);
-          }
-        });
-      }
+        if (result.events) {
+          result.events.forEach((event) => {
+            if (event.to) {
+              this.server.to(event.to).emit(event.name, event.payload);
+            } else {
+              this.server.to(roomId).emit(event.name, event.payload);
+            }
+          });
+        }
 
-      if (!result.success) {
-        console.error(`Error in game_action for ${telegramId}:`, result.error);
-        client.emit('error', { message: result.error });
+        if (!result.success) {
+          console.error(
+            `Error in game_action for ${telegramId}:`,
+            result.error,
+          );
+          client.emit('error', { message: result.error });
+        }
+      } else {
+        console.error('No telegramId provided for game_action');
+        client.emit('error', { message: 'Требуется авторизация (telegramId)' });
       }
-    } else {
-      console.error('No telegramId provided for game_action');
-      client.emit('error', { message: 'Требуется авторизация (telegramId)' });
-    }
     } catch (error) {
       console.error('Error in handleGameAction:', error);
       client.emit('error', { message: 'Внутренняя ошибка сервера' });

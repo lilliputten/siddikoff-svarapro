@@ -1,5 +1,9 @@
 import axios from "axios";
-import { AdminSession, AdminLoginState, AdminWithdrawSession } from "../types/index.js";
+import {
+  AdminSession,
+  AdminLoginState,
+  AdminWithdrawSession,
+} from "../types/index.js";
 
 export class AdminService {
   private sessions = new Map<string, AdminSession>();

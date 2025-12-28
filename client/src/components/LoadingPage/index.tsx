@@ -1,8 +1,8 @@
-import { CSSProperties, useEffect, useState } from 'react';
-import './LoadingPage.css';
+import { CSSProperties, useEffect, useState } from "react";
+import "./LoadingPage.css";
 
 // Добавляем импорт логотипа (если используете vite)
-import mainLogo from '@/assets/main_logo.png'; // или правильный путь к вашему изображению
+import mainLogo from "@/assets/main_logo.png"; // или правильный путь к вашему изображению
 
 export function LoadingPage({ isLoading }: { isLoading: boolean }) {
   const [isVisible, setIsVisible] = useState(false);
@@ -16,18 +16,14 @@ export function LoadingPage({ isLoading }: { isLoading: boolean }) {
 
   const containerStyle: CSSProperties = {
     opacity: isVisible && isLoading ? 1 : 0,
-    transition: 'opacity 300ms ease-in-out',
+    transition: "opacity 300ms ease-in-out",
   };
 
   return (
     <div className="loading-container" style={containerStyle}>
       {/* Main Logo - теперь с явным указанием src */}
-      <img 
-        src={mainLogo} 
-        alt="Main Logo"
-        className="loading-logo"
-      />
-      
+      <img src={mainLogo} alt="Main Logo" className="loading-logo" />
+
       {/* 18+ Badge 
       <div className="loading-badge">
         <svg width="22" height="22" viewBox="0 0 22 22" fill="none">

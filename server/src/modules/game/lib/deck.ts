@@ -22,7 +22,9 @@ export const shuffleDeck = (deck: Card[]): Card[] => {
 };
 
 export const dealCards = (deck: Card[], numPlayers: number): Card[][] => {
-  const hands: Card[][] = Array(numPlayers).fill(0).map(() => []);
+  const hands: Card[][] = Array(numPlayers)
+    .fill(0)
+    .map(() => []);
   // The deck is modified by pop(), so we need a copy if we want to preserve the original deck.
   const deckCopy = [...deck];
   for (let i = 0; i < 3; i++) {

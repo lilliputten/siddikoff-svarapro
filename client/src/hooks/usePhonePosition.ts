@@ -1,8 +1,8 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect } from "react";
 
 interface windowSize {
-    width: number;
-    height: number;
+  width: number;
+  height: number;
 }
 
 export const usePhonePosition = () => {
@@ -19,12 +19,11 @@ export const usePhonePosition = () => {
       });
     }
 
-    window.addEventListener('resize', handleResize);
+    window.addEventListener("resize", handleResize);
     handleResize();
 
-    return () => window.removeEventListener('resize', handleResize);
+    return () => window.removeEventListener("resize", handleResize);
   }, []);
-  
-  return windowSize.width > windowSize.height?'gorizontal':'vertical';
-}
 
+  return windowSize.width > windowSize.height ? "gorizontal" : "vertical";
+};

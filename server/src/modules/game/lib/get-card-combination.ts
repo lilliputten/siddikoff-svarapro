@@ -20,10 +20,8 @@ export const getCardCombination = (
   const sortedHand = sortCards(hand);
   const [card1, card2, card3] = sortedHand;
 
-  const isSameSuit =
-    card1.suit === card2.suit && card2.suit === card3.suit;
-  const isSameRank =
-    card1.rank === card2.rank && card2.rank === card3.rank;
+  const isSameSuit = card1.suit === card2.suit && card2.suit === card3.suit;
+  const isSameRank = card1.rank === card2.rank && card2.rank === card3.rank;
 
   if (isSameRank && card1.rank === 'A') {
     return { name: 'Три туза', rank: 10, value: 33 };
@@ -63,13 +61,25 @@ export const getCardCombination = (
   }
 
   if (card1.rank === card2.rank) {
-    return { name: `Пара ${card1.rank}`, rank: 6, value: getCardValue(card1) * 2 };
+    return {
+      name: `Пара ${card1.rank}`,
+      rank: 6,
+      value: getCardValue(card1) * 2,
+    };
   }
   if (card1.rank === card3.rank) {
-    return { name: `Пара ${card1.rank}`, rank: 6, value: getCardValue(card1) * 2 };
+    return {
+      name: `Пара ${card1.rank}`,
+      rank: 6,
+      value: getCardValue(card1) * 2,
+    };
   }
   if (card2.rank === card3.rank) {
-    return { name: `Пара ${card2.rank}`, rank: 6, value: getCardValue(card2) * 2 };
+    return {
+      name: `Пара ${card2.rank}`,
+      rank: 6,
+      value: getCardValue(card2) * 2,
+    };
   }
 
   const value = getCardValue(card1);

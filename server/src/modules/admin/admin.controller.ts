@@ -182,7 +182,14 @@ export class AdminController {
 
   private async getPeriodStats(startDate: Date, endDate: Date) {
     // Общие транзакции
-    const [deposits, withdrawals, cryptoDeposits, cryptoWithdrawals, fiatDeposits, fiatWithdrawals] = (await Promise.all([
+    const [
+      deposits,
+      withdrawals,
+      cryptoDeposits,
+      cryptoWithdrawals,
+      fiatDeposits,
+      fiatWithdrawals,
+    ] = (await Promise.all([
       // Все депозиты
       this.transactionRepository
         .createQueryBuilder('transaction')
@@ -212,7 +219,9 @@ export class AdminController {
         .createQueryBuilder('transaction')
         .where('transaction.type = :type', { type: 'deposit' })
         .andWhere('transaction.status = :status', { status: 'complete' })
-        .andWhere('transaction.payment_provider = :provider', { provider: 'alfabit' })
+        .andWhere('transaction.payment_provider = :provider', {
+          provider: 'alfabit',
+        })
         .andWhere('transaction.createdAt BETWEEN :start AND :end', {
           start: startDate,
           end: endDate,
@@ -225,7 +234,9 @@ export class AdminController {
         .createQueryBuilder('transaction')
         .where('transaction.type = :type', { type: 'withdraw' })
         .andWhere('transaction.status = :status', { status: 'complete' })
-        .andWhere('transaction.payment_provider = :provider', { provider: 'alfabit' })
+        .andWhere('transaction.payment_provider = :provider', {
+          provider: 'alfabit',
+        })
         .andWhere('transaction.createdAt BETWEEN :start AND :end', {
           start: startDate,
           end: endDate,
@@ -238,7 +249,9 @@ export class AdminController {
         .createQueryBuilder('transaction')
         .where('transaction.type = :type', { type: 'deposit' })
         .andWhere('transaction.status = :status', { status: 'complete' })
-        .andWhere('transaction.payment_provider = :provider', { provider: 'noros' })
+        .andWhere('transaction.payment_provider = :provider', {
+          provider: 'noros',
+        })
         .andWhere('transaction.createdAt BETWEEN :start AND :end', {
           start: startDate,
           end: endDate,
@@ -251,7 +264,9 @@ export class AdminController {
         .createQueryBuilder('transaction')
         .where('transaction.type = :type', { type: 'withdraw' })
         .andWhere('transaction.status = :status', { status: 'complete' })
-        .andWhere('transaction.payment_provider = :provider', { provider: 'noros' })
+        .andWhere('transaction.payment_provider = :provider', {
+          provider: 'noros',
+        })
         .andWhere('transaction.createdAt BETWEEN :start AND :end', {
           start: startDate,
           end: endDate,

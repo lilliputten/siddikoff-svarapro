@@ -28,4 +28,4 @@ import { FinancesModule } from '../finances/finances.module';
   ],
   exports: [GameService, GameStateService],
 })
-export class GameModule { }
+export class GameModule {}

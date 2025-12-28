@@ -49,7 +49,7 @@ export function CardsDeck({ className, gameStatus }: Props) {
         setIsDeckVisible(true);
         setIsStartDistribution(true);
         distributionTriggered.current = true;
-      }, 2000)
+      }, 2000);
     }
   }, [gameStatus]);
 
@@ -86,7 +86,7 @@ export function CardsDeck({ className, gameStatus }: Props) {
 
     setAnimatedCards(cards);
     requestAnimationFrame(() =>
-      setAnimatedCards(cards.map((c) => ({ ...c, animate: true })))
+      setAnimatedCards(cards.map((c) => ({ ...c, animate: true }))),
     );
 
     // cards.forEach((card) => {
@@ -109,7 +109,7 @@ export function CardsDeck({ className, gameStatus }: Props) {
     <div
       className={cn(
         "absolute bottom-40 left-1/2 -translate-x-1/2 z-30",
-        className
+        className,
       )}
       ref={ref}
       id="cards-deck"
@@ -142,7 +142,7 @@ export function CardsDeck({ className, gameStatus }: Props) {
                   transitionDelay: `${card.delay}ms`,
                 }}
               />,
-              document.body
+              document.body,
             );
           })}
       </div>

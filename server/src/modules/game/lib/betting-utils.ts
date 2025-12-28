@@ -46,7 +46,9 @@ export const getMaxRaise = (gameState: GameState, playerId: string): number => {
 
   // ИСПРАВЛЕНИЕ: Если кто-то уже сделал raise max, блокируем raise
   if (gameState.hasRaiseMax) {
-    console.log(`[RAISE_MAX_DEBUG] hasRaiseMax=true, blocking raise for player ${playerId}`);
+    console.log(
+      `[RAISE_MAX_DEBUG] hasRaiseMax=true, blocking raise for player ${playerId}`,
+    );
     return 0;
   }
 
@@ -59,8 +61,10 @@ export const getMaxRaise = (gameState: GameState, playerId: string): number => {
 
   // Максимальное повышение - это остаток баланса после уравнивания
   const availableBalanceForRaise = player.balance - amountToCall;
-  
-  console.log(`[RAISE_MAX_DEBUG] Player ${playerId}: balance=${player.balance}, amountToCall=${amountToCall}, maxRaise=${availableBalanceForRaise}`);
+
+  console.log(
+    `[RAISE_MAX_DEBUG] Player ${playerId}: balance=${player.balance}, amountToCall=${amountToCall}, maxRaise=${availableBalanceForRaise}`,
+  );
 
   return availableBalanceForRaise;
 };

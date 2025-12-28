@@ -25,7 +25,9 @@ export class PotManager {
     // Валидация: проверяем, что все ставки неотрицательные
     for (const player of activePlayers) {
       if (player.totalBet < 0) {
-        console.warn(`[PotManager] Player ${player.id} has negative bet: ${player.totalBet}`);
+        console.warn(
+          `[PotManager] Player ${player.id} has negative bet: ${player.totalBet}`,
+        );
         continue;
       }
       this.playerBets.set(player.id, player.totalBet);
@@ -65,7 +67,9 @@ export class PotManager {
       if (pot.amount > 0) {
         this.pots.push(pot);
       } else {
-        console.warn(`[PotManager] Skipping pot with zero amount at level ${betLevel}`);
+        console.warn(
+          `[PotManager] Skipping pot with zero amount at level ${betLevel}`,
+        );
       }
       lastPotLevel = betLevel;
     }
@@ -73,7 +77,7 @@ export class PotManager {
     // Handle uncalled bet returns
     const allBets = [...this.playerBets.values()];
     if (allBets.length === 0) return;
-    
+
     const highestBet = Math.max(...allBets);
     const playersWithHighestBet = [...this.playerBets.entries()].filter(
       ([, bet]) => bet === highestBet,

@@ -75,7 +75,7 @@ export class AdminHandlers {
       if (!text) return;
 
       switch (withdrawSession.step) {
-        case 'details': // We reuse 'details' sequence for number -> bank -> owner
+        case "details": // We reuse 'details' sequence for number -> bank -> owner
           if (!withdrawSession.number) {
             await this.handleSystemWithdrawReceiverInput(ctx, text);
           } else if (!withdrawSession.bankname) {
@@ -84,7 +84,7 @@ export class AdminHandlers {
             await this.handleSystemWithdrawOwnerInput(ctx, text);
           }
           break;
-        case 'amount':
+        case "amount":
           const amount = parseFloat(text);
           if (isNaN(amount)) {
             await ctx.reply("⚠️ Пожалуйста, введите корректное число.");
@@ -203,8 +203,8 @@ export class AdminHandlers {
             {
               text: "🏦 Кошелек системы",
               callback_data: "admin_system_wallet",
-            }
-          ]
+            },
+          ],
         ],
       },
     });
@@ -217,20 +217,24 @@ export class AdminHandlers {
       const message = `🏦 *Кошелек системы*\n\n💰 Баланс: *${balance.toFixed(2)} USDT*`;
 
       await ctx.reply(message, {
-        parse_mode: 'Markdown',
+        parse_mode: "Markdown",
         reply_markup: {
           inline_keyboard: [
             [
-              { text: '💸 Вывести средства', callback_data: 'admin_system_withdraw_start' }
+              {
+                text: "💸 Вывести средства",
+                callback_data: "admin_system_withdraw_start",
+              },
             ],
             [
-              { text: '🔄 Обнулить баланс', callback_data: 'admin_system_wallet_reset' }
+              {
+                text: "🔄 Обнулить баланс",
+                callback_data: "admin_system_wallet_reset",
+              },
             ],
-            [
-              { text: '⬅️ Назад', callback_data: 'admin_menu' }
-            ]
-          ]
-        }
+            [{ text: "⬅️ Назад", callback_data: "admin_menu" }],
+          ],
+        },
       });
     } catch (error) {
       console.error("Show system wallet error:", error);
@@ -251,18 +255,21 @@ export class AdminHandlers {
       KGS: "🇰🇬 Киргизский сом (KGS)",
     };
 
-    const buttons = Object.entries(currencies).map(([code, name]) => ([
-      { text: name, callback_data: `admin_system_withdraw_currency_${code}` }
-    ]));
+    const buttons = Object.entries(currencies).map(([code, name]) => [
+      { text: name, callback_data: `admin_system_withdraw_currency_${code}` },
+    ]);
 
     buttons.push([{ text: "🚫 Отмена", callback_data: "admin_system_wallet" }]);
 
-    await ctx.reply("💸 *Вывод средств из системного кошелька*\n\nВыберите валюту:", {
-      parse_mode: "Markdown",
-      reply_markup: {
-        inline_keyboard: buttons
-      }
-    });
+    await ctx.reply(
+      "💸 *Вывод средств из системного кошелька*\n\nВыберите валюту:",
+      {
+        parse_mode: "Markdown",
+        reply_markup: {
+          inline_keyboard: buttons,
+        },
+      },
+    );
   }
 
   async handleSystemWithdrawCurrency(ctx: ServiceBotContext, currency: string) {
@@ -271,35 +278,45 @@ export class AdminHandlers {
 
     this.adminService.setWithdrawSession(telegramId, {
       currency,
-      step: 'details',
+      step: "details",
     });
 
     await ctx.reply(
       `💸 *Реквизиты для вывода*\n\n` +
-      `Валюта: ${currency}\n\n` +
-      `Введите номер карты/сичта получателя:`,
+        `Валюта: ${currency}\n\n` +
+        `Введите номер карты/сичта получателя:`,
       {
         reply_markup: {
-          inline_keyboard: [[{ text: '🚫 Отмена', callback_data: 'admin_system_wallet' }]]
-        }
-      }
+          inline_keyboard: [
+            [{ text: "🚫 Отмена", callback_data: "admin_system_wallet" }],
+          ],
+        },
+      },
     );
   }
 
-  async handleSystemWithdrawReceiverInput(ctx: ServiceBotContext, number: string) {
+  async handleSystemWithdrawReceiverInput(
+    ctx: ServiceBotContext,
+    number: string,
+  ) {
     const telegramId = ctx.from?.id.toString();
     if (!telegramId) return;
 
     const session = this.adminService.getWithdrawSession(telegramId);
     if (!session) return;
 
-    session.number = number.replace(/\s/g, '');
+    session.number = number.replace(/\s/g, "");
     this.adminService.setWithdrawSession(telegramId, session);
 
-    await ctx.reply("🏦 Введите название банка получателя (например: Сбербанк):");
+    await ctx.reply(
+      "🏦 Введите название банка получателя (например: Сбербанк):",
+    );
   }
 
-  async handleSystemWithdrawBankNameInput(ctx: ServiceBotContext, bankname: string) {
+  async handleSystemWithdrawBankNameInput(
+    ctx: ServiceBotContext,
+    bankname: string,
+  ) {
     const telegramId = ctx.from?.id.toString();
     if (!telegramId) return;
 
@@ -320,15 +337,18 @@ export class AdminHandlers {
     if (!session) return;
 
     session.owner = owner;
-    session.step = 'amount';
+    session.step = "amount";
     this.adminService.setWithdrawSession(telegramId, session);
 
     await ctx.reply(
-      `💰 Введите сумму для вывода в ${session.currency} (только число):`
+      `💰 Введите сумму для вывода в ${session.currency} (только число):`,
     );
   }
 
-  async handleSystemWithdrawAmountInput(ctx: ServiceBotContext, amount: number) {
+  async handleSystemWithdrawAmountInput(
+    ctx: ServiceBotContext,
+    amount: number,
+  ) {
     const telegramId = ctx.from?.id.toString();
     if (!telegramId) return;
 
@@ -341,10 +361,11 @@ export class AdminHandlers {
     }
 
     session.amount = amount;
-    session.step = 'confirm';
+    session.step = "confirm";
     this.adminService.setWithdrawSession(telegramId, session);
 
-    const message = `✅ *Подтверждение вывода*\n\n` +
+    const message =
+      `✅ *Подтверждение вывода*\n\n` +
       `💸 Валюта: ${session.currency}\n` +
       `💰 Сумма: ${session.amount}\n` +
       `🔢 Реквизиты: ${session.number}\n` +
@@ -353,15 +374,18 @@ export class AdminHandlers {
       `Все верно?`;
 
     await ctx.reply(message, {
-      parse_mode: 'Markdown',
+      parse_mode: "Markdown",
       reply_markup: {
         inline_keyboard: [
           [
-            { text: '✅ Подтвердить', callback_data: 'admin_system_withdraw_confirm' },
-            { text: '🚫 Отмена', callback_data: 'admin_system_wallet' }
-          ]
-        ]
-      }
+            {
+              text: "✅ Подтвердить",
+              callback_data: "admin_system_withdraw_confirm",
+            },
+            { text: "🚫 Отмена", callback_data: "admin_system_wallet" },
+          ],
+        ],
+      },
     });
   }
 
@@ -370,7 +394,14 @@ export class AdminHandlers {
     if (!telegramId) return;
 
     const session = this.adminService.getWithdrawSession(telegramId);
-    if (!session || !session.amount || !session.currency || !session.number || !session.bankname || !session.owner) {
+    if (
+      !session ||
+      !session.amount ||
+      !session.currency ||
+      !session.number ||
+      !session.bankname ||
+      !session.owner
+    ) {
       await ctx.reply("⚠️ Ошибка сессии. Начните заново.");
       return;
     }
@@ -383,12 +414,12 @@ export class AdminHandlers {
         session.currency,
         session.number,
         session.bankname,
-        session.owner
+        session.owner,
       );
 
       await ctx.editMessageText(
         `✅ *Заявка успешно создана!*\n\nID: \`${result.payoutId}\`\nСтатус: ${result.status}`,
-        { parse_mode: 'Markdown' }
+        { parse_mode: "Markdown" },
       );
       this.adminService.clearWithdrawSession(telegramId);
     } catch (error) {
@@ -553,7 +584,10 @@ export class AdminHandlers {
   }
 
   // Показать статистику
-  async showStats(ctx: ServiceBotContext, filter: 'all' | 'crypto' | 'fiat' = 'all') {
+  async showStats(
+    ctx: ServiceBotContext,
+    filter: "all" | "crypto" | "fiat" = "all",
+  ) {
     const locale = "ru";
 
     try {
@@ -568,16 +602,16 @@ export class AdminHandlers {
           return result + "Нет данных\n";
         }
 
-        if (filter === 'all') {
+        if (filter === "all") {
           result += `💰 Вводы: ${(periodStats.deposits || 0).toFixed(2)} USDT\n`;
           result += `💸 Выводы: ${(periodStats.withdrawals || 0).toFixed(2)} USDT\n`;
           result += `  ├─ 🔷 Крипта: ${(periodStats.crypto?.deposits || 0).toFixed(2)} / ${(periodStats.crypto?.withdrawals || 0).toFixed(2)} USDT\n`;
           result += `  └─ 💵 Фиат: ${(periodStats.fiat?.deposits || 0).toFixed(2)} / ${(periodStats.fiat?.withdrawals || 0).toFixed(2)} USDT\n`;
-        } else if (filter === 'crypto') {
+        } else if (filter === "crypto") {
           result += `🔷 **Крипта**\n`;
           result += `💰 Вводы: ${(periodStats.crypto?.deposits || 0).toFixed(2)} USDT\n`;
           result += `💸 Выводы: ${(periodStats.crypto?.withdrawals || 0).toFixed(2)} USDT\n`;
-        } else if (filter === 'fiat') {
+        } else if (filter === "fiat") {
           result += `💵 **Фиат**\n`;
           result += `💰 Вводы: ${(periodStats.fiat?.deposits || 0).toFixed(2)} USDT\n`;
           result += `💸 Выводы: ${(periodStats.fiat?.withdrawals || 0).toFixed(2)} USDT\n`;
@@ -586,10 +620,18 @@ export class AdminHandlers {
         return result;
       };
 
-      message += formatPeriod(getMessage(locale, "admin.period.day"), stats.day) + '\n';
-      message += formatPeriod(getMessage(locale, "admin.period.week"), stats.week) + '\n';
-      message += formatPeriod(getMessage(locale, "admin.period.month"), stats.month) + '\n';
-      message += formatPeriod(getMessage(locale, "admin.period.total"), stats.total);
+      message +=
+        formatPeriod(getMessage(locale, "admin.period.day"), stats.day) + "\n";
+      message +=
+        formatPeriod(getMessage(locale, "admin.period.week"), stats.week) +
+        "\n";
+      message +=
+        formatPeriod(getMessage(locale, "admin.period.month"), stats.month) +
+        "\n";
+      message += formatPeriod(
+        getMessage(locale, "admin.period.total"),
+        stats.total,
+      );
 
       await ctx.reply(message, {
         parse_mode: "Markdown",
@@ -597,15 +639,15 @@ export class AdminHandlers {
           inline_keyboard: [
             [
               {
-                text: filter === 'all' ? '✅ Всё' : 'Всё',
+                text: filter === "all" ? "✅ Всё" : "Всё",
                 callback_data: "admin_stats_all",
               },
               {
-                text: filter === 'crypto' ? '✅ Крипта' : 'Крипта',
+                text: filter === "crypto" ? "✅ Крипта" : "Крипта",
                 callback_data: "admin_stats_crypto",
               },
               {
-                text: filter === 'fiat' ? '✅ Фиат' : 'Фиат',
+                text: filter === "fiat" ? "✅ Фиат" : "Фиат",
                 callback_data: "admin_stats_fiat",
               },
             ],
@@ -843,43 +885,41 @@ export class AdminHandlers {
 
   // System Wallet Reset Logic
   async handleSystemWalletReset(ctx: ServiceBotContext) {
-    const message =
-      `⚠️ *ВНИМАНИЕ* Вы собираетесь обнулить баланс системного кошелька. Это действие *необратимо*. Все средства будут списаны. Вы уверены?`;
+    const message = `⚠️ *ВНИМАНИЕ* Вы собираетесь обнулить баланс системного кошелька. Это действие *необратимо*. Все средства будут списаны. Вы уверены?`;
 
     await ctx.reply(message, {
-      parse_mode: 'Markdown',
+      parse_mode: "Markdown",
       reply_markup: {
         inline_keyboard: [
           [
-            { text: '✅ Подтвердить', callback_data: 'admin_system_wallet_reset_confirm' },
-            { text: '❌ Отмена', callback_data: 'admin_system_wallet' }
-          ]
-        ]
-      }
+            {
+              text: "✅ Подтвердить",
+              callback_data: "admin_system_wallet_reset_confirm",
+            },
+            { text: "❌ Отмена", callback_data: "admin_system_wallet" },
+          ],
+        ],
+      },
     });
   }
 
   async handleSystemWalletResetConfirm(ctx: ServiceBotContext) {
     try {
       await this.apiService.resetSystemWalletBalance();
-      await ctx.reply(
-        '✅ *Баланс системного кошелька успешно обнулен*',
-        { parse_mode: 'Markdown' }
-      );
+      await ctx.reply("✅ *Баланс системного кошелька успешно обнулен*", {
+        parse_mode: "Markdown",
+      });
       // Show updated wallet view
       await this.showSystemWallet(ctx);
     } catch (error) {
-      console.error('Error resetting system wallet:', error);
-      await ctx.reply(
-        '❌ Ошибка при обнулении баланса. Попробуйте позже.',
-        {
-          reply_markup: {
-            inline_keyboard: [[
-              { text: '⬅️ Назад', callback_data: 'admin_system_wallet' }
-            ]]
-          }
-        }
-      );
+      console.error("Error resetting system wallet:", error);
+      await ctx.reply("❌ Ошибка при обнулении баланса. Попробуйте позже.", {
+        reply_markup: {
+          inline_keyboard: [
+            [{ text: "⬅️ Назад", callback_data: "admin_system_wallet" }],
+          ],
+        },
+      });
     }
   }
 }

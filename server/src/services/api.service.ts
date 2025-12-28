@@ -566,13 +566,15 @@ export class ApiService {
       // Using exchangerate-api.com (free, no API key required)
       const response = await axios.get(
         `https://api.exchangerate-api.com/v4/latest/USD`,
-        { timeout: 10000 }
+        { timeout: 10000 },
       );
 
       const rates = response.data.rates;
 
       if (!rates[fiatCode]) {
-        this.logger.warn(`Fiat currency ${fiatCode} not found in exchange rates`);
+        this.logger.warn(
+          `Fiat currency ${fiatCode} not found in exchange rates`,
+        );
         return 1; // Fallback
       }
 
@@ -581,11 +583,15 @@ export class ApiService {
       // Example: 1 USD = 95 RUB → 1 RUB = 1/95 USD = 0.0105 USDT
       const usdPerFiat = 1 / rates[fiatCode];
 
-      this.logger.log(`Fiat rate for ${fiatCode}: 1 ${fiatCode} = ${usdPerFiat.toFixed(6)} USDT (1 USD = ${rates[fiatCode]} ${fiatCode})`);
+      this.logger.log(
+        `Fiat rate for ${fiatCode}: 1 ${fiatCode} = ${usdPerFiat.toFixed(6)} USDT (1 USD = ${rates[fiatCode]} ${fiatCode})`,
+      );
 
       return usdPerFiat;
     } catch (error) {
-      this.logger.error(`Failed to fetch fiat currency rate for ${fiatCode}: ${error instanceof Error ? error.message : String(error)}`);
+      this.logger.error(
+        `Failed to fetch fiat currency rate for ${fiatCode}: ${error instanceof Error ? error.message : String(error)}`,
+      );
       return 1; // Fallback rate
     }
   }

@@ -1,8 +1,8 @@
-import React, { useState, useEffect } from 'react';
-import { StyledContainer } from '../StyledContainer';
-import { TURN_DURATION_SECONDS } from '@/constants';
-import { useTranslation } from 'react-i18next';
-import { Slider } from '../Slider';
+import React, { useState, useEffect } from "react";
+import { StyledContainer } from "../StyledContainer";
+import { TURN_DURATION_SECONDS } from "@/constants";
+import { useTranslation } from "react-i18next";
+import { Slider } from "../Slider";
 
 interface BetSliderProps {
   minBet: number;
@@ -17,11 +17,11 @@ interface BetSliderProps {
   isProcessing?: boolean;
 }
 
-export function BetSlider({ 
-  minBet, 
-  maxBet, 
-  initialBet, 
-  onChange, 
+export function BetSlider({
+  minBet,
+  maxBet,
+  initialBet,
+  onChange,
   onConfirm,
   isOpen,
   onClose,
@@ -29,7 +29,7 @@ export function BetSlider({
   turnTimer = TURN_DURATION_SECONDS,
   isProcessing = false,
 }: BetSliderProps) {
-  const { t } = useTranslation('common');
+  const { t } = useTranslation("common");
   const [value, setValue] = useState(initialBet || minBet);
   const [percentage, setPercentage] = useState(0);
 
@@ -44,11 +44,11 @@ export function BetSlider({
   }, [isOpen, initialBet, minBet, maxBet]);
 
   // Предустановленные множители ставок
-  const multipliers: { label: string; value: number | 'max' }[] = [
-    { label: '2x', value: 2 },
-    { label: '5x', value: 5 },
-    { label: '10x', value: 10 },
-    { label: 'Max', value: 'max' },
+  const multipliers: { label: string; value: number | "max" }[] = [
+    { label: "2x", value: 2 },
+    { label: "5x", value: 5 },
+    { label: "10x", value: 10 },
+    { label: "Max", value: "max" },
   ];
 
   // Обновляем процент заполнения слайдера
@@ -74,9 +74,9 @@ export function BetSlider({
   };
 
   // Обработчик нажатия на множитель
-  const handleMultiplier = (multiplier: number | 'max') => {
+  const handleMultiplier = (multiplier: number | "max") => {
     let newValue;
-    if (multiplier === 'max') {
+    if (multiplier === "max") {
       newValue = maxBet;
     } else {
       newValue = Math.min(maxBet, minBet * multiplier);
@@ -102,26 +102,26 @@ export function BetSlider({
           {/* Таймер Хода */}
           {isTurn ? (
             <div className="w-[96px] h-[5px] bg-gray-600 rounded-full overflow-hidden">
-              <div 
+              <div
                 className="h-full rounded-full"
-                style={{ 
-                  width: `${(turnTimer / TURN_DURATION_SECONDS) * 100}%`, 
+                style={{
+                  width: `${(turnTimer / TURN_DURATION_SECONDS) * 100}%`,
                   backgroundColor: `hsl(${(turnTimer / TURN_DURATION_SECONDS) * 120}, 100%, 50%)`,
-                  transition: 'width 0.1s linear, background-color 0.1s linear'
-                }} 
+                  transition: "width 0.1s linear, background-color 0.1s linear",
+                }}
               />
             </div>
           ) : (
             <div className="w-[96px] h-[5px] rounded-full" />
           )}
           {/* Дисплей суммы */}
-          <div 
+          <div
             className="flex items-center justify-center text-white font-bold text-[18px] leading-none"
-            style={{ 
-              width: '79px', 
-              height: '33px',
-              backgroundColor: 'rgba(19, 18, 23, 0.5)',
-              borderRadius: '6px'
+            style={{
+              width: "79px",
+              height: "33px",
+              backgroundColor: "rgba(19, 18, 23, 0.5)",
+              borderRadius: "6px",
             }}
           >
             ${Number(value).toFixed(2)}
@@ -135,16 +135,19 @@ export function BetSlider({
               handleConfirm();
             }}
             className={`w-1/4 h-[29px] text-white font-bold rounded-md transition flex items-center justify-center text-xs cursor-pointer ${
-              value > maxBet || isProcessing ? 'opacity-50 cursor-not-allowed' : ''
+              value > maxBet || isProcessing
+                ? "opacity-50 cursor-not-allowed"
+                : ""
             }`}
-            style={{ 
-              backgroundColor: value > maxBet || isProcessing ? '#666' : '#56BF00',
-              WebkitTapHighlightColor: 'transparent',
-              touchAction: 'manipulation'
+            style={{
+              backgroundColor:
+                value > maxBet || isProcessing ? "#666" : "#56BF00",
+              WebkitTapHighlightColor: "transparent",
+              touchAction: "manipulation",
             }}
             disabled={value > maxBet || isProcessing}
           >
-            {t('raise')}
+            {t("raise")}
           </button>
         </div>
 
@@ -152,9 +155,10 @@ export function BetSlider({
         <div className="grid grid-cols-4 gap-2 mb-4 justify-items-center w-[85%] mx-auto">
           {multipliers.map((mult, index) => {
             // Проверяем, не превышает ли множитель баланс
-            const multiplierValue = mult.value === 'max' ? maxBet : minBet * (mult.value as number);
+            const multiplierValue =
+              mult.value === "max" ? maxBet : minBet * (mult.value as number);
             const isDisabled = multiplierValue > maxBet || isProcessing;
-            
+
             return (
               <button
                 key={index}
@@ -167,16 +171,18 @@ export function BetSlider({
                   }
                 }}
                 className={`font-medium text-xs leading-none transition flex items-center justify-center cursor-pointer ${
-                  isDisabled ? 'opacity-50 cursor-not-allowed' : ''
+                  isDisabled ? "opacity-50 cursor-not-allowed" : ""
                 }`}
                 style={{
-                  width: '27px',
-                  height: '19px',
-                  borderRadius: '4px',
-                  backgroundColor: isDisabled ? 'rgba(255, 255, 255, 0.03)' : 'rgba(255, 255, 255, 0.06)',
-                  color: isDisabled ? '#666' : '#C9C6CE',
-                  WebkitTapHighlightColor: 'transparent',
-                  touchAction: 'manipulation'
+                  width: "27px",
+                  height: "19px",
+                  borderRadius: "4px",
+                  backgroundColor: isDisabled
+                    ? "rgba(255, 255, 255, 0.03)"
+                    : "rgba(255, 255, 255, 0.06)",
+                  color: isDisabled ? "#666" : "#C9C6CE",
+                  WebkitTapHighlightColor: "transparent",
+                  touchAction: "manipulation",
                 }}
                 disabled={isDisabled}
               >
@@ -187,12 +193,15 @@ export function BetSlider({
         </div>
 
         <div className="flex justify-center">
-          <StyledContainer className="w-[85%] h-[42px] rounded-[15px]" contentClassName="w-full h-full flex items-center justify-center">
+          <StyledContainer
+            className="w-[85%] h-[42px] rounded-[15px]"
+            contentClassName="w-full h-full flex items-center justify-center"
+          >
             <div className="relative w-[82.5%] h-full flex items-center">
               {/* Track background */}
               <div className="w-full h-[5px] bg-[#807C7C] rounded-full" />
               {/* Track progress */}
-              <div 
+              <div
                 className="absolute h-[5px] bg-[#56BF00] rounded-full"
                 style={{ width: `${percentage}%` }}
               />
@@ -207,14 +216,14 @@ export function BetSlider({
                 onTouchMove={(e) => e.stopPropagation()}
                 onTouchEnd={(e) => e.stopPropagation()}
                 className="absolute w-full h-full appearance-none bg-transparent cursor-pointer"
-                style={{ 
-                  WebkitAppearance: 'none',
-                  WebkitTapHighlightColor: 'transparent',
-                  touchAction: 'pan-x'
+                style={{
+                  WebkitAppearance: "none",
+                  WebkitTapHighlightColor: "transparent",
+                  touchAction: "pan-x",
                 }}
               />
               {/* Thumb */}
-              <div 
+              <div
                 className="absolute top-1/2 -translate-y-1/2 w-7 h-7 bg-white rounded-full shadow-lg pointer-events-none"
                 style={{ left: `calc(${percentage}% - 14px)` }} // 14px is half of 28px width
               />

@@ -31,5 +31,5 @@ export interface AdminWithdrawSession {
   number?: string;
   bankname?: string;
   owner?: string;
-  step: 'currency' | 'bank' | 'amount' | 'details' | 'confirm';
+  step: "currency" | "bank" | "amount" | "details" | "confirm";
 }

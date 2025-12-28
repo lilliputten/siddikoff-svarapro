@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState } from "react";
 
 export const useAppUpdate = () => {
   const [updateAvailable, setUpdateAvailable] = useState(false);
@@ -6,18 +6,23 @@ export const useAppUpdate = () => {
 
   useEffect(() => {
     // Проверяем, поддерживает ли браузер Service Worker
-    if ('serviceWorker' in navigator) {
+    if ("serviceWorker" in navigator) {
       // Слушаем события обновления
-      navigator.serviceWorker.addEventListener('controllerchange', () => {
+      navigator.serviceWorker.addEventListener("controllerchange", () => {
         setUpdateAvailable(true);
       });
 
       // Проверяем обновления каждые 5 минут
-      const interval = setInterval(() => {
-        if (navigator.serviceWorker.controller) {
-          navigator.serviceWorker.controller.postMessage({ type: 'SKIP_WAITING' });
-        }
-      }, 5 * 60 * 1000);
+      const interval = setInterval(
+        () => {
+          if (navigator.serviceWorker.controller) {
+            navigator.serviceWorker.controller.postMessage({
+              type: "SKIP_WAITING",
+            });
+          }
+        },
+        5 * 60 * 1000,
+      );
 
       return () => clearInterval(interval);
     }
@@ -30,4 +35,4 @@ export const useAppUpdate = () => {
   };
 
   return { updateAvailable, isUpdating, updateApp };
-}; 
+};

@@ -12,5 +12,5 @@ export const getChipsCountFromBet = (bet: number): number => {
     }
   }
 
-    return 15;
+  return 15;
 };

@@ -67,7 +67,9 @@ export class GameService {
     }
 
     if (gameState) {
-      const playerIndex = gameState.players.findIndex((p) => p.id === telegramId);
+      const playerIndex = gameState.players.findIndex(
+        (p) => p.id === telegramId,
+      );
 
       if (playerIndex > -1) {
         const removedPlayer = gameState.players[playerIndex];
@@ -248,11 +250,12 @@ export class GameService {
     await this.redisService.publishGameUpdate(roomId, finalGameState);
 
     await this.startAntePhase(roomId);
-    
+
     // Запускаем таймер для первого игрока
     const initialGameState = await this.redisService.getGameState(roomId);
     if (initialGameState && initialGameState.currentPlayerIndex !== undefined) {
-      const currentPlayer = initialGameState.players[initialGameState.currentPlayerIndex];
+      const currentPlayer =
+        initialGameState.players[initialGameState.currentPlayerIndex];
       if (currentPlayer) {
         this.startTurnTimer(roomId, currentPlayer.id);
         // Обновляем GameState с информацией о таймере
@@ -316,13 +319,15 @@ export class GameService {
 
     // ИСПРАВЛЕНИЕ: Проверяем случай свары с недостатком средств ПОСЛЕ установки currentPlayerIndex
     if (gameState.isSvara) {
-      const svaraParticipants = gameState.players.filter(p => 
-        gameState.svaraParticipants?.includes(p.id) && p.isActive
+      const svaraParticipants = gameState.players.filter(
+        (p) => gameState.svaraParticipants?.includes(p.id) && p.isActive,
       );
-      
+
       // ПРАВИЛЬНО: Если в сваре 2 игрока и у хотя бы одного нет денег - сразу showdown
       if (svaraParticipants.length === 2) {
-        const participantsWithoutMoney = svaraParticipants.filter(p => p.balance < gameState.minBet);
+        const participantsWithoutMoney = svaraParticipants.filter(
+          (p) => p.balance < gameState.minBet,
+        );
         if (participantsWithoutMoney.length > 0) {
           // Сразу showdown, не предлагать ходы
           await this.endGameWithWinner(roomId, gameState);
@@ -333,7 +338,6 @@ export class GameService {
 
     await this.redisService.setGameState(roomId, gameState);
     await this.redisService.publishGameUpdate(roomId, gameState);
-    
   }
 
   private svaraTimers: Map<string, NodeJS.Timeout> = new Map();
@@ -351,7 +355,10 @@ export class GameService {
       if (gameState.svaraConfirmed?.includes(telegramId)) {
         return { success: true, gameState };
       } else {
-        return { success: false, error: 'Сейчас нельзя присоединиться к сваре' };
+        return {
+          success: false,
+          error: 'Сейчас нельзя присоединиться к сваре',
+        };
       }
     }
 
@@ -491,7 +498,10 @@ export class GameService {
 
     // Проверяем, что у игрока есть деньги для действий (кроме fold и raise)
     if (action !== 'fold' && action !== 'raise' && player.balance <= 0) {
-      return { success: false, error: 'Недостаточно средств для выполнения действия' };
+      return {
+        success: false,
+        error: 'Недостаточно средств для выполнения действия',
+      };
     }
 
     if (action === 'fold') {
@@ -501,7 +511,10 @@ export class GameService {
       return this.handleFold(roomId, gameState, playerIndex);
     }
 
-    if (player.hasLookedAndMustAct && !['raise', 'call', 'fold'].includes(action)) {
+    if (
+      player.hasLookedAndMustAct &&
+      !['raise', 'call', 'fold'].includes(action)
+    ) {
       return {
         success: false,
         error:
@@ -614,16 +627,17 @@ export class GameService {
         gameState.players,
         gameState.currentPlayerIndex,
       );
-      
+
       // Если нет игроков с деньгами, завершаем игру
       if (aboutToActPlayerIndex === -1) {
         await this.endGameWithWinner(roomId, gameState);
         return { success: true };
       }
-      
+
       // Проверяем завершение круга ставок
-      const anchorPlayerIndex = this.bettingService.getAnchorPlayerIndex(gameState);
-      
+      const anchorPlayerIndex =
+        this.bettingService.getAnchorPlayerIndex(gameState);
+
       if (aboutToActPlayerIndex === anchorPlayerIndex) {
         await this.endBettingRound(roomId, gameState);
         return { success: true };
@@ -684,13 +698,13 @@ export class GameService {
           gameState.players,
           gameState.currentPlayerIndex,
         );
-        
+
         // Если нет игроков с деньгами, завершаем игру
         if (gameState.currentPlayerIndex === -1) {
           await this.endGameWithWinner(roomId, gameState);
           return { success: true, gameState };
         }
-        
+
         // Запускаем таймер для следующего игрока
         if (gameState.currentPlayerIndex !== undefined) {
           const nextPlayer = gameState.players[gameState.currentPlayerIndex];
@@ -745,24 +759,37 @@ export class GameService {
         // В blind_betting можно только raise после look
 
         // ИСПРАВЛЕНИЕ: call после look НЕ завершает игру, а устанавливает якорь
-        if (playerIndex === gameState.lastRaiseIndex && !player.hasLookedAndMustAct) {
+        if (
+          playerIndex === gameState.lastRaiseIndex &&
+          !player.hasLookedAndMustAct
+        ) {
           await this.endBettingRound(roomId, gameState);
           return { success: true };
         }
 
         // ИСПРАВЛЕНИЕ: Правильный расчет callAmount для look -> call
         let callAmount = gameState.lastActionAmount;
-        console.log('755>>', callAmount, 'lastAction:', gameState.lastActionAmount)
+        console.log(
+          '755>>',
+          callAmount,
+          'lastAction:',
+          gameState.lastActionAmount,
+        );
         // Если нет последней ставки, используем minBet (ante)
         if (callAmount <= 0) {
           callAmount = gameState.minBet;
         }
-        console.log('760>>', callAmount, 'minBet:', gameState.minBet)
+        console.log('760>>', callAmount, 'minBet:', gameState.minBet);
         // ТОЛЬКО если нет lastActionAmount, используем blind ставки
         if (callAmount == gameState.lastBlindBet) {
           callAmount = gameState.lastBlindBet * 2;
         }
-        console.log('765>>', callAmount, 'lastBlindBet:', gameState.lastBlindBet)
+        console.log(
+          '765>>',
+          callAmount,
+          'lastBlindBet:',
+          gameState.lastBlindBet,
+        );
         if (callAmount <= 0) {
           return {
             success: false,
@@ -776,27 +803,38 @@ export class GameService {
         const { updatedPlayer, action: callAction } =
           this.playerService.processPlayerBet(player, callAmount, 'call');
         gameState.players[playerIndex] = updatedPlayer;
-        console.log('Банк:', gameState.pot, 'Ставка игрока:',  callAmount, 'Что получается:', Number((gameState.pot + callAmount).toFixed(2)))
+        console.log(
+          'Банк:',
+          gameState.pot,
+          'Ставка игрока:',
+          callAmount,
+          'Что получается:',
+          Number((gameState.pot + callAmount).toFixed(2)),
+        );
         gameState.pot = Number((gameState.pot + callAmount).toFixed(2));
         gameState.chipCount += 1;
-        
+
         // ИСПРАВЛЕНИЕ: Не обновляем lastActionAmount при call после raise max
         if (!gameState.hasRaiseMax) {
           gameState.lastActionAmount = callAmount;
-          console.log(`[LAST_ACTION_AMOUNT_DEBUG] Set lastActionAmount to ${callAmount} after call by ${player.username}`);
+          console.log(
+            `[LAST_ACTION_AMOUNT_DEBUG] Set lastActionAmount to ${callAmount} after call by ${player.username}`,
+          );
         } else {
-          console.log(`[LAST_ACTION_AMOUNT_DEBUG] Skipping lastActionAmount update after call by ${player.username} because hasRaiseMax=true`);
+          console.log(
+            `[LAST_ACTION_AMOUNT_DEBUG] Skipping lastActionAmount update after call by ${player.username} because hasRaiseMax=true`,
+          );
         }
-        
+
         gameState.log.push(callAction);
-        
+
         // ИСПРАВЛЕНИЕ: call после look устанавливает якорь и переводит в betting
         if (player.hasLookedAndMustAct) {
           // Call после look устанавливает якорь ТОЛЬКО если якорь еще не установлен
           if (gameState.lastRaiseIndex === undefined) {
             gameState.lastRaiseIndex = playerIndex;
           }
-          
+
           // Переводим игру в фазу betting только если мы еще в blind_betting
           if (gameState.status === 'blind_betting') {
             const phaseResult = this.gameStateService.moveToNextPhase(
@@ -827,7 +865,7 @@ export class GameService {
           gameState = scoreResult.updatedGameState;
           gameState.log.push(...scoreResult.actions);
         }
-        
+
         break;
       }
       case 'raise': {
@@ -862,20 +900,24 @@ export class GameService {
 
         gameState.pot = Number((gameState.pot + raiseAmount).toFixed(2));
         gameState.chipCount += 1;
-        
+
         // Устанавливаем lastRaiseIndex для raise
         gameState.lastRaiseIndex = playerIndex;
-        
+
         gameState.lastActionAmount = raiseAmount;
-        console.log(`[LAST_ACTION_AMOUNT_DEBUG] Set lastActionAmount to ${raiseAmount} after raise by ${player.username}`);
-        
+        console.log(
+          `[LAST_ACTION_AMOUNT_DEBUG] Set lastActionAmount to ${raiseAmount} after raise by ${player.username}`,
+        );
+
         // ИСПРАВЛЕНИЕ: Проверяем, является ли это raise max
         if (updatedPlayer.balance === 0) {
-          console.log(`[RAISE_MAX_DEBUG] Player ${player.username} made raise max! Setting hasRaiseMax=true`);
+          console.log(
+            `[RAISE_MAX_DEBUG] Player ${player.username} made raise max! Setting hasRaiseMax=true`,
+          );
           gameState.hasRaiseMax = true;
           gameState.raiseMaxPlayerIndex = playerIndex;
         }
-        
+
         gameState.log.push(raiseAction);
 
         if (isPostLookRaise) {
@@ -907,7 +949,7 @@ export class GameService {
           gameState = scoreResult.updatedGameState;
           gameState.log.push(...scoreResult.actions);
         }
-        
+
         break;
       }
     }
@@ -937,13 +979,14 @@ export class GameService {
     }
 
     // Проверяем завершение круга ставок
-    const anchorPlayerIndex = this.bettingService.getAnchorPlayerIndex(gameState);
-    
+    const anchorPlayerIndex =
+      this.bettingService.getAnchorPlayerIndex(gameState);
+
     if (aboutToActPlayerIndex === anchorPlayerIndex) {
       await this.endBettingRound(roomId, gameState);
     } else {
       gameState.currentPlayerIndex = aboutToActPlayerIndex;
-      
+
       // Запускаем таймер для следующего игрока
       if (gameState.currentPlayerIndex !== undefined) {
         const nextPlayer = gameState.players[gameState.currentPlayerIndex];
@@ -954,9 +997,11 @@ export class GameService {
           gameState.turnStartTime = Date.now();
         }
       }
-      
+
       await this.redisService.setGameState(roomId, gameState);
-      console.log(`[LAST_ACTION_AMOUNT_DEBUG] Publishing game update after raise with lastActionAmount=${gameState.lastActionAmount}`);
+      console.log(
+        `[LAST_ACTION_AMOUNT_DEBUG] Publishing game update after raise with lastActionAmount=${gameState.lastActionAmount}`,
+      );
       await this.redisService.publishGameUpdate(roomId, gameState);
     }
     return { success: true, gameState };
@@ -966,7 +1011,8 @@ export class GameService {
     roomId: string,
     gameState: GameState,
   ): Promise<void> {
-    const scoreResult = this.gameStateService.calculateScoresForPlayers(gameState);
+    const scoreResult =
+      this.gameStateService.calculateScoresForPlayers(gameState);
     gameState = scoreResult.updatedGameState;
     gameState.log.push(...scoreResult.actions);
 
@@ -1005,21 +1051,29 @@ export class GameService {
 
     if (participants.length >= 2) {
       // ИСПРАВЛЕНИЕ: Проверяем, могут ли участники свары внести деньги
-      const svaraPlayers = gameState.players.filter(p => participants.includes(p.id));
-      const playersWithoutMoney = svaraPlayers.filter(p => p.balance < gameState.minBet);
-      
+      const svaraPlayers = gameState.players.filter((p) =>
+        participants.includes(p.id),
+      );
+      const playersWithoutMoney = svaraPlayers.filter(
+        (p) => p.balance < gameState.minBet,
+      );
+
       // Если в сваре только 2 игрока и у одного 0$ - сразу showdown
       if (svaraPlayers.length === 2 && playersWithoutMoney.length === 1) {
-        console.log(`[resolveSvara] Only 2 players in svara, one with 0$ - going to showdown`);
-        
+        console.log(
+          `[resolveSvara] Only 2 players in svara, one with 0$ - going to showdown`,
+        );
+
         // Принудительно завершаем игру с победителем (игрок с деньгами)
-        const winnerWithMoney = svaraPlayers.find(p => p.balance >= gameState.minBet);
+        const winnerWithMoney = svaraPlayers.find(
+          (p) => p.balance >= gameState.minBet,
+        );
         if (winnerWithMoney) {
           // Очищаем таймер
           this.clearTurnTimer(roomId);
           gameState.timer = undefined;
           gameState.turnStartTime = undefined;
-          
+
           // Переходим в showdown с одним победителем
           const phaseResult = this.gameStateService.moveToNextPhase(
             gameState,
@@ -1028,33 +1082,41 @@ export class GameService {
           const updatedGameState = phaseResult.updatedGameState;
           updatedGameState.log.push(...phaseResult.actions);
           updatedGameState.winners = [winnerWithMoney];
-          
+
           await this.redisService.setGameState(roomId, updatedGameState);
           await this.redisService.publishGameUpdate(roomId, updatedGameState);
-          
+
           // Распределяем выигрыш
           setTimeout(() => {
             this.distributeWinnings(roomId).catch((error) => {
-              console.error(`Failed to distribute winnings for room ${roomId}:`, error);
+              console.error(
+                `Failed to distribute winnings for room ${roomId}:`,
+                error,
+              );
             });
           }, 3000);
         }
         return;
       }
-      
+
       // Если в сваре 2+ игроков и у одного 0$ - автоматический fold
       if (svaraPlayers.length > 2 && playersWithoutMoney.length > 0) {
-        console.log(`[resolveSvara] Multiple players in svara, some with 0$ - auto-folding players without money`);
-        
+        console.log(
+          `[resolveSvara] Multiple players in svara, some with 0$ - auto-folding players without money`,
+        );
+
         // Автоматически fold игроков без денег
         for (const player of playersWithoutMoney) {
-          const playerIndex = gameState.players.findIndex(p => p.id === player.id);
+          const playerIndex = gameState.players.findIndex(
+            (p) => p.id === player.id,
+          );
           if (playerIndex !== -1) {
-            gameState.players[playerIndex] = this.playerService.updatePlayerStatus(
-              gameState.players[playerIndex],
-              { hasFolded: true, lastAction: 'fold' }
-            );
-            
+            gameState.players[playerIndex] =
+              this.playerService.updatePlayerStatus(
+                gameState.players[playerIndex],
+                { hasFolded: true, lastAction: 'fold' },
+              );
+
             const action: GameAction = {
               type: 'fold',
               telegramId: player.id,
@@ -1064,16 +1126,16 @@ export class GameService {
             gameState.log.push(action);
           }
         }
-        
+
         // Сохраняем изменения в Redis
         await this.redisService.setGameState(roomId, gameState);
         await this.redisService.publishGameUpdate(roomId, gameState);
-        
+
         // Обновляем список участников свары
-        const remainingParticipants = participants.filter(id => 
-          !playersWithoutMoney.some(p => p.id === id)
+        const remainingParticipants = participants.filter(
+          (id) => !playersWithoutMoney.some((p) => p.id === id),
         );
-        
+
         if (remainingParticipants.length >= 2) {
           await this.startSvaraGame(roomId, remainingParticipants);
         } else {
@@ -1082,19 +1144,26 @@ export class GameService {
         }
         return;
       }
-      
+
       // Если у всех участников свары нет денег, делим банк пополам
-      if (playersWithoutMoney.length === svaraPlayers.length && svaraPlayers.length === 2) {
-        console.log(`[resolveSvara] Svara participants have no money, splitting pot between ${svaraPlayers.length} players`);
-        
+      if (
+        playersWithoutMoney.length === svaraPlayers.length &&
+        svaraPlayers.length === 2
+      ) {
+        console.log(
+          `[resolveSvara] Svara participants have no money, splitting pot between ${svaraPlayers.length} players`,
+        );
+
         const winAmount = Number((gameState.pot / 2).toFixed(2));
         const rake = Number((gameState.pot * 0.05).toFixed(2));
-        
+
         for (const player of svaraPlayers) {
-          const playerIndex = gameState.players.findIndex(p => p.id === player.id);
+          const playerIndex = gameState.players.findIndex(
+            (p) => p.id === player.id,
+          );
           if (playerIndex !== -1) {
             gameState.players[playerIndex].balance += winAmount;
-            
+
             const action: GameAction = {
               type: 'win',
               telegramId: player.id,
@@ -1105,7 +1174,7 @@ export class GameService {
             gameState.log.push(action);
           }
         }
-        
+
         // Добавляем действие о комиссии
         if (rake > 0) {
           const action: GameAction = {
@@ -1116,17 +1185,17 @@ export class GameService {
           };
           gameState.log.push(action);
         }
-        
+
         // Завершаем игру
         gameState.pot = 0;
         gameState.status = 'finished';
         gameState.winners = svaraPlayers;
-        
+
         await this.redisService.setGameState(roomId, gameState);
         await this.redisService.publishGameUpdate(roomId, gameState);
         return;
       }
-      
+
       await this.startSvaraGame(roomId, participants);
     } else if (participants.length === 1) {
       await this.endGameWithWinner(roomId, gameState);
@@ -1197,13 +1266,15 @@ export class GameService {
     const overallWinners = this.playerService.determineWinners(activePlayers);
 
     if (overallWinners.length > 1) {
-      console.log(`Svara detected in room ${roomId}. Pot will be carried over.`);
-      
+      console.log(
+        `Svara detected in room ${roomId}. Pot will be carried over.`,
+      );
+
       // Очищаем таймер при переходе в svara_pending
       this.clearTurnTimer(roomId);
       gameState.timer = undefined;
       gameState.turnStartTime = undefined;
-      
+
       const phaseResult = this.gameStateService.moveToNextPhase(
         gameState,
         'svara_pending',
@@ -1236,12 +1307,11 @@ export class GameService {
       }, TURN_DURATION_SECONDS * 1000);
       this.svaraTimers.set(roomId, timer);
     } else {
-      
       // Очищаем таймер при переходе в showdown
       this.clearTurnTimer(roomId);
       gameState.timer = undefined;
       gameState.turnStartTime = undefined;
-      
+
       const phaseResult = this.gameStateService.moveToNextPhase(
         gameState,
         'showdown',
@@ -1255,7 +1325,10 @@ export class GameService {
 
       setTimeout(() => {
         this.distributeWinnings(roomId).catch((error) => {
-          console.error(`Failed to distribute winnings for room ${roomId}:`, error);
+          console.error(
+            `Failed to distribute winnings for room ${roomId}:`,
+            error,
+          );
         });
       }, 3000);
     }
@@ -1267,10 +1340,11 @@ export class GameService {
   private async distributeWinnings(roomId: string): Promise<void> {
     let gameState = await this.redisService.getGameState(roomId);
     if (!gameState) {
-      console.error(`[distributeWinnings] Game state not found for room ${roomId}`);
+      console.error(
+        `[distributeWinnings] Game state not found for room ${roomId}`,
+      );
       return;
     }
-
 
     // Reset lastWinAmount for all players
     for (const p of gameState.players) {
@@ -1287,7 +1361,7 @@ export class GameService {
 
     if (winners.length === 1) {
       const winnerId = winners[0].id;
-      const winnerBefore = gameState.players.find(p => p.id === winnerId);
+      const winnerBefore = gameState.players.find((p) => p.id === winnerId);
       const balanceBefore = winnerBefore ? winnerBefore.balance : 0;
 
       const { updatedGameState, actions } = this.bettingService.processWinnings(
@@ -1297,7 +1371,7 @@ export class GameService {
       gameState = updatedGameState;
       gameState.log.push(...actions);
 
-      const winnerAfter = gameState.players.find(p => p.id === winnerId);
+      const winnerAfter = gameState.players.find((p) => p.id === winnerId);
       const balanceAfter = winnerAfter ? winnerAfter.balance : 0;
       if (winnerAfter) {
         winnerAfter.lastWinAmount = balanceAfter - balanceBefore;
@@ -1322,11 +1396,14 @@ export class GameService {
     await this.endGame(roomId, gameState, 'winner');
   }
 
-  private async endGame(roomId: string, gameState: GameState, reason: 'winner' | 'no_winner' | 'svara'): Promise<void> {
-
+  private async endGame(
+    roomId: string,
+    gameState: GameState,
+    reason: 'winner' | 'no_winner' | 'svara',
+  ): Promise<void> {
     // Очищаем таймер для этой комнаты
     this.clearTurnTimer(roomId);
-    
+
     // Очищаем таймер в GameState
     gameState.timer = undefined;
     gameState.turnStartTime = undefined;
@@ -1335,7 +1412,10 @@ export class GameService {
     if (room) {
       room.status = 'finished';
       room.finishedAt = new Date();
-      room.winner = reason === 'winner' && gameState.winners ? gameState.winners[0]?.id : undefined;
+      room.winner =
+        reason === 'winner' && gameState.winners
+          ? gameState.winners[0]?.id
+          : undefined;
       await this.redisService.setRoom(roomId, room);
       await this.redisService.publishRoomUpdate(roomId, room);
     }
@@ -1347,16 +1427,15 @@ export class GameService {
     }, 5000);
   }
 
-
   // Методы управления таймерами
   startTurnTimer(roomId: string, playerId: string): void {
     this.clearTurnTimer(roomId); // Всегда очищаем предыдущий
-    
+
     const timer = setTimeout(async () => {
       await this.handleAutoFold(roomId, playerId);
       this.turnTimers.delete(roomId);
     }, TURN_DURATION_SECONDS * 1000);
-    
+
     this.turnTimers.set(roomId, timer);
   }
 
@@ -1396,12 +1475,12 @@ export class GameService {
     if (gameState.currentPlayerIndex !== playerIndex) {
       return { success: false, error: 'Сейчас не ваш ход' };
     }
-    
+
     // Если у игрока нет денег, автоматически делаем fold
     if (player.balance <= 0) {
       return this.handleFold(roomId, gameState, playerIndex);
     }
-    
+
     // Выполняем автоматический fold
     return this.handleFold(roomId, gameState, playerIndex);
   }
@@ -1413,5 +1492,4 @@ export class GameService {
     }
     this.turnTimers.clear();
   }
-
 }
