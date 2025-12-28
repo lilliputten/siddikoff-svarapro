@@ -1,10 +1,13 @@
 import dotenv from "dotenv";
 import { Context, Telegraf } from "telegraf";
+// @ts-ignore: No type definitions found
 import rateLimit from "telegraf-ratelimit";
 
 import { AdminHandlers } from "./src/handlers/admin.handlers.js";
-import { getMessage } from "./src/locales/index.js";
+import { getMessage, Locale } from "./src/locales/index.js";
 import { AdminService } from "./src/services/admin.service.js";
+import { StatsService } from "./src/services/stats.service.js";
+import { UsersService } from "./src/services/users.service.js";
 
 dotenv.config();
 
@@ -20,7 +23,14 @@ if (!BOT_TOKEN) {
 }
 
 const adminService = new AdminService();
-const adminHandlers = new AdminHandlers(adminService);
+const usersService = new UsersService();
+const statsService = new StatsService();
+
+const adminHandlers = new AdminHandlers(
+  adminService,
+  usersService,
+  statsService,
+);
 
 const bot = new Telegraf<ServiceBotContext>(BOT_TOKEN);
 
@@ -28,11 +38,14 @@ bot.use(
   rateLimit({
     window: 3000,
     limit: 1,
-    onLimitExceeded: (ctx) => ctx.reply("Too many requests, please try again later."),
+    onLimitExceeded: (ctx: { reply: (arg0: string) => any }) =>
+      ctx.reply("Too many requests, please try again later."),
   }),
 );
 
-bot.command("admin_login", (ctx) => adminHandlers.handleAdminLogin(ctx));
+/* // NOTE: There no `handleAdminLogin` method in the `AdminHandlers` class
+ * bot.command("admin_login", (ctx) => adminHandlers.handleAdminLogin(ctx));
+ */
 bot.hears(/.*/, (ctx) => adminHandlers.handlePasswordInput(ctx));
 
 bot.use(async (ctx, next) => {
@@ -49,7 +62,12 @@ bot.start(async (ctx) => {
   const user = ctx.from;
   if (!user) return;
   const locale = ctx.locale || "ru";
-  const welcomeMessage = getMessage(locale, "welcome", user.first_name, ctx.isAdmin);
+  const welcomeMessage = getMessage(
+    locale,
+    "welcome",
+    user.first_name,
+    ctx.isAdmin,
+  );
   await ctx.reply(welcomeMessage);
 });
 
@@ -57,7 +75,9 @@ bot.help(async (ctx) => {
   const locale = ctx.locale || "ru";
   const isAdmin = ctx.isAdmin;
   const helpText =
-    getMessage(locale, "help.title") + getMessage(locale, "help.common").join("\n") + "\n\n";
+    getMessage(locale, "help.title") +
+    getMessage(locale, "help.common").join("\n") +
+    "\n\n";
   if (isAdmin) {
     const adminCommands = getMessage(locale, "help.admin").join("\n");
     await ctx.reply(helpText + adminCommands);
