@@ -17,11 +17,14 @@ dotenv.config();
 // Конфигурация
 const BOT_TOKEN = process.env.BOT_TOKEN;
 
-if (!BOT_TOKEN) {
-  const error = new Error('BOT_TOKEN is required');
-  console.error('[index]', error);
-  debugger; // eslint-disable-line no-debugger
-  throw error;
+if (!BOT_TOKEN || BOT_TOKEN === 'your_bot_token_here') {
+  console.warn(
+    '[index] BOT_TOKEN not set or using placeholder. Service bot will not start.',
+  );
+  console.warn(
+    '[index] To enable the service bot, set BOT_TOKEN environment variable with a valid Telegram bot token.',
+  );
+  process.exit(0);
 }
 
 const bot = new Telegraf<ServiceBotContext>(BOT_TOKEN);

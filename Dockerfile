@@ -1,4 +1,4 @@
-ARG NODE_IMAGE=node:20.18.0-alpine
+ARG NODE_IMAGE=node:20-alpine
 
 # Base stage with pnpm
 FROM ${NODE_IMAGE} AS base

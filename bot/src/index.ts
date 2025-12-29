@@ -12,8 +12,21 @@ interface MyContext extends Context {
 const BOT_TOKEN = process.env.BOT_TOKEN;
 const APP_URL = process.env.APP_URL;
 
-if (!BOT_TOKEN) throw new Error('BOT_TOKEN is required');
-if (!APP_URL) throw new Error('APP_URL is required');
+if (!BOT_TOKEN || BOT_TOKEN === 'your_bot_token_here') {
+  console.warn(
+    '[bot] BOT_TOKEN not set or using placeholder. Bot will not start.',
+  );
+  console.warn(
+    '[bot] To enable the bot, set BOT_TOKEN environment variable with a valid Telegram bot token.',
+  );
+  process.exit(0);
+}
+
+if (!APP_URL) {
+  console.warn('[bot] APP_URL not set. Bot will not start.');
+  console.warn('[bot] To enable the bot, set APP_URL environment variable.');
+  process.exit(0);
+}
 
 const bot = new Telegraf<MyContext>(BOT_TOKEN);
 

@@ -1,5 +1,5 @@
-ARG NODE_IMAGE=node:20.18.0-alpine
-ARG NGINX_IMAGE=nginx:1.27.2-alpine
+ARG NODE_IMAGE=node:20-alpine
+ARG NGINX_IMAGE=nginx:alpine
 
 # Base stage
 FROM ${NODE_IMAGE} AS base

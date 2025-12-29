@@ -1,21 +1,33 @@
 # version: '3.8'  # Obsolete, commenting out
 services:
   app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        NODE_IMAGE: node:20-alpine
     environment:
       - NODE_ENV=development
       - BOT_TOKEN=${BOT_TOKEN:-your_bot_token_here}
       - SERVICE_BOT_TOKEN=${SERVICE_BOT_TOKEN:-your_service_bot_token_here}
     volumes:
       # Mount source code for hot reload (Windows paths auto-converted)
-      - .:/app:delegated  # Full monorepo mount
-      - /app/node_modules  # Preserve container node_modules
+      - .:/app:delegated # Full monorepo mount
+      - /app/node_modules # Preserve container node_modules
       - /app/server/node_modules
       - /app/bot/node_modules
       - /app/service-bot/node_modules
     working_dir: /app
-    command: >  # Dev startup with pnpm workspaces - run development servers
+    command: > # Dev startup with pnpm workspaces - run development servers
       sh -c "
-        pnpm install &&
+        echo 'Installing workspace dependencies...' &&
+        CI=true pnpm install --no-frozen-lockfile &&
+        echo 'Installing server dependencies...' &&
+        cd /app/server && CI=true pnpm install --no-frozen-lockfile &&
+        echo 'Installing bot dependencies...' &&
+        cd /app/bot && CI=true pnpm install --no-frozen-lockfile &&
+        echo 'Installing service-bot dependencies...' &&
+        cd /app/service-bot && CI=true pnpm install --no-frozen-lockfile &&
         echo 'Starting services in development mode using tsx...' &&
         cd /app/server && npx tsx watch src/main.ts &
         sleep 5 && cd /app/bot && npx tsx watch src/index.ts &
@@ -28,7 +40,7 @@ services:
   postgres:
     image: ${POSTGRES_IMAGE}
     environment:
-      - POSTGRES_PASSWORD=1  # Match your server/.env
+      - POSTGRES_PASSWORD=1 # Match your server/.env
       - POSTGRES_USER=postgres
       - POSTGRES_DB=svarapro
     ports:
@@ -64,16 +76,16 @@ services:
   client:
     build:
       context: .
-      dockerfile: client/Dockerfile.dev  # Create this
+      dockerfile: client/Dockerfile.dev # Create this
     ports:
-      - "5173:5173"  # Vite default
+      - '5173:5173' # Vite default
     volumes:
       - ./client:/app/client
     command: >
       sh -c "
         npm install -g pnpm &&
         cd /app/client &&
-        pnpm install &&
+        CI=true pnpm install &&
         pnpm run dev -- --host 0.0.0.0
       "
 
@@ -84,4 +96,3 @@ networks:
 volumes:
   postgres_dev_data:
   redis_dev_data:
-
