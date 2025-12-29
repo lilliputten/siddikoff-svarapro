@@ -19,10 +19,17 @@ import { SystemRoomsModule } from './modules/system-rooms/system-rooms.module';
 import { UsersModule } from './modules/users/users.module';
 import { MigrationService } from './services/migration.service';
 
+const dirName = process.cwd();
+
 @Module({
   imports: [
     ConfigModule.forRoot({
       isGlobal: true,
+      envFilePath: [
+        // Specify a custom file path
+        `${dirName}/../.env`,
+        `${dirName}/.env`,
+      ],
       validationSchema: Joi.object({
         POSTGRES_HOST: Joi.string().required(),
         POSTGRES_PORT: Joi.number().port().required(),

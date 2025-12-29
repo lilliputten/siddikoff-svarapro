@@ -2,8 +2,20 @@ import axios from 'axios';
 
 import { Room } from '../../types/game';
 
+const baseHost = API_BASE_URL || 'https://svarapro.com';
+const baseURL = `${baseHost}/api/v1`;
+
+const isDev = NODE_ENV === 'development';
+console.log('[client/src/services/api/api.ts] Initializing', {
+  isDev,
+  NODE_ENV,
+  baseURL,
+  baseHost,
+  API_BASE_URL,
+});
+
 const api = axios.create({
-  baseURL: 'https://svarapro.com/api/v1',
+  baseURL,
   withCredentials: true,
 });
 
@@ -12,15 +24,38 @@ export const apiService = {
     initData: string,
     startPayload?: string,
   ): Promise<{ accessToken: string; roomId?: string }> {
+    const url = '/auth/login';
     // eslint-disable-next-line no-console
-    console.log(
-      'Sending to server - initData:',
+    console.log('[client/src/services/api/api.ts:login] Sending', {
+      url,
+      baseURL,
       initData,
-      'startPayload:',
       startPayload,
+      api,
+    });
+    debugger;
+    /* // Request:
+     * url: http://localhost:3000/api/v1/auth/login
+     * data: {"initData":"auth_date=1766976773&user=%7B%22id%22%3A490398083%2C%22first_name%22%3A%22Ig%22%2C%22username%22%3A%22lilliputten%22%2C%22language_code%22%3A%22en%22%7D&hash=mock_signature_for_development"}
+     * Test command:
+     * curl -H "Content-Type: application/json" -d '{"initData":"auth_date=1766976773&user=%7B%22id%22%3A490398083%2C%22first_name%22%3A%22Ig%22%2C%22username%22%3A%22lilliputten%22%2C%22language_code%22%3A%22en%22%7D&hash=mock_signature_for_development"}' http://localhost:3000/api/v1/auth/login
+     */
+    const response = await api.post(
+      url,
+      { initData, startPayload },
+      {
+        withCredentials: true, // if you need cookies
+      },
     );
-    const response = await api.post('/auth/login', { initData, startPayload });
-    localStorage.setItem('token', response.data.accessToken);
+    const { data } = response;
+    const accessToken = data.accessToken;
+    console.log('[client/src/services/api/api.ts:login] Received', {
+      accessToken,
+      data,
+      response,
+    });
+    debugger;
+    localStorage.setItem('token', accessToken);
     return response.data;
   },
 

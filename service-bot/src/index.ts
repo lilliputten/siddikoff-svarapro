@@ -1,5 +1,5 @@
 /* eslint-disable no-console */
-import dotenv from 'dotenv';
+import dotenv, { DotenvConfigOptions } from 'dotenv';
 import { Telegraf } from 'telegraf';
 import rateLimit from 'telegraf-ratelimit';
 
@@ -12,7 +12,7 @@ import { UsersService } from './services/users.service.js';
 import { ServiceBotContext } from './types/index.js';
 
 // Загружаем переменные окружения
-dotenv.config();
+dotenv.config({} satisfies DotenvConfigOptions);
 
 // Конфигурация
 const BOT_TOKEN = process.env.BOT_TOKEN;

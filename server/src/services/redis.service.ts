@@ -1,3 +1,5 @@
+/* eslint-disable no-console */
+
 import { Injectable } from '@nestjs/common';
 import { Redis } from 'ioredis';
 
@@ -8,9 +10,12 @@ export class RedisService {
   private client: Redis;
 
   constructor() {
+    const REDIS_HOST = process.env.REDIS_HOST;
+    const REDIS_PORT = process.env.REDIS_PORT;
+
     this.client = new Redis({
-      host: process.env.REDIS_HOST || 'redis',
-      port: parseInt(process.env.REDIS_PORT || '6379', 10),
+      host: REDIS_HOST || 'redis',
+      port: parseInt(REDIS_PORT || '6379', 10),
       maxRetriesPerRequest: 3,
       connectTimeout: 10000,
       commandTimeout: 5000,
@@ -19,15 +24,19 @@ export class RedisService {
 
     // Обработка ошибок подключения
     this.client.on('error', (error) => {
-      console.error('Redis connection error:', error);
+      // prettier-ignore
+      console.error('[server/src/services/redis.service.ts] Redis connection error:', error);
+      debugger; // eslint-disable-line no-debugger
     });
 
     this.client.on('connect', () => {
-      console.log('Redis connected successfully');
+      // prettier-ignore
+      console.log('[server/src/services/redis.service.ts] Redis connected successfully');
     });
 
     this.client.on('ready', () => {
-      console.log('Redis is ready');
+      // prettier-ignore
+      console.log('[server/src/services/redis.service.ts] Redis is ready');
     });
   }
 
@@ -136,7 +145,15 @@ export class RedisService {
     callback: (data: { action: string; roomId?: string; room?: Room }) => void,
   ): Promise<void> {
     const subClient = this.client.duplicate();
+    // prettier-ignore
+    console.log('[server/src/services/redis.service.ts] subscribe:rooms:start', {
+      options: subClient.options,
+    });
     await subClient.subscribe('rooms');
+    // prettier-ignore
+    console.log('[server/src/services/redis.service.ts] subscribe:rooms:success', {
+      options: subClient.options,
+    });
 
     subClient.on('message', (channel, message) => {
       if (channel === 'rooms') {

@@ -40,14 +40,17 @@
     "tailwind-merge": "^3.3.1"
   },
   "scripts": {
-    "type-check-all": "echo --Run typescript linter-- && pnpm --filter server run type-check && pnpm --filter client run type-check",
+    "type-check-all": "pnpm --filter svara-pro-server --filter svara-pro-bot --filter svara-pro-client --filter svara-pro-service-bot type-check",
     "format": "prettier --write --cache . | grep -v -e cached -e unchanged || true",
     "format-quick": "pretty-quick --write --cache .",
     "format-all": "pnpm --filter svara-pro-server --filter svara-pro-bot --filter svara-pro-client --filter svara-pro-service-bot format",
     "lint-all": "pnpm --filter svara-pro-server --filter svara-pro-bot --filter svara-pro-client --filter svara-pro-service-bot lint",
-    "check-all": "echo --Run all pre-commit check-ups-- && npm-run-all lint-all && echo --All checks passed--",
-    "build": "pnpm --filter svara-pro-server build && pnpm --filter svara-pro-bot build",
+    "check-all": "npm-run-all lint-all && echo --All checks passed--",
+    "dev-bot": "pnpm --filter svara-pro-bot dev",
+    "dev-all": "pnpm --filter svara-pro-server --filter svara-pro-bot --filter svara-pro-client --filter svara-pro-service-bot dev",
+    "build": "pnpm --filter svara-pro-server --filter svara-pro-bot build",
     "build:client": "pnpm --filter svara-pro-client build",
+    "build:bot": "pnpm --filter svara-pro-client build",
     "start": "pm2-runtime start ecosystem.config.js",
     "install-all": "pnpm --frozen-lockfile --config.confirmModulesPurge=false install",
     "install-workspaces": "pnpm --filter svara-pro-server --filter svara-pro-bot --filter svara-pro-client --filter svara-pro-service-bot --frozen-lockfile install"

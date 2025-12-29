@@ -57,6 +57,7 @@ export class AuthService {
         });
         if (!referrer) {
           // In case of an invalid referrer in the link, we just ignore it
+          // eslint-disable-next-line no-console
           console.warn(`Invalid referrerId: ${referrerId}`);
         }
       }

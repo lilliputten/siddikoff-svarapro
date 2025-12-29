@@ -10,6 +10,7 @@
     "format": "prettier --write --cache \"src/**/*.ts\" \"test/**/*.ts\"",
     "format-quick": "pretty-quick --write --cache .",
     "start:debug": "nest start --debug --watch",
+    "dev": "nest start --debug --watch",
     "start:prod": "node dist/main",
     "lint": "eslint . --ext .ts",
     "test": "jest",

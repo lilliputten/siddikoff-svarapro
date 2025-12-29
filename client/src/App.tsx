@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { isMiniAppDark, retrieveLaunchParams } from '@telegram-apps/sdk-react';
 import { AppRoot } from '@telegram-apps/telegram-ui';
-import axios from 'axios';
+import axios, { AxiosError } from 'axios';
 import { Socket } from 'socket.io-client';
 
 import { ErrorAlert } from './components/ErrorAlert';
@@ -103,6 +103,7 @@ function App() {
   const [isPhoneVertical, setIsPhoneVertical] = useState(false);
 
   useEffect(() => {
+    console.log('client/src/App.tsx');
     if (window.innerWidth >= window.innerHeight) {
       setIsPhoneVertical(false);
     } else {
@@ -156,10 +157,14 @@ function App() {
       try {
         await initTelegramSdk();
         setIsSdkInitialized(true);
-      } catch (e) {
+      } catch (error) {
+        const errMsg = 'Failed to initialize SDK';
         // eslint-disable-next-line no-console
-        console.error('Failed to initialize SDK:', e);
-        setError('Failed to initialize Telegram SDK');
+        console.error('[App]', errMsg, {
+          error,
+        });
+        debugger; // eslint-disable-line no-debugger
+        setError(errMsg);
       }
 
       const launchParams = retrieveLaunchParams() as LaunchParams;
@@ -184,10 +189,10 @@ function App() {
           return;
         }
 
+        let profile: UserProfile | undefined;
+        let roomIdFromPayload: string | undefined = undefined;
+        let referrerIdFromPayload: string | undefined = undefined;
         try {
-          let roomIdFromPayload: string | undefined = undefined;
-          let referrerIdFromPayload: string | undefined = undefined;
-
           if (
             launchParams.startPayload &&
             launchParams.startPayload.startsWith('join_')
@@ -202,9 +207,19 @@ function App() {
             referrerIdFromPayload = launchParams.startPayload;
           }
 
+          console.log('[App:loadData] try login', {
+            launchParams,
+            initData,
+            roomIdFromPayload,
+            referrerIdFromPayload, // startPayload
+          });
+          debugger;
+
+          // XXX: Is it expected the "startPayload" parameter ("ref123-roomNAME")?
           await apiService.login(initData, referrerIdFromPayload);
 
-          const profile = (await apiService.getProfile()) as UserProfile;
+          profile = await apiService.getProfile();
+
           setBalance(
             profile.balance !== undefined
               ? typeof profile.balance === 'number'
@@ -213,6 +228,13 @@ function App() {
               : '0.00',
           );
           setWalletAddress(profile.walletAddress || null);
+
+          console.log('[App:loadData] after login, got profile', {
+            profile,
+            roomIdFromPayload,
+            referrerIdFromPayload,
+          });
+          debugger;
 
           if (roomIdFromPayload) {
             try {
@@ -236,8 +258,12 @@ function App() {
               ) {
                 handleSetCurrentPage('deposit');
               } else {
+                const errMsg = 'Failed to join room';
                 // eslint-disable-next-line no-console
-                console.error('Failed to join room:', error);
+                console.error('[App:loadData]', errMsg, {
+                  error,
+                });
+                debugger; // eslint-disable-line no-debugger
                 setCurrentPage('dashboard');
                 setNotification('gameJoinError');
               }
@@ -246,11 +272,23 @@ function App() {
 
           // Создаем единое WebSocket соединение
           if (!socket) {
+            console.log('[App:loadData] start with socket', {
+              socket,
+              profile,
+            });
+            debugger;
             const socketInstance = initSocket(profile.telegramId, {
               username: profile.username || 'Unknown',
               photo_url: profile.avatar || '',
             });
             setSocket(socketInstance);
+
+            console.log('[App:loadData] got socketInstance', {
+              socketInstance,
+              socket,
+              profile,
+            });
+            debugger;
 
             // Добавляем обработчики для баланса
             const handleBalanceUpdate = (event: CustomEvent) => {
@@ -275,19 +313,28 @@ function App() {
           }
         } catch (error) {
           const apiError = error as ApiError;
+          const axiosError = error as AxiosError;
+          const errMsg = 'Failed to load data. Please try again later.';
           const errorMessage =
             typeof apiError === 'string'
               ? apiError
               : apiError.message || 'Unknown error';
+          const response =
+            typeof apiError === 'object' ? apiError.response : undefined;
+          const responseData = response?.data;
+          const request = axiosError?.request;
           // eslint-disable-next-line no-console
-          console.error(
-            'Login error:',
+          console.error('[App:loadData]', errMsg, {
             errorMessage,
-            typeof apiError === 'object' && apiError.response
-              ? apiError.response.data
-              : 'No response data',
-          );
-          setError('Failed to load data. Please try again later.');
+            responseData,
+            profile,
+            response,
+            request,
+            error,
+            socket,
+          });
+          debugger; // eslint-disable-line no-debugger
+          setError(errMsg);
         }
       };
 

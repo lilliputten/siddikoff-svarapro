@@ -3,6 +3,10 @@ import { io, Socket } from 'socket.io-client';
 
 import { UserData } from '@/types/entities';
 
+const websocketHostUrl = 'https://svarapro.com';
+
+console.log('[websocket] Initializing');
+
 export const initSocket = (
   telegramId?: string,
   userData?: UserData,
@@ -15,7 +19,7 @@ export const initSocket = (
     avatar: window.Telegram?.WebApp?.initDataUnsafe?.user?.photo_url || '',
   };
 
-  const socket = io('https://svarapro.com', {
+  const socket = io(websocketHostUrl, {
     withCredentials: true,
     transports: ['websocket'],
     auth: {
@@ -28,6 +32,10 @@ export const initSocket = (
   });
 
   socket.on('connect', () => {
+    console.log('[websocket:connect]', {
+      telegramId,
+      defaultTelegramId,
+    });
     socket.emit('request_rooms');
     // Добавляем обработчики для баланса
     socket.emit('join', telegramId || defaultTelegramId);

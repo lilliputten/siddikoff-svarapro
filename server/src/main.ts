@@ -1,3 +1,5 @@
+/* eslint-disable no-console */
+
 import { ValidationPipe } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
 import { json, Request, Response, urlencoded } from 'express';
@@ -5,11 +7,13 @@ import helmet from 'helmet';
 
 import { AppModule } from './app.module';
 
+const isDev = process.env.NODE_ENV === 'development';
+
 // Генерируем уникальный ID процесса
 const processId = Math.random().toString(36).substring(2, 15);
 
 async function bootstrap() {
-  console.log(`[${processId}] Starting server process...`);
+  console.log(`[server/src/main.ts:${processId}] Starting server process...`);
   const app = await NestFactory.create(AppModule, {
     logger: ['error', 'warn', 'log'],
   });
@@ -24,10 +28,23 @@ async function bootstrap() {
   app.use(json({ limit: '10kb' }));
   app.use(urlencoded({ extended: true, limit: '10kb' }));
 
+  /* app.use(
+   *   cors({
+   *     origin: [> isDev ? 'http://localhost:5173' : <] '*', // exact origin of your frontend (no '*') if you use credentials
+   *     methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+   *     credentials: true, // allow cookies
+   *     allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With'],
+   *   }),
+   * );
+   */
+
+  const clientAppUrl = process.env.CLIENT_APP_URL;
   app.enableCors({
-    origin: '*', // In production, specify allowed origins
+    // In production, specify allowed origins
+    origin: isDev ? clientAppUrl : '*',
     methods: 'GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS',
     credentials: true,
+    allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With'],
   });
 
   app.setGlobalPrefix('api/v1');

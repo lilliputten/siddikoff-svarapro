@@ -1,16 +1,33 @@
 /* eslint-disable no-console */
+
 import path from 'path';
 import { fileURLToPath } from 'url';
+import dotenv from 'dotenv';
 import { Context, Telegraf } from 'telegraf';
 import rateLimit from 'telegraf-ratelimit';
+
+const dirName = process.cwd();
+
+const dotenvOptions: dotenv.DotenvConfigOptions = {
+  path: [
+    // Using root `.env` file
+    path.resolve(dirName, '..', '.env'),
+    // Using current folder's `.env` file
+    path.resolve(dirName, '.env'),
+  ],
+};
+
+dotenv.config(dotenvOptions);
 
 // Расширяем тип Context для startPayload
 interface MyContext extends Context {
   startPayload?: string;
 }
 
+const isDev = process.env.NODE_ENV === 'development';
 const BOT_TOKEN = process.env.BOT_TOKEN;
 const APP_URL = process.env.APP_URL;
+const CLIENT_APP_URL = process.env.CLIENT_APP_URL;
 
 if (!BOT_TOKEN || BOT_TOKEN === 'your_bot_token_here') {
   console.warn(
@@ -28,7 +45,19 @@ if (!APP_URL) {
   process.exit(0);
 }
 
-const bot = new Telegraf<MyContext>(BOT_TOKEN);
+const appUrl = CLIENT_APP_URL || APP_URL;
+
+console.log('[bot/src/index.ts]', {
+  isDev,
+  appUrl,
+  dotenvOptions,
+  BOT_TOKEN,
+  APP_URL,
+  CLIENT_APP_URL,
+});
+
+const tgOptions = {} satisfies Partial<Telegraf.Options<MyContext>>;
+const bot = new Telegraf<MyContext>(BOT_TOKEN, tgOptions);
 
 // Rate-limiting
 bot.use(
@@ -57,8 +86,14 @@ bot.start(async (ctx) => {
     );
     initData.append('hash', 'mock_signature_for_development');
 
-    const webAppUrl = new URL(APP_URL);
+    const webAppUrl = new URL(appUrl);
     webAppUrl.searchParams.set('initData', initData.toString());
+
+    /* // initData sample (unescaped) keys:
+     * auth_date=NNNNNNNNNN
+     * user={"id":NNNNNNNNN,"first_name":"Ig","username":"lilliputten","language_code":"en"}
+     * hash=mock_signature_for_development
+     */
 
     const payload = ctx.message?.text.split(' ')[1]; // Получаем telegramId из /start
 
@@ -89,6 +124,12 @@ bot.start(async (ctx) => {
     } catch {
       assetsPath = path.join(__dirname, '..', 'src', 'assets', 'welcome.png');
     }
+
+    console.log('[bot/src/index.ts:start]', {
+      ctx,
+      assetsPath,
+      webAppUrl,
+    });
 
     await ctx.replyWithPhoto(
       { source: assetsPath },
@@ -122,10 +163,33 @@ const shutdown = (signal: NodeJS.Signals) => {
 process.once('SIGINT', shutdown);
 process.once('SIGTERM', shutdown);
 
-// Запуск
-bot
-  .launch()
-  .then(() => console.log('Bot started on @' + bot.botInfo?.username))
+const launchOptions: Telegraf.LaunchOptions = {
+  // Long polling options (default mode)
+  dropPendingUpdates: true, // Удаляем старые обновления при запуске
+  allowedUpdates: ['message', 'callback_query', 'inline_query'], // Типы обновлений, которые будем получать
+};
+/* // DEBUG: Use webhook
+ * if (isDev) {
+ *   launchOptions.webhook = {
+ *     domain: APP_URL, // Use your APP_URL as the domain
+ *     port: parseInt(process.env.PORT || '3000'), // Use PORT from env or default to 3000
+ *   };
+ * }
+ */
+
+// Удаляем текущий webhook (если он был установлен), чтобы использовать long polling
+bot.telegram
+  .deleteWebhook({ drop_pending_updates: true })
+  .then(() => {
+    console.log('Webhook deleted, starting in long polling mode');
+
+    // Запуск - используем long polling (режим по умолчанию)
+    return bot.launch(launchOptions);
+  })
+  .then(() => {
+    // This log entry is never printed
+    console.log('Bot started on @' + bot.botInfo?.username);
+  })
   .catch((err) => {
     console.error('Bot start failed:', err);
     process.exit(1);

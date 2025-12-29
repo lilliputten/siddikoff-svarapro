@@ -1,9 +1,20 @@
-import { config } from 'dotenv';
-import { DataSource } from 'typeorm';
+import path from 'path';
+import dotenv from 'dotenv';
+import { DataSource, DataSourceOptions } from 'typeorm';
 
-config(); // Загружаем переменные окружения
+const dirName = process.cwd();
 
-export default new DataSource({
+const dotenvOptions: dotenv.DotenvConfigOptions = {
+  path: [
+    // Using root `.env` file
+    path.resolve(dirName, '..', '.env'),
+    // Using current folder's `.env` file
+    path.resolve(dirName, '.env'),
+  ],
+};
+dotenv.config(dotenvOptions); // Загружаем переменные окружения
+
+const dataSourceOptions: DataSourceOptions = {
   type: 'postgres',
   host: process.env.POSTGRES_HOST,
   port: parseInt(process.env.POSTGRES_PORT || '5432'),
@@ -14,4 +25,5 @@ export default new DataSource({
   migrations: [__dirname + '/src/migrations/*{.ts,.js}'],
   synchronize: false, // Отключаем для продакшена
   logging: process.env.NODE_ENV === 'development',
-});
+};
+export default new DataSource(dataSourceOptions);
